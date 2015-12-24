@@ -51,7 +51,7 @@ public class ExpressionParser {
 		this.expressionPathSegemnts = new ArrayList<>();
 	}
 
-	public ExpressionParser parse() {
+	private ExpressionParser parse() {
 		if(!expressionPathSegemnts.isEmpty()) {
 			throw new IllegalArgumentException("Seems to be parse was already invoked.");
 		}
