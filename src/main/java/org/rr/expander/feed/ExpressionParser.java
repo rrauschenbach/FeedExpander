@@ -52,6 +52,9 @@ public class ExpressionParser {
 	}
 
 	public ExpressionParser parse() {
+		if(!expressionPathSegemnts.isEmpty()) {
+			throw new IllegalArgumentException("Seems to be parse was already invoked.");
+		}
 		expressionPathSegemnts.addAll(Arrays.asList(StringUtils.split(expression, "/")));
 		return this;
 	}

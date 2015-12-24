@@ -24,7 +24,7 @@ public class ExpressionParserTest {
 	public void testOneExpressionCount() {
 		List<ExpressionParser> parsers = ExpressionParser.createExpressionParser("tag=div");
 		Assert.assertEquals(1, parsers.size());
-		ExpressionParser parser = parsers.get(0).parse();
+		ExpressionParser parser = parsers.get(0);
 		
 		Assert.assertEquals(1, parser.segmentCount());
 	}
@@ -33,7 +33,7 @@ public class ExpressionParserTest {
 	public void testMultipleExpressionCount() {
 		List<ExpressionParser> parsers = ExpressionParser.createExpressionParser("tag=div/tag=div/tag=div");
 		Assert.assertEquals(1, parsers.size());
-		ExpressionParser parser = parsers.get(0).parse();
+		ExpressionParser parser = parsers.get(0);
 		
 		Assert.assertEquals(3, parser.segmentCount());
 	}
@@ -42,7 +42,7 @@ public class ExpressionParserTest {
 	public void testExpressionGetTag() {
 		List<ExpressionParser> parsers = ExpressionParser.createExpressionParser("tag=div/tag=p");
 		Assert.assertEquals(1, parsers.size());
-		ExpressionParser parser = parsers.get(0).parse();
+		ExpressionParser parser = parsers.get(0);
 		
 		Assert.assertEquals("div", parser.getTagSegmentValueAt(0));
 		Assert.assertEquals("p", parser.getTagSegmentValueAt(1));
@@ -52,7 +52,7 @@ public class ExpressionParserTest {
 	public void testExpressionGetId() {
 		List<ExpressionParser> parsers = ExpressionParser.createExpressionParser("id=test1/id=test2");
 		Assert.assertEquals(1, parsers.size());
-		ExpressionParser parser = parsers.get(0).parse();
+		ExpressionParser parser = parsers.get(0);
 		
 		Assert.assertEquals("test1", parser.getIdSegmentValueAt(0));
 		Assert.assertEquals("test2", parser.getIdSegmentValueAt(1));
