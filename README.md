@@ -25,7 +25,7 @@ In other words, you can convert a cropped feed into a full feed.
   Please note that the parameter values in the must be url encoded. You can use [url-encode-decode.com](www.url-encode-decode.com) for example. The following examples are randomly picked and only examples. There exists NO agreement with page
   proprietor which allows to expand their feeds for commercial or private reasons. 
 
-  * golem.de feed at http://rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the screen element, than the third div and the article element below `id=screen/tag=div 3/tag=article`.
+  * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the screen element, than the third div and the article element below `id=screen/tag=div 3/tag=article`.
     `http://localhost:8080/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DATOM1.0&include=id%3Dscreen%2Ftag%3Ddiv+3%2Ftag%3Darticle`
   It is also possible to select the 'article' element directly with simply `tag=*article` which selects all articles where the first one is automatically used. If there're more than
   one, the right one can be selected with a separated number. For example with `tag=*article 1`.
@@ -36,7 +36,7 @@ In other words, you can convert a cropped feed into a full feed.
   The golem.de example will also works here.
     `http://localhost:8080/expand?feedUrl=http%3A%2F%2Fheise.de.feedsportal.com%2Fc%2F35207%2Ff%2F653902%2Findex.rss&include=tag%3D%2Aarticle`
     
-  * fluter.de feed at http://www.fluter.de/de/?tpl=907 can be expanded by stating with the element with the id 'page-wrapper' and than taking the second div and than the first one. 
+  * fluter.de feed at fluter.de/de/?tpl=907 can be expanded by stating with the element with the id 'page-wrapper' and than taking the second div and than the first one. 
   Because the first div contains only the headline, the second and third div is also selected by repeating the expression before separated with a '|' pipe. 
     `http://localhost:8080/expand?feedUrl=http%3A%2F%2Fwww.fluter.de%2Fde%2F%3Ftpl%3D907&include=id=page-wrapper;tag=div%202;tag=div%201|id=page-wrapper;tag=div%202;tag=div%202|id=page-wrapper;tag=div%202;tag=div%203`
     
