@@ -29,7 +29,7 @@ public class ExpanderResource {
 			public Response apply(String feedUrl) {
 				try {
 					if (feedUrl != null ) {
-						FeedHandler feedHandler = new FeedHandler().setFeedUrl(feedUrl).loadFeed().filterContent(include.or("*"));
+						FeedHandler feedHandler = new FeedHandler().setFeedUrl(feedUrl).loadFeed().expand(include.or("*"));
 						return Response.ok(feedHandler.toXml(), feedHandler.getMimeType()).build();
 					}
 				} catch (Exception e) {

@@ -19,14 +19,16 @@ import com.sun.syndication.io.SyndFeedOutput;
 import com.sun.syndication.io.XmlReader;
 
 /**
- * Statefull feed handler which is able to load a feed from a given url and
- * apply filter to its entries.
+ * Statefull class which provides all feed functionality needed to load, expand
+ * and generate a new, expanded feed.
  */
 public class FeedHandler {
 
+	/** contains the http url to the feed that should be expanded. */
 	@Nullable
 	private String feedUrl;
 
+	/** The laoded rss or atom feed. */
 	@Nullable
 	private SyndFeed loadedFeed;
 
@@ -83,9 +85,10 @@ public class FeedHandler {
 	}
 
 	/**
-	 * Applies the given <code>includeExpression</code> to the feed entries of the
-	 * loaded feed. The method {@link #loadFeed()} must be invoked before this
-	 * method can be used. Otherwise no filter will be applied.
+	 * Applies the given <code>includeExpression</code> to the linked page behind
+	 * each feed entry of the loaded feed and attach the result to the result
+	 * feed. The method {@link #loadFeed()} must be invoked before this method can
+	 * be used. Otherwise no filter will be applied.
 	 * 
 	 * @param includeExpression
 	 *          The include expression which is used to filter the page content of
@@ -93,10 +96,10 @@ public class FeedHandler {
 	 * @return This {@link FeedHandler} instance.
 	 * @throws IOException
 	 */
-	public @Nonnull FeedHandler filterContent(@Nullable String includeExpression) throws IOException {
+	public @Nonnull FeedHandler expand(@Nullable String includeExpression) throws IOException {
 		if (includeExpression != null) {
-			ContentFilter filter = new ContentFilter(includeExpression);
-			filter.apply(getEntries());
+			FeedContentExchanger filter = new FeedContentExchanger(includeExpression);
+			filter.exchangeAll(getEntries());
 		}
 		return this;
 	}

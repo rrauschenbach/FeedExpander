@@ -1,4 +1,4 @@
-package rssExpander;
+package org.rr.expander.feed;
 
 import java.util.List;
 
@@ -44,8 +44,8 @@ public class ExpressionParserTest {
 		Assert.assertEquals(1, parsers.size());
 		ExpressionParser parser = parsers.get(0);
 		
-		Assert.assertEquals("div", parser.getTagSegmentValueAt(0));
-		Assert.assertEquals("p", parser.getTagSegmentValueAt(1));
+		Assert.assertEquals("div", parser.getSegmentValue(0));
+		Assert.assertEquals("p", parser.getSegmentValue(1));
 	}
 	
 	@Test
@@ -54,8 +54,8 @@ public class ExpressionParserTest {
 		Assert.assertEquals(1, parsers.size());
 		ExpressionParser parser = parsers.get(0);
 		
-		Assert.assertEquals("test1", parser.getIdSegmentValueAt(0));
-		Assert.assertEquals("test2", parser.getIdSegmentValueAt(1));
+		Assert.assertEquals("test1", parser.getSegmentValue(0));
+		Assert.assertEquals("test2", parser.getSegmentValue(1));
 	}
 	
 }
