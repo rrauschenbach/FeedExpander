@@ -41,7 +41,7 @@ class ContentFilter {
 		String pageContent;
 		try {
 			pageContent = loadPageContent(feedEntry);
-			String html = mergeElements(getSelectedElements(pageContent));
+			String html = mergeElements(getSelectedElements(pageContent, feedEntry.getLink()));
 			applyToEntry(feedEntry, html);
 		} catch (IOException e) {
 			logger.warn(String.format("Failed to load link '%s'.", feedEntry.getLink()), e);
@@ -62,8 +62,8 @@ class ContentFilter {
 		return resultHtml.toString();
 	}
 
-	private @Nonnull Collection<Element> getSelectedElements(@Nonnull String pageContent) {
-		Element pageBody = Jsoup.parse(pageContent).body();
+	private @Nonnull Collection<Element> getSelectedElements(@Nonnull String pageContent, @Nonnull String baseUri) {
+		Element pageBody = Jsoup.parse(pageContent, baseUri).body();
 		List<ExpressionParser> expressionParsers = ExpressionParser.createExpressionParser(includeExpression);
 		
 		Collection<Element> result = new ArrayList<Element>();
