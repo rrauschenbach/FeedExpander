@@ -26,7 +26,9 @@ import org.slf4j.LoggerFactory;
  * equality character. The type can be {@link #TYPE_TAG} or {@link #TYPE_ID}. The value is a free
  * word having optionally a numeric value as index separated with a whitespace.
  * 
- * The following example results in two segments.
+ * The following example results in two segments where the first segment type is a
+ * {@link SEGMENT_TYPE#ID} with the value "article" and the second one is of type
+ * {@link SEGMENT_TYPE#TAG} with the value "div" and a segment number of two.
  * 
  * <pre>
  * "id=article/tag=div 2"
