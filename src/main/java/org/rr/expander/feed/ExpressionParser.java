@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * valid expression can be separated in segments with a slash. A segment always
  * have a type and a value separated by an equality character. The type can be
  * {@link #TYPE_TAG} or {@link #TYPE_ID}. The value is a free word having
- * optional a numeric value as index separated with a whitespace.
+ * optionally a numeric value as index separated with a whitespace.
  * 
  * The following example results in two segments.
  * <pre>
@@ -51,7 +51,9 @@ public class ExpressionParser {
   }
 
 	public static List<ExpressionParser> createExpressionParser(@Nullable String expression) {
-		return Arrays.asList(StringUtils.split(expression != null ? expression : EMPTY, "|")).stream().map(ex -> new ExpressionParser(ex).parse())
+		return Arrays.asList(StringUtils.split(expression != null ? expression : EMPTY, "|"))
+				.stream()
+				.map(ex -> new ExpressionParser(ex).parse())
 				.collect(Collectors.toList());
 	}
 
@@ -83,7 +85,7 @@ public class ExpressionParser {
 	 * value 1 will be returned.
 	 * 
 	 * <pre>
-	 * "tag=div 2" // this segment will return 2
+	 * "tag=div 2" // 2 will be returned
 	 * </pre>
 	 * 
 	 * @param index
@@ -98,6 +100,11 @@ public class ExpressionParser {
 	/**
 	 * Tells what kind of segment is located at the given segment index.
 	 * 
+	 * <pre>
+	 * "tag=div 2" // {@link SEGMENT_TYPE#TAG} will be returned
+	 * "id=test" // {@link SEGMENT_TYPE#ID} will be returned
+	 * </pre>
+
 	 * @param index
 	 *          The index of the segment. 0 is the first segment.
 	 * @return The {@link SEGMENT_TYPE} at the given <code>index</code>.
@@ -108,11 +115,38 @@ public class ExpressionParser {
 		return SEGMENT_TYPE.valueOf(getSegmentName(index).toUpperCase());
 	}
 
+	/**
+	 * Get the name of the segment at the specified segment index.
+	 * 
+	 * <pre>
+	 * "tag=div 2" // "tag" will be returned.
+	 * "id=test" // "id" will be returned
+	 * </pre>
+	 * 
+	 * @param index
+	 *          The index of the expression segment.
+	 * @return The name part of the segment. The name can possibly be empty but
+	 *         never <code>null</code>.
+	 */
 	public @NotNull String getSegmentName(int index) {
 		String expressionPathSegment = getExpressionPathSegment(index);
 		return StringUtils.substringBefore(expressionPathSegment, "=");
 	}
 
+	/**
+	 * Get the value of the segment at the specified segment index. The number
+	 * which is optionally behind the value is not be part of the value.
+	 * 
+	 * <pre>
+	 * "tag=div 2" // "div" will be returned.
+	 * "id=test" // "test" will be returned
+	 * </pre>
+	 * 
+	 * @param index
+	 *          The index of the expression segment.
+	 * @return The value part of the segment. The value can possibly be empty but
+	 *         never <code>null</code>.
+	 */
 	public @NotNull String getSegmentValue(int index) {
 		String expressionPathSegment = getExpressionPathSegment(index);
 		return StringUtils.substringAfter(StringUtils.substringBefore(expressionPathSegment, " "), "=");
@@ -129,6 +163,6 @@ public class ExpressionParser {
 	
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("expression", expression).build();
+		return new ToStringBuilder(this).append("expression", "'" + expression + "'").build();
 	}
 }
