@@ -1,5 +1,6 @@
 package org.rr.expander.feed;
 
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.split;
@@ -10,7 +11,6 @@ import static org.apache.commons.lang3.math.NumberUtils.toInt;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,7 +57,7 @@ public class ExpressionParser {
 		return Arrays.asList(split(expression != null ? expression : EMPTY, "|"))
 				.stream()
 				.map(ex -> new ExpressionParser(ex).parse())
-				.collect(Collectors.toList());
+				.collect(toList());
 	}
 
 	private ExpressionParser(@Nonnull String expression) {

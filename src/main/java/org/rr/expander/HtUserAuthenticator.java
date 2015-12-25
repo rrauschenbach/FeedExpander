@@ -1,5 +1,6 @@
 package org.rr.expander;
 
+import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.BooleanUtils.negate;
 import static org.apache.commons.lang3.StringUtils.contains;
 import static org.apache.commons.lang3.StringUtils.split;
@@ -11,7 +12,6 @@ import java.io.FileReader;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,10 +57,9 @@ public class HtUserAuthenticator implements Authenticator<BasicCredentials, Basi
 	}
 
 	private Collector<String[], ?, Map<String, String>> getUserPassMapCollector() {
-		return Collectors.toMap(
-						line -> line[0], // user
-						line -> line[1], // pass
-						(name1, name2) -> name1 + ";" + name2);
+		return toMap(line -> line[0], // user
+						     line -> line[1], // pass
+						     (name1, name2) -> name1 + ";" + name2);
 	}
 
 	private String[] splitUserPass(@NotNull String line) {
