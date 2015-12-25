@@ -7,7 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import org.rr.expander.feed.FeedHandler;
+import org.rr.expander.feed.FeedBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +29,8 @@ public class ExpanderResource {
 			public Response apply(String feedUrl) {
 				try {
 					if (feedUrl != null ) {
-						FeedHandler feedHandler = new FeedHandler().setFeedUrl(feedUrl).loadFeed().expand(include.or("*"));
-						return Response.ok(feedHandler.toXml(), feedHandler.getMimeType()).build();
+						FeedBuilder feedHandler = new FeedBuilder(feedUrl).loadFeed().expand(include.or("*"));
+						return Response.ok(feedHandler.build(), feedHandler.getMimeType()).build();
 					}
 				} catch (Exception e) {
 					logger.warn(String.format("Fetching feed for '%s' has failed", feedUrl), e);

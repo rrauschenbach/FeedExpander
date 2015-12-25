@@ -1,14 +1,22 @@
 package org.rr.expander;
 
+import static org.apache.commons.lang3.BooleanUtils.negate;
+import static org.apache.commons.lang3.StringUtils.contains;
+import static org.apache.commons.lang3.StringUtils.split;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.auth.BasicUserPrincipal;
 import org.slf4j.Logger;
@@ -20,45 +28,63 @@ import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 
+/**
+ * The {@link HtUserAuthenticator} uses a file containing the user credentials to authenticate a
+ * user/pass http auth request.
+ */
 public class HtUserAuthenticator implements Authenticator<BasicCredentials, BasicUserPrincipal> {
 	
 	@Nonnull
 	final static Logger logger = LoggerFactory.getLogger(HtUserAuthenticator.class);
 
+	@Nonnull
 	private String htusers;
 	
-	public HtUserAuthenticator(String htusers) {
+	public HtUserAuthenticator(@Nonnull String htusers) {
 		this.htusers = htusers;
 	}
 	
-	private Map<String, String> readConfig() {
-		try {
-			Map<String, String> result = new HashMap<>();
-			LineIterator users = FileUtils.lineIterator(new File(htusers));
-			while(users.hasNext()) {
-				String user = users.next();
-				if(!isCommentLine(user)) {
-					result.put(StringUtils.substringBefore(user, ":"), StringUtils.substringAfter(user, ":"));
-				}
-			}
-			return result;
+	private Map<String, String> readHtUsers() {
+		try (BufferedReader in = new BufferedReader(new FileReader(new File(htusers)))) {
+			return in.lines()
+					.filter(line -> isNoValidUserCredentialLine(line))
+					.map(line -> splitUserPass(line))
+					.collect(getUserPassMapCollector());
 		} catch (Exception e) {
 			logger.warn(String.format("Loading user file '%s' has failed.", htusers), e);
 		}
 		return Collections.emptyMap();
 	}
 
-	private boolean isCommentLine(@Nonnull String htUserLine) {
-		return StringUtils.trimToEmpty(htUserLine).startsWith("#");
+	private Collector<String[], ?, Map<String, String>> getUserPassMapCollector() {
+		return Collectors.toMap(
+						line -> line[0], // user
+						line -> line[1], // pass
+						(name1, name2) -> name1 + ";" + name2);
+	}
+
+	private String[] splitUserPass(@NotNull String line) {
+		return split(line, ':');
+	}
+
+	private boolean isNoValidUserCredentialLine(@Nullable String line) {
+		return negate(isCommentLine(line)) && containsSeparatorChar(line);
+	}
+
+	private boolean containsSeparatorChar(@Nullable String line) {
+		return contains(line, ':');
+	}
+
+	private boolean isCommentLine(@Nullable String htUserLine) {
+		return trimToEmpty(htUserLine).startsWith("#");
 	}
 	
 	@Override
 	public Optional<BasicUserPrincipal> authenticate(BasicCredentials credentials) throws AuthenticationException {
-		String password = readConfig().get(credentials.getUsername());
-		if(!StringUtils.equals(password, credentials.getPassword())) {
+		String password = readHtUsers().get(credentials.getUsername());
+		if(negate(StringUtils.equals(password, credentials.getPassword()))) {
 			return Optional.absent();
 		}
-
 		return Optional.of(new BasicUserPrincipal(credentials.getUsername()));
 	}
 }

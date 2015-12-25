@@ -1,7 +1,8 @@
 package org.rr.expander;
 
 
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import org.apache.http.auth.BasicUserPrincipal;
 
 import io.dropwizard.Application;
@@ -27,7 +28,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 	}
 	
 	private void registerBasicAuth(Environment environment, String htusers) {
-		if(StringUtils.isNotBlank(htusers)) {
+		if(isNotBlank(htusers)) {
 			environment.jersey().register(new AuthDynamicFeature(
 	        new BasicCredentialAuthFilter.Builder<BasicUserPrincipal>()
 	            .setAuthenticator(new HtUserAuthenticator(htusers))
