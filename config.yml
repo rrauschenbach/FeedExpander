@@ -18,8 +18,8 @@ server:
 #      validateCerts: false
 #      validatePeers: false
   adminConnectors:
-    - type: http
-      port: 8081
+#    - type: http
+#      port: 8081
 #    - type: https
 #      port: 8444
 #      keyStorePath: example.keystore
@@ -64,6 +64,11 @@ metrics:
   frequency: 10s
 
 # Define the file that contains all users and password. User and password has to be separated with a single ':' character.
-# Leave empty if no authentication is desired. 
-htusers: htusers 
+# Leave empty if no authentication is desired.
+htusers: htusers
+
+# It is highly recommended to restrict the feeds to be expanded to those you know they're save. Otherwise an 
+# attacker can load an own feed which links to something you won't your server have to fetch from the internet.
+# Leave empty if no white listing is desired.
+feedWhiteList: whitelist.txt
 

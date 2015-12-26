@@ -18,12 +18,12 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 
 	@Override
 	public void run(ExpanderConfiguration config, Environment environment) throws ClassNotFoundException {
-		registerExpanderResource(environment);
+		registerExpanderResource(environment, config.getFeedWhiteList());
 		registerBasicAuth(environment, config.getHtusers());
 	}
 
-	private void registerExpanderResource(Environment environment) {
-		ExpanderResource resource = new ExpanderResource();
+	private void registerExpanderResource(Environment environment, String feedWhiteList) {
+		ExpanderResource resource = new ExpanderResource(feedWhiteList);
 		environment.jersey().register(resource);
 	}
 	

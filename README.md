@@ -7,11 +7,10 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `git clone https://github.com/meerkatzenwildschein/FeedExpander.git` 
   * `cd FeedExpander/` 
   * `mvn install` 
-      
 
 ## Install
- * Take the expander-x.x.x.jar, config.yml and .htusers and copy them both together where you want to run the feed expander. `cp config.yml .htusers target/expander-x.x.x.jar /tmp/`
- * Edit the config.yml and change the .htuser file if you like. 
+ * Take the expander-x.x.x.jar, config.yml, whitelist.txt and htusers files and copy them both together where you want to run the feed expander. `cp config.yml htusers whitelist.txt target/expander-x.x.x.jar /tmp/`
+ * Edit the config.yml and change the htuser file if you like. 
  * Start the service with `java -jar expander-x.x.x.jar server config.yml`
 
 ## Usage
@@ -27,10 +26,16 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `id=someId` selects the tag with the id `someId` somewhere in the page.
   * `tag=div 3` selects the third div came up from the previous element or the body element if no previous one was defined.
   * `tag=*article` selects the first article tag somewhere in the page.
+  
+## Important
+  The client have the possibility to make the FeedExpander service to load html from some self defined url. This can for example be misused to run DDOS attacks or to load some unexpected things over this service. It's highly recommended to use the white list functionality to prohibit those cases.
+  
+  If you plan to use the FeedExpander service as some private service (as it is designed for) you have to configure the htusers files where you can simply add some users and their password which are allowed to get access. It would also be much more safe to use https instead of the preconfigured http setup. Please take a look at the config.yml.
+  
+  In that case that FeedExpander is running on the same machine as the feedreader you would to use (for example TTRSS) it would be a good idea to configure an iptabel rule which makes the FeedExpander port only available from localhost where the feedreader can request the expanded feeds. Just take a look at [serverfault.com/questions/247176/iptables-only-allow-localhost-access](http://serverfault.com/questions/247176/iptables-only-allow-localhost-access) for more informations.
 
 ## Examples
-  Please note that the parameter values in the must be url encoded. You can use [url-encode-decode.com](www.url-encode-decode.com) for example. The following examples are randomly picked and only examples. There exists NO agreement with page
-  proprietor which allows to expand their feeds for commercial or private reasons. 
+  Please note that the parameter values must be url encoded. You can use [url-encode-decode.com](http://www.url-encode-decode.com) for example. The following url configurations are randomly picked and only have to be understand as an example. There exists NO agreement with page proprietor which allows to expand their feeds for commercial or private reasons. 
 
   * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the screen element, than the third div and the article element below `id=screen/tag=div 3/tag=article`.
     `http://localhost:8080/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DATOM1.0&include=id%3Dscreen%2Ftag%3Ddiv+3%2Ftag%3Darticle`

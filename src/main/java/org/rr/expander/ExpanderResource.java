@@ -1,6 +1,9 @@
 package org.rr.expander;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,6 +22,13 @@ public class ExpanderResource {
 	
 	@Nonnull
 	final static Logger logger = LoggerFactory.getLogger(ExpanderResource.class);
+	
+	@Nullable
+	private String feedWhiteList;
+	
+	public ExpanderResource(@Nullable String feedWhiteList) {
+		this.feedWhiteList = feedWhiteList;
+	}
 
 	@PermitAll
 	@GET
@@ -28,15 +38,25 @@ public class ExpanderResource {
 		return feedUrl.transform(new Function<String, Response>() {
 			public Response apply(String feedUrl) {
 				try {
-					if (feedUrl != null ) {
+					if (feedUrl != null && isFeedAllowed(feedUrl)) {
 						FeedBuilder feedHandler = new FeedBuilder(feedUrl).loadFeed().expand(include.or("*"));
 						return Response.ok(feedHandler.build(), feedHandler.getMimeType()).build();
 					}
+					logger.warn(String.format("Fetching feed '%s' is not allowed.", feedUrl));
+					return Response.status(403).build();
 				} catch (Exception e) {
-					logger.warn(String.format("Fetching feed for '%s' has failed", feedUrl), e);
+					logger.warn(String.format("Fetching feed '%s' has failed.", feedUrl), e);
+					return Response.status(500).build();
 				}
-				return Response.status(500).build();
 			}
-		}).or(Response.status(404).build());
+		}).get();
 	}
+	
+	private boolean isFeedAllowed(@Nonnull String feedUrl) {
+		if (isNotBlank(feedWhiteList)) {
+			return new UrlPatternManager().readPatternFile(feedWhiteList).containsUrl(feedUrl);
+		}
+		return true; // no white listing configured.
+	}
+	
 }
