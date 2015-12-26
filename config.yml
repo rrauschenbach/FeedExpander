@@ -65,5 +65,5 @@ metrics:
 
 # Define the file that contains all users and password. User and password has to be separated with a single ':' character.
 # Leave empty if no authentication is desired. 
-htusers: .htusers 
+htusers: htusers 
 
