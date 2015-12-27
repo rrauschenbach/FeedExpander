@@ -36,6 +36,7 @@ public class ExpanderResource {
 			final @QueryParam("feedUrl") Optional<String> feedUrl,
 			final @QueryParam("include") Optional<String> include) {
 		return feedUrl.transform(new Function<String, Response>() {
+			@Override
 			public Response apply(String feedUrl) {
 				try {
 					if (feedUrl != null && isFeedAllowed(feedUrl)) {
