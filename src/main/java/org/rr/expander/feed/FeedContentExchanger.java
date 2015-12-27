@@ -10,8 +10,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.IOUtils;
-import org.rr.expander.util.HttpInputStream;
+import org.rr.expander.util.HttpLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +67,7 @@ public class FeedContentExchanger {
 	}
 
 	private @Nonnull String loadPageContent(@Nonnull String link) throws IOException {
-		return IOUtils.toString(new HttpInputStream(link));
+		return new HttpLoader(link).getContent();
 	}
 
 }

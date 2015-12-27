@@ -1,5 +1,9 @@
 package org.rr.expander.util;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
+import static org.apache.commons.lang3.StringUtils.trim;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +11,7 @@ import java.io.InputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.io.Charsets;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,10 +21,11 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 /**
- * InputStream implementation which is able to load http and https content using
- * the apache http client.
+ * Fetch the content of a specified http url using the apache http client.
  */
-public class HttpInputStream extends InputStream {
+public class HttpLoader {
+
+	private static final int DEFAULT_TIMEOUT = 10000;
 
 	@Nonnull
 	private String url;
@@ -27,32 +33,24 @@ public class HttpInputStream extends InputStream {
 	@Nullable
 	private ByteArrayInputStream in;
 
-	public HttpInputStream(@Nonnull String url) {
+	public HttpLoader(@Nonnull String url) {
 		this.url = url;
 	}
-
-	private InputStream getInternalInputStream() throws IOException {
-		if (in == null) {
-			in = new ByteArrayInputStream(getContent(url));
-		}
-		return in;
+	
+	/**
+	 * @return the content as InputStream with UTF-8 encoding.
+	 * @throws IOException
+	 */
+	public InputStream getContentAsStream() throws IOException {
+		return new ByteArrayInputStream(getContent().getBytes(Charsets.UTF_8));
 	}
 
-	@Override
-	public int read() throws IOException {
-		try {
-			return getInternalInputStream().read();
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
-	}
-
-	private byte[] getContent(String url) throws IOException {
-		RequestConfig.Builder requestBuilder = createRequestBuilder(10000);
+	public String getContent() throws IOException {
+		RequestConfig.Builder requestBuilder = createRequestBuilder(DEFAULT_TIMEOUT);
 		HttpClient client = createHttpClient(requestBuilder);
 		HttpGet httpGet = createHttpGet(url);
 
-		HttpResponse response1 = client.execute(httpGet);
+		HttpResponse response = client.execute(httpGet);
 
 		// The underlying HTTP connection is still held by the response object
 		// to allow the response content to be streamed directly from the network
@@ -60,17 +58,26 @@ public class HttpInputStream extends InputStream {
 		// In order to ensure correct deallocation of system resources
 		// the user MUST either fully consume the response content or abort request
 		// execution by calling HttpGet#releaseConnection().
-
-		if (response1.getStatusLine().getStatusCode() != 200) {
-			throw new IOException(response1.getStatusLine().toString());
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new IOException(response.getStatusLine().toString());
 		}
-		HttpEntity entity = response1.getEntity();
-
+		HttpEntity entity = response.getEntity();
+		
 		// do something useful with the response body
 		// and ensure it is fully consumed
 		byte[] byteArray = EntityUtils.toByteArray(entity);
 		entity.consumeContent();
-		return byteArray;
+		
+		String responseCharset = getResponseCharset(response);
+		if(isNotBlank(responseCharset)) {
+			return new String (byteArray, responseCharset);
+		}
+		
+		return new String (byteArray);
+	}
+
+	private String getResponseCharset(HttpResponse response) {
+		return trim(substringAfter(response.getFirstHeader("Content-Type").getValue(), "charset="));
 	}
 
 	private HttpGet createHttpGet(String url) {

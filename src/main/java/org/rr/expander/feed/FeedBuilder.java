@@ -10,7 +10,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.rr.expander.util.HttpInputStream;
+import org.rr.expander.util.HttpLoader;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -43,7 +43,7 @@ public class FeedBuilder {
 	 * @return This {@link FeedBuilder} instance.
 	 */
 	public @Nonnull FeedBuilder loadFeed() throws MalformedURLException, FeedException, IOException {
-		loadedFeed = new SyndFeedInput().build(new XmlReader(new HttpInputStream(feedUrl)));
+		loadedFeed = new SyndFeedInput().build(new XmlReader(new HttpLoader(feedUrl).getContentAsStream()));
 		return this;
 	}
 
