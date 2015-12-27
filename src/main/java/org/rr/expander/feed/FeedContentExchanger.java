@@ -37,7 +37,6 @@ public class FeedContentExchanger {
 	 * Exchanges the content from each feed entry with the selected part of the linked web page.
 	 * 
 	 * @param feedEntries All entries which content should be exchanged.
-	 * @throws IOException
 	 */
 	public void exchangeAll(@Nonnull List<SyndEntry> feedEntries) {
 		feedEntries.stream().forEach(feedEntry -> exchange(feedEntry));
