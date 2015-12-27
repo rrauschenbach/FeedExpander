@@ -9,7 +9,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `mvn install` 
 
 ## Install
- * Take the expander-x.x.x.jar, config.yml, whitelist.txt and htusers files and copy them both together where you want to run the feed expander. `cp config.yml htusers whitelist.txt target/expander-x.x.x.jar /tmp/`
+ * Take the expander-x.x.x.jar, config.yml, whitelist.txt and htusers files and copy them all together where you want to run the feed expander. `cp config.yml htusers whitelist.txt target/expander-x.x.x.jar /tmp/`
  * Edit the config.yml and change the htuser file if you like. 
  * Start the service with `java -jar expander-x.x.x.jar server config.yml`
 
