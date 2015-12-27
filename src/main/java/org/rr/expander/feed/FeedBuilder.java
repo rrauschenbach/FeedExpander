@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.io.Charsets;
 import org.rr.expander.util.HttpLoader;
 
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -92,10 +93,8 @@ public class FeedBuilder {
 	 * @throws FeedException
 	 */
 	public @Nonnull byte[] build() throws IOException, FeedException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		SyndFeedOutput output = new SyndFeedOutput();
-		output.output(loadedFeed, new PrintWriter(out), true);
-		return out.toByteArray();
+		return output.outputString(loadedFeed, true).getBytes();
 	}
 
 	/**
