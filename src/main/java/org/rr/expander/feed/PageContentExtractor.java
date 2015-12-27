@@ -65,6 +65,10 @@ public class PageContentExtractor {
 
 	private @Nullable Element selectPageElement(@Nonnull ExpressionParser expressionParser, @Nonnull Element working,
 			int index) {
+		if(isWildcardSelection(expressionParser.getSegmentName(index))) {
+			return working;
+		} 
+		
 		if (equal(SEGMENT_TYPE.ID, expressionParser.getSegmentType(index))) {
 			working = selectIdElement(working, expressionParser.getSegmentValue(index));
 		} else if (equal(SEGMENT_TYPE.TAG, expressionParser.getSegmentType(index))) {
