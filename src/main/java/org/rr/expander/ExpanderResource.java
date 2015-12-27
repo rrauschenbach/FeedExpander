@@ -39,25 +39,36 @@ public class ExpanderResource {
 			@Override
 			public Response apply(String feedUrl) {
 				try {
-					if (feedUrl != null && isFeedAllowed(feedUrl)) {
+					if (isFeedAllowed(feedUrl)) {
 						FeedBuilder feedHandler = new FeedBuilder(feedUrl).loadFeed().expand(include.or("*"));
 						return Response.ok(feedHandler.build(), feedHandler.getMimeType()).build();
 					}
 					logger.warn(String.format("Fetching feed '%s' is not allowed.", feedUrl));
-					return Response.status(403).build();
+					return getForbiddenResponse();
 				} catch (Exception e) {
 					logger.warn(String.format("Fetching feed '%s' has failed.", feedUrl), e);
-					return Response.status(500).build();
+					return getInternalServerErrorResponse();
 				}
 			}
-		}).get();
+		}).or(getBadRequestResponse()); // (no feedUrl)
 	}
-	
+
 	private boolean isFeedAllowed(@Nonnull String feedUrl) {
 		if (isNotBlank(feedWhiteList)) {
 			return new UrlPatternManager().readPatternFile(feedWhiteList).containsUrl(feedUrl);
 		}
 		return true; // no white listing configured.
 	}
+
+	private Response getInternalServerErrorResponse() {
+		return Response.status(500).build();
+	}
+
+	private Response getForbiddenResponse() {
+		return Response.status(403).build();
+	}
 	
+	private Response getBadRequestResponse() {
+		return Response.status(400).build();
+	}	
 }
