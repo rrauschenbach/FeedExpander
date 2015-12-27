@@ -3,7 +3,9 @@ package org.rr.expander;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.BooleanUtils.negate;
 import static org.apache.commons.lang3.StringUtils.contains;
+import static org.apache.commons.lang3.StringUtils.endsWith;
 import static org.apache.commons.lang3.StringUtils.split;
+import static org.apache.commons.lang3.StringUtils.startsWith;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 import java.io.BufferedReader;
@@ -63,7 +65,7 @@ public class HtUserAuthenticator implements Authenticator<BasicCredentials, Basi
 	}
 
 	private String[] splitUserPass(@NotNull String line) {
-		return split(line, ':');
+		return split(line, ":", 2);
 	}
 
 	private boolean isNoValidUserCredentialLine(@Nullable String line) {
@@ -71,7 +73,7 @@ public class HtUserAuthenticator implements Authenticator<BasicCredentials, Basi
 	}
 
 	private boolean containsSeparatorChar(@Nullable String line) {
-		return contains(line, ':');
+		return line.matches(".+:.+");
 	}
 
 	private boolean isCommentLine(@Nullable String htUserLine) {
@@ -80,10 +82,13 @@ public class HtUserAuthenticator implements Authenticator<BasicCredentials, Basi
 	
 	@Override
 	public Optional<BasicUserPrincipal> authenticate(BasicCredentials credentials) throws AuthenticationException {
-		String password = readHtUsers().get(credentials.getUsername());
-		if(negate(StringUtils.equals(password, credentials.getPassword()))) {
+		String loginUserName = credentials.getUsername();
+		String loginPassword = credentials.getPassword();
+		String htUsersPass = readHtUsers().get(loginUserName);
+		if(negate(StringUtils.equals(htUsersPass, loginPassword))) {
+			logger.info("Failed to login " + loginUserName);
 			return Optional.absent();
 		}
-		return Optional.of(new BasicUserPrincipal(credentials.getUsername()));
+		return Optional.of(new BasicUserPrincipal(loginUserName));
 	}
 }
