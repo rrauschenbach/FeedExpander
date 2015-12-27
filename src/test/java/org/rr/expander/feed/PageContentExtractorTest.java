@@ -5,6 +5,7 @@ import static j2html.TagCreator.div;
 import static j2html.TagCreator.h1;
 import static j2html.TagCreator.img;
 import static j2html.TagCreator.text;
+import static org.apache.commons.lang3.StringUtils.deleteWhitespace;
 import static org.apache.commons.lang3.StringUtils.remove;
 import static org.junit.Assert.assertEquals;
 
@@ -41,7 +42,9 @@ public class PageContentExtractorTest {
 	public void testSingleIdSelection() {
 		PageContentExtractor extractor = new PageContentExtractor("id=id1");
 		List<String> extractedPageElements = extractElements(extractor, 1);
-		assertEquals("<div id=\"id1\"> content-id1 <h1>Heading2</h1></div>", stripNewLines(extractedPageElements.get(0)));
+		System.out.println(deleteWhitespace(stripNewLines(extractedPageElements.get(0))));
+		assertEquals("<div>content-id1<h1>Heading2</h1></div>", 
+				deleteWhitespace(stripNewLines(extractedPageElements.get(0))));
 	}
 	
 	@Test
