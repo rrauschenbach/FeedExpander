@@ -107,7 +107,7 @@ public class FeedBuilder {
 	@SuppressWarnings("unchecked")
 	private @Nonnull List<SyndEntry> getEntries() {
 		if (loadedFeed != null) {
-			return (List<SyndEntry>) loadedFeed.getEntries();
+			return loadedFeed.getEntries();
 		}
 		throw new IllegalArgumentException("feed is not loaded.");
 	}
