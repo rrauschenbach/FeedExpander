@@ -17,7 +17,7 @@ server:
 #      keyStorePassword: example
 #      validateCerts: false
 #      validatePeers: false
-  adminConnectors:
+#  adminConnectors:
 #    - type: http
 #      port: 8081
 #    - type: https
