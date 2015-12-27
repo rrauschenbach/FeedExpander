@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.rr.expander.feed.ExpressionParser.SEGMENT_TYPE;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The {@link PageContentExtractor} is responsible to extract the part of a given web page which
- * is described by an expression.
+ * is described with an expression.
  */
 public class PageContentExtractor {
 	
@@ -36,7 +37,12 @@ public class PageContentExtractor {
 	public @Nonnull List<String> extractPageElements(@Nonnull String pageContent, @Nonnull String baseUri) {
 		return getSelectedPageElements(pageContent, baseUri).stream()
 				.map(element -> element.outerHtml())
+				.map(bodyHtml -> cleanHtml(bodyHtml))
 				.collect(toList());
+	}
+	
+	private @Nonnull String cleanHtml(@Nonnull String bodyHtml) {
+		return Jsoup.clean(bodyHtml, Whitelist.relaxed());
 	}
 	
 	private @Nonnull Collection<Element> getSelectedPageElements(@Nonnull String pageContent, @Nonnull String baseUri) {
@@ -45,7 +51,8 @@ public class PageContentExtractor {
 		
 		return expressionParsers.stream()
 				.map(expressionParser -> selectPageElement(pageBody, expressionParser))
-				.filter(selectedElement -> selectedElement != null).collect(toList());
+				.filter(selectedElement -> selectedElement != null)
+				.collect(toList());
 	}
 
 	private @Nullable Element selectPageElement(@Nonnull Element pageBody, @Nonnull ExpressionParser expressionParser) {
