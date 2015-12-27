@@ -2,10 +2,7 @@ package org.rr.expander;
 
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.BooleanUtils.negate;
-import static org.apache.commons.lang3.StringUtils.contains;
-import static org.apache.commons.lang3.StringUtils.endsWith;
 import static org.apache.commons.lang3.StringUtils.split;
-import static org.apache.commons.lang3.StringUtils.startsWith;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 import java.io.BufferedReader;
