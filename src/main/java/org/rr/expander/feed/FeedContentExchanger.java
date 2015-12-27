@@ -19,7 +19,7 @@ import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 
 /**
- * This class is responsible to load the linked web page content and place it at the feed entries.
+ * The {@link FeedContentExchanger} is responsible to load the linked web page content and place it at the feed entries.
  */
 public class FeedContentExchanger {
 	
