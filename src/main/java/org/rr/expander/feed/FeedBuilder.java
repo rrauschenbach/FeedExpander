@@ -1,8 +1,6 @@
 package org.rr.expander.feed;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +8,6 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.Charsets;
 import org.rr.expander.util.HttpLoader;
 
 import com.sun.syndication.feed.synd.SyndEntry;
