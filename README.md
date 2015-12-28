@@ -15,7 +15,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
 
 ## Usage
   After starting the FeedExpander service, you can connect to it as configured with the config.yml. The
-  default configuration uses http://localhost:8080/expand as base url. You have to add the url parameters `feedUrl` 
+  default configuration uses http://localhost:9998/expand as base url. You have to add the url parameters `feedUrl` 
   containing the url which points to the url of the feed to be expanded. You also need the `includes` url parameter
   which describes the part of the page, linked in the feed entries / articles.
   
