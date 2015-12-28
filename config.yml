@@ -6,11 +6,11 @@
 #    port: 8080
 
 server:
-#  softNofileLimit: 1000
-#  hardNofileLimit: 1000
   applicationConnectors:
+  # see http://www.dropwizard.io/0.9.1/docs/manual/configuration.html#http for more configuration options
     - type: http
-      port: 8080
+      port: 9998
+      bindHost: 127.0.0.1 # only bind to loopback
 #    - type: https
 #      port: 8443
 #      keyStorePath: example.keystore
@@ -19,7 +19,7 @@ server:
 #      validatePeers: false
 #  adminConnectors:
 #    - type: http
-#      port: 8081
+#      port: 9997
 #    - type: https
 #      port: 8444
 #      keyStorePath: example.keystore
@@ -49,16 +49,14 @@ logging:
 
   appenders:
     - type: console
-    - type: file
-      threshold: INFO
-      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
-      currentLogFilename: /tmp/application.log
-      archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
-      archivedFileCount: 7
-      timeZone: UTC
-      maxFileSize: 10MB
-
-
+#    - type: file
+#      threshold: INFO
+#      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+#      currentLogFilename: /var/log/FeedExpander.log
+#      archivedLogFilenamePattern: /var/log/FeedExpander-%d{yyyy-MM-dd}-%i.log.gz
+#      archivedFileCount: 7
+#      timeZone: UTC
+#      maxFileSize: 10MB
 
 metrics:
   frequency: 10s
