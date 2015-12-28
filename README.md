@@ -27,13 +27,13 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `tag=div 3` selects the third div came up from the previous element or the body element if no previous one was defined.
   * `tag=*article` selects the first article tag somewhere in the page.
   
-## Important
+## Security hints
   The client have the possibility to make the FeedExpander service to load html from some self defined url. This can for example be misused to run DDOS attacks or to load some unexpected things over this service. It's highly recommended to use the white list functionality to prohibit those cases.
   
-  If you plan to use the FeedExpander service as some private service (as it is designed for) you have to configure the htusers files where you can simply add some users and their password which are allowed to get access. It would also be much more safe to use https instead of the preconfigured http setup. Please take a look at the config.yml.
+  If you plan to use the FeedExpander service as some private service (as it is designed for) you have to configure the htusers files where you can simply add some users and their password which are allowed to get access. It would also be much more safe to use https instead of the preconfigured http setup.
   
-  In that case that FeedExpander is running on the same machine as the feedreader you would to use (for example TTRSS) it would be a good idea to configure an iptabel rule which makes the FeedExpander port only available from localhost where the feedreader can request the expanded feeds. Just take a look at [serverfault.com/questions/247176/iptables-only-allow-localhost-access](http://serverfault.com/questions/247176/iptables-only-allow-localhost-access) for more informations.
-
+  In the case that FeedExpander is running on the same machine as the feed reader you would use (for example TTRSS) it would be a good idea configure FeedExpander with `bindHost: 127.0.0.1` which is already the default configuration.    
+  
 ## Examples
   Please note that the parameter values must be url encoded. You can use [url-encode-decode.com](http://www.url-encode-decode.com) for example. The following url configurations are randomly picked and only have to be understand as an example. There exists NO agreement with page proprietor which allows to expand their feeds for commercial or private reasons. 
 
