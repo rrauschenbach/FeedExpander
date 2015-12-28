@@ -18,8 +18,8 @@ import com.sun.syndication.io.SyndFeedOutput;
 import com.sun.syndication.io.XmlReader;
 
 /**
- * Statefull class which provides all feed functionality needed to load, expand and generate a new,
- * expanded feed.
+ * The {@link FeedBuilder} can be used to handle the whole load, expand and new feed generation process
+ * by simply invoking <code>loadFeed().expand(expression).build()</code>.
  */
 public class FeedBuilder {
 
@@ -36,7 +36,7 @@ public class FeedBuilder {
 	}
 
 	/**
-	 * Starts fetching the feed from the {@link #feedUrl}.
+	 * Starts fetching the feed from the {@link #feedUrl} specified with the class constructor.
 	 * 
 	 * @return This {@link FeedBuilder} instance.
 	 */
@@ -50,7 +50,7 @@ public class FeedBuilder {
 	 * {@link #loadFeed()} must be invoked before this method can be used.
 	 * 
 	 * @return The mime of the feed.
-	 * @throws IllegalArgumentException if the feed is not loaded before fetching its entries.
+	 * @throws IllegalArgumentException if the feed was not loaded before invoking {@link #getMimeType()}.
 	 */
 	public @Nonnull String getMimeType() {
 		if (loadedFeed != null) {
@@ -86,10 +86,9 @@ public class FeedBuilder {
 	 * Create a new xml from the current (possibly modified) state of the loaded feed.
 	 * 
 	 * @return Get the xml representation for the current feed state.
-	 * @throws IOException
 	 * @throws FeedException
 	 */
-	public @Nonnull byte[] build() throws IOException, FeedException {
+	public @Nonnull byte[] build() throws FeedException {
 		SyndFeedOutput output = new SyndFeedOutput();
 		return output.outputString(loadedFeed, true).getBytes();
 	}

@@ -37,7 +37,7 @@ public class ExpanderResource {
 			final @QueryParam("include") Optional<String> include) {
 		return feedUrl.transform(new Function<String, Response>() {
 			@Override
-			public Response apply(String feedUrl) {
+			public Response apply(@Nonnull String feedUrl) {
 				try {
 					if (isFeedAllowed(feedUrl)) {
 						FeedBuilder feedHandler = new FeedBuilder(feedUrl).loadFeed().expand(include.or("*"));
