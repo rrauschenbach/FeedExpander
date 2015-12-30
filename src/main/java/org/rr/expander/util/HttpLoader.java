@@ -7,11 +7,12 @@ import static org.apache.commons.lang3.StringUtils.trim;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -41,11 +42,11 @@ public class HttpLoader {
 	 * @return the content as InputStream with UTF-8 encoding.
 	 * @throws IOException
 	 */
-	public InputStream getContentAsStream() throws IOException {
-		return new ByteArrayInputStream(getContent().getBytes(Charsets.UTF_8));
+	public @Nonnull InputStream getContentAsStream() throws IOException {
+		return new ByteArrayInputStream(getContent().getBytes(StandardCharsets.UTF_8));
 	}
 
-	public String getContent() throws IOException {
+	public @Nonnull String getContent() throws IOException {
 		RequestConfig.Builder requestBuilder = createRequestBuilder(DEFAULT_TIMEOUT);
 		HttpClient client = createHttpClient(requestBuilder);
 		HttpGet httpGet = createHttpGet(url);
@@ -66,7 +67,7 @@ public class HttpLoader {
 		// do something useful with the response body
 		// and ensure it is fully consumed
 		byte[] byteArray = EntityUtils.toByteArray(entity);
-		entity.consumeContent();
+		IOUtils.closeQuietly(entity.getContent());
 		
 		String responseCharset = getResponseCharset(response);
 		if(isNotBlank(responseCharset)) {
@@ -76,19 +77,19 @@ public class HttpLoader {
 		return new String (byteArray);
 	}
 
-	private String getResponseCharset(HttpResponse response) {
+	private @Nullable String getResponseCharset(HttpResponse response) {
 		return trim(substringAfter(response.getFirstHeader("Content-Type").getValue(), "charset="));
 	}
 
-	private HttpGet createHttpGet(String url) {
+	private @Nonnull HttpGet createHttpGet(String url) {
 		return new HttpGet(url);
 	}
 
-	private HttpClient createHttpClient(RequestConfig.Builder requestBuilder) {
+	private @Nonnull HttpClient createHttpClient(@Nonnull RequestConfig.Builder requestBuilder) {
 		return HttpClientBuilder.create().setDefaultRequestConfig(requestBuilder.build()).build();
 	}
 
-	private RequestConfig.Builder createRequestBuilder(int timeout) {
+	private @Nonnull RequestConfig.Builder createRequestBuilder(int timeout) {
 		return RequestConfig.custom().setConnectTimeout(timeout).setConnectionRequestTimeout(timeout);
 	}
 

@@ -41,7 +41,7 @@ public class ExpanderResource {
 				try {
 					if (isFeedAllowed(feedUrl)) {
 						FeedBuilder feedHandler = new FeedBuilder(feedUrl).loadFeed().expand(include.or("*"));
-						return Response.ok(feedHandler.build(), feedHandler.getMimeType()).build();
+						return Response.ok(feedHandler.build(), feedHandler.getMediaType()).build();
 					}
 					logger.warn(String.format("Fetching feed '%s' is not allowed.", feedUrl));
 					return getForbiddenResponse();

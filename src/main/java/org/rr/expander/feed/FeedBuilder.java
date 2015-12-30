@@ -1,5 +1,7 @@
 package org.rr.expander.feed;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.ws.rs.core.MediaType;
 
 import org.rr.expander.util.HttpLoader;
 
@@ -50,31 +53,34 @@ public class FeedBuilder {
 	 * {@link #loadFeed()} must be invoked before this method can be used.
 	 * 
 	 * @return The mime of the feed.
-	 * @throws IllegalArgumentException if the feed was not loaded before invoking {@link #getMimeType()}.
+	 * @throws IllegalArgumentException if the feed was not loaded before.
 	 */
-	public @Nonnull String getMimeType() {
-		if (loadedFeed != null) {
-			String feedType = loadedFeed.getFeedType();
+	public @Nonnull MediaType getMediaType() {
+		MediaType mediaType = Optional.ofNullable(loadedFeed).map(feed -> {
+			String feedType = feed.getFeedType();
 			if (feedType.startsWith("rss")) {
-				return "application/rss+xml";
+				return new MediaType("application", "rss+xml", UTF_8.name());
 			} else if (feedType.startsWith("atom")) {
-				return "application/atom+xml";
+				return new MediaType("application", "atom+xml", UTF_8.name());
 			} else {
-				return "application/octet-stream";
+				return new MediaType("application", "octet-stream", UTF_8.name());
 			}
+		}).get();
+		
+		if(mediaType != null) {
+			return mediaType;
 		}
 		throw new IllegalArgumentException("feed is not loaded.");
 	}
 
 	/**
 	 * Applies the given <code>includeExpression</code> to the linked page behind each feed entry of
-	 * the loaded feed and attach the result to the result feed. The method {@link #loadFeed()} must
+	 * the loaded feed and attach the result to the result feed. The {@link #loadFeed()} method must
 	 * be invoked before this method can be used. Otherwise no filter will be applied.
 	 * 
 	 * @param includeExpression The include expression which is used to filter the page content of the
 	 *        linked web page.
 	 * @return This {@link FeedBuilder} instance.
-	 * @throws IOException
 	 */
 	public @Nonnull FeedBuilder expand(@Nullable String includeExpression) {
 		Optional.<String> ofNullable(includeExpression)
@@ -83,21 +89,27 @@ public class FeedBuilder {
 	}
 
 	/**
-	 * Create a new xml from the current (possibly modified) state of the loaded feed.
+	 * Create a new, utf-8 encoded feed from the current, modified loaded feed. The {@link #loadFeed()} method must
+	 * be invoked first.
 	 * 
-	 * @return Get the xml representation for the current feed state.
-	 * @throws FeedException
+	 * @return Get the XML representation for the current feed state.
+	 * @throws FeedException thrown if the XML representation for the feed could not be created.
+	 * @throws IllegalArgumentException if the feed was not loaded before.
 	 */
 	public @Nonnull byte[] build() throws FeedException {
-		SyndFeedOutput output = new SyndFeedOutput();
-		return output.outputString(loadedFeed, true).getBytes();
+		if(loadedFeed != null) {
+			SyndFeedOutput output = new SyndFeedOutput();
+			loadedFeed.setEncoding(UTF_8.name());
+			return output.outputString(loadedFeed, true).getBytes(UTF_8);
+		}
+		throw new IllegalArgumentException("feed is not loaded.");
 	}
 
 	/**
 	 * Get all feed entries (for each article one) from the loaded feed.
 	 * 
 	 * @return All feed entries from the loaded feed.
-	 * @throws IllegalArgumentException if the feed is not loaded before fetching its entries.
+	 * @throws IllegalArgumentException if the feed is not loaded before.
 	 */
 	@SuppressWarnings("unchecked")
 	private @Nonnull List<SyndEntry> getEntries() {
