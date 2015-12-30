@@ -1,6 +1,7 @@
 package org.rr.expander.util;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.commons.lang3.StringUtils.upperCase;
@@ -105,7 +106,7 @@ public class HttpLoader {
     }
   }
 	
-	private boolean isValidCharset(String charset) {
+	private boolean isValidCharset(@Nullable String charset) {
 		try {
 			return isNotBlank(charset) && Charset.isSupported(charset);
 		} catch(IllegalCharsetNameException e) {
@@ -114,8 +115,14 @@ public class HttpLoader {
 		return false;
 	}
 
-	private @Nullable String getResponseCharset(HttpResponse response) {
-		return upperCase(trim(substringAfter(response.getFirstHeader("Content-Type").getValue(), "charset=")));
+	private @Nullable String getResponseCharset(@Nonnull HttpResponse response) {
+		return Optional.of(response)
+			.transform(res -> res.getFirstHeader("Content-Type").getValue())
+			.transform(header -> substringAfter(header, "charset="))
+			.transform(charset -> remove(charset, ';'))
+			.transform(charset -> trim(charset))
+			.transform(charset -> upperCase(charset))
+			.get();
 	}
 
 	private @Nonnull HttpGet createHttpGet(String url) {
