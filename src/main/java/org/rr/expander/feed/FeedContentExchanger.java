@@ -38,7 +38,7 @@ public class FeedContentExchanger {
 	 * @param feedEntries All entries which content should be exchanged.
 	 */
 	public void exchangeAll(@Nonnull List<SyndEntry> feedEntries) {
-		feedEntries.stream().forEach(feedEntry -> exchange(feedEntry));
+			feedEntries.parallelStream().forEach(feedEntry -> exchange(feedEntry));
 	}
 
 	private @Nullable SyndEntry exchange(@Nullable SyndEntry feedEntry) {

@@ -24,10 +24,10 @@ public class ExpanderResource {
 	final static Logger logger = LoggerFactory.getLogger(ExpanderResource.class);
 	
 	@Nullable
-	private String feedWhiteList;
+	private String feedWhiteListFileName;
 	
-	public ExpanderResource(@Nullable String feedWhiteList) {
-		this.feedWhiteList = feedWhiteList;
+	public ExpanderResource(@Nullable String feedWhiteListFileName) {
+		this.feedWhiteListFileName = feedWhiteListFileName;
 	}
 
 	@PermitAll
@@ -41,7 +41,7 @@ public class ExpanderResource {
 				try {
 					if (isFeedAllowed(feedUrl)) {
 						FeedBuilder feedHandler = new FeedBuilder(feedUrl).loadFeed().expand(include.or("*"));
-						return Response.ok(feedHandler.build(), feedHandler.getMimeType()).build();
+						return Response.ok(feedHandler.build(), feedHandler.getMediaType()).build();
 					}
 					logger.warn(String.format("Fetching feed '%s' is not allowed.", feedUrl));
 					return getForbiddenResponse();
@@ -54,8 +54,8 @@ public class ExpanderResource {
 	}
 
 	private boolean isFeedAllowed(@Nonnull String feedUrl) {
-		if (isNotBlank(feedWhiteList)) {
-			return new UrlPatternManager().readPatternFile(feedWhiteList).containsUrl(feedUrl);
+		if (isNotBlank(feedWhiteListFileName)) {
+			return new UrlPatternManager().readPatternFile(feedWhiteListFileName).containsUrl(feedUrl);
 		}
 		return true; // no white listing configured.
 	}

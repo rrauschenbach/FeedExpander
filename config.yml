@@ -17,9 +17,10 @@ server:
 #      keyStorePassword: example
 #      validateCerts: false
 #      validatePeers: false
-#  adminConnectors:
-#    - type: http
-#      port: 9997
+  adminConnectors:
+    - type: http
+      port: 9997
+      bindHost: 127.0.0.1 # only bind to loopback
 #    - type: https
 #      port: 8444
 #      keyStorePath: example.keystore
