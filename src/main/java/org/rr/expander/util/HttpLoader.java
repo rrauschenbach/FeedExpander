@@ -3,6 +3,7 @@ package org.rr.expander.util;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.trim;
+import static org.apache.commons.lang3.StringUtils.upperCase;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class HttpLoader {
     try {
 	    detector.handleData(content, 0, content.length);
 	    detector.dataEnd();
-	    String encoding = detector.getDetectedCharset();
+	    String encoding = upperCase(detector.getDetectedCharset());
 	    return isValidCharset(encoding) ? encoding : null;
     } finally {
     	detector.reset();
@@ -114,7 +115,7 @@ public class HttpLoader {
 	}
 
 	private @Nullable String getResponseCharset(HttpResponse response) {
-		return trim(substringAfter(response.getFirstHeader("Content-Type").getValue(), "charset="));
+		return upperCase(trim(substringAfter(response.getFirstHeader("Content-Type").getValue(), "charset=")));
 	}
 
 	private @Nonnull HttpGet createHttpGet(String url) {
