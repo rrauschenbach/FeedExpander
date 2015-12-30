@@ -6,6 +6,8 @@ import static org.apache.commons.lang3.StringUtils.join;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +40,18 @@ public class FeedContentExchanger {
 	 * @param feedEntries All entries which content should be exchanged.
 	 */
 	public void exchangeAll(@Nonnull List<SyndEntry> feedEntries) {
-			feedEntries.parallelStream().forEach(feedEntry -> exchange(feedEntry));
+		ForkJoinPool executor = new ForkJoinPool(10);
+		try {
+			executor.submit(() ->
+				feedEntries.parallelStream().forEach(feedEntry -> exchange(feedEntry))
+			).get();
+		} catch (InterruptedException | ExecutionException e) {
+			logger.error("Failed to fetch rss entries", e);
+		} finally {
+			executor.shutdown();
+		}
+		
+			
 	}
 
 	private @Nullable SyndEntry exchange(@Nullable SyndEntry feedEntry) {
