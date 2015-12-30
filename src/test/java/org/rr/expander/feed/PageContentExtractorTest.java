@@ -42,7 +42,6 @@ public class PageContentExtractorTest {
 	public void testSingleIdSelection() {
 		PageContentExtractor extractor = new PageContentExtractor("id=id1");
 		List<String> extractedPageElements = extractElements(extractor, 1);
-		System.out.println(deleteWhitespace(stripNewLines(extractedPageElements.get(0))));
 		assertEquals("<div>content-id1<h1>Heading2</h1></div>", 
 				deleteWhitespace(stripNewLines(extractedPageElements.get(0))));
 	}
