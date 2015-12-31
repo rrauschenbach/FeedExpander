@@ -59,7 +59,7 @@ It is generally a good idea to reduce the visibility of a service using a firewa
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Fwww.pro-linux.de%2Frss%2F2%2F3%2Frss20_aktuell.xml&include=id%3Dnews`
   
   * Android Police at https://feeds.feedburner.com/AndroidPolice
-  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FAndroidPolice&include=id%3Dpost-351965`
+  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FAndroidPolice&include=id%3Dap-body%2Ftag%3Ddiv+2%2Ftag%3Ddiv+1`
   
   * Asienspiegel http://asienspiegel.ch/feed/
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Fasienspiegel.ch%2Ffeed%2F&include=id%3Dcontent`
