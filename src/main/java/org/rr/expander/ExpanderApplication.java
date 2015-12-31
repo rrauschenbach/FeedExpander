@@ -4,6 +4,7 @@ package org.rr.expander;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import org.apache.http.auth.BasicUserPrincipal;
+import org.rr.expander.health.ConfigurationHealthCheck;
 
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
@@ -20,6 +21,13 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 	public void run(ExpanderConfiguration config, Environment environment) throws ClassNotFoundException {
 		registerExpanderResource(environment, config.getFeedWhiteList());
 		registerBasicAuth(environment, config.getHtusers());
+		registerConfigurationHealthCheck(config, environment);
+	}
+
+	private void registerConfigurationHealthCheck(ExpanderConfiguration config, Environment environment) {
+		final ConfigurationHealthCheck healthCheck =
+        new ConfigurationHealthCheck(config.getHtusers(), config.getFeedWhiteList());
+    environment.healthChecks().register("configuration", healthCheck);
 	}
 
 	private void registerExpanderResource(Environment environment, String feedWhiteList) {

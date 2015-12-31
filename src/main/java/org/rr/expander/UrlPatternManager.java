@@ -8,9 +8,9 @@ import static org.apache.commons.lang3.StringUtils.replace;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -108,8 +108,8 @@ public class UrlPatternManager {
 	
 	@Nonnull
 	public UrlPatternManager readPatternFile(@Nonnull String listFile) {
-		try (BufferedReader in = new BufferedReader(new FileReader(new File(listFile)))) {
-			setUrlPatterns(in.lines().collect(toList()));
+		try {
+			setUrlPatterns(Files.readAllLines(Paths.get(listFile), StandardCharsets.UTF_8).stream().collect(toList()));
 		} catch (Exception e) {
 			urlPatterns = Collections.emptyList();
 			logger.warn(String.format("Loading list file '%s' has failed.", listFile), e);
