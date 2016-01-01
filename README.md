@@ -13,11 +13,11 @@ You need to have git, maven and java 1.8 installed before doing the following.
  * Start the service with `java -jar expander-x.x.x.jar server config.yml`
 
 ## Security hints
-  The client have the possibility to make the FeedExpander service to load html from some self defined url. This can for example be misused to run DDOS attacks or to load some unexpected things over this service. It`s highly recommended to use the white list functionality to prohibit those cases.
+  The client have the possibility to make the FeedExpander service to load a feed and the linked html pages from some self defined url. This can for example be misused to run DDOS attacks or to load some unexpected things over this service. It`s highly recommended to use the white list functionality to prohibit those cases.
   
   If you plan to use the FeedExpander service as some private service you have to configure the htusers files where you can simply add some users and their password which are allowed to get access. It would also be much more safe to use https instead of the preconfigured http setup.
   
-  In the case that FeedExpander is running on the same machine as the feed reader you would use (for example TTRSS) it would be a good idea configure FeedExpander with `bindHost: 127.0.0.1` which is already the default configuration. 
+  In the case that FeedExpander is running on the same machine as the feed reader you are using (for example TTRSS) it would be a good idea configure FeedExpander with `bindHost: 127.0.0.1` which is already the default configuration. 
 It is generally a good idea to reduce the visibility of a service using a firewall or defining some iptable rules.  
   
 ## Usage
@@ -54,6 +54,9 @@ It is generally a good idea to reduce the visibility of a service using a firewa
     
   * Java Code Geeks feeds.feedburner.com/JavaCodeGeeks
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FJavaCodeGeeks&include=id%3Dmain-content%2Ftag%3Ddiv%2Ftag%3Ddiv`
+  
+  * Java revisited http://feeds.feedburner.com/Javarevisited
+  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FJavarevisited&include=id%3DBlog1%2Ftag%3Ddiv%2Ftag%3Ddiv%2Ftag%3Ddiv%2Ftag%3Ddiv%2Ftag%3Ddiv`
   
   * Pro Linux pro-linux.de/rss/2/3/rss20_aktuell.xml
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Fwww.pro-linux.de%2Frss%2F2%2F3%2Frss20_aktuell.xml&include=id%3Dnews`
