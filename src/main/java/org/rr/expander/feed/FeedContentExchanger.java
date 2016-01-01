@@ -6,9 +6,9 @@ import static org.apache.commons.lang3.StringUtils.join;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -87,9 +87,7 @@ public class FeedContentExchanger {
 
 	@SuppressWarnings("unchecked")
 	private void applyNewContentToFirstEntry(@Nonnull SyndEntry feedEntry, @Nonnull String pageContent) {
-		Optional.ofNullable(feedEntry.getContents())
-			.map(list -> ((List<SyndContent>) list).stream())
-			.get()
+		((Stream<SyndContent>) feedEntry.getContents().stream())
 			.findFirst()
 			.ifPresent(entry -> applyNewContentToEntry(entry, pageContent));
 	}
