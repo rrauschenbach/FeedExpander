@@ -43,7 +43,7 @@ It is generally a good idea to reduce the visibility of a service using a firewa
 
   * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the screen element, than the third div and the article element below `id=screen/tag=div 3/tag=article`.
     `http://localhost:9998/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DATOM1.0&include=id%3Dscreen%2Ftag%3Ddiv+3%2Ftag%3Darticle`
-  It is also possible to select the `article` element directly with simply `tag=*article` which selects all articles where the first one is automatically used. If there`re more than
+  It is also possible to select the `article` element directly with simply `tag=*article` which selects all articles where the first one is automatically used. If there're more than
   one, the right one can be selected with a separated number. For example with `tag=*article 1`.
     `http://localhost:9998/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DATOM1.0&include=tag%3D%2Aarticle`
     
@@ -55,15 +55,15 @@ It is generally a good idea to reduce the visibility of a service using a firewa
   * Java Code Geeks feeds.feedburner.com/JavaCodeGeeks
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FJavaCodeGeeks&include=id%3Dmain-content%2Ftag%3Ddiv%2Ftag%3Ddiv`
   
-  * Java revisited http://feeds.feedburner.com/Javarevisited
+  * Java revisited feeds.feedburner.com/Javarevisited
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FJavarevisited&include=id%3DBlog1%2Ftag%3Ddiv%2Ftag%3Ddiv%2Ftag%3Ddiv%2Ftag%3Ddiv%2Ftag%3Ddiv`
   
   * Pro Linux pro-linux.de/rss/2/3/rss20_aktuell.xml
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Fwww.pro-linux.de%2Frss%2F2%2F3%2Frss20_aktuell.xml&include=id%3Dnews`
   
-  * Android Police at https://feeds.feedburner.com/AndroidPolice
+  * Android Police at feeds.feedburner.com/AndroidPolice
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FAndroidPolice&include=id%3Dap-body%2Ftag%3Ddiv+2%2Ftag%3Ddiv+1`
   
-  * Asienspiegel http://asienspiegel.ch/feed/
+  * Asienspiegel asienspiegel.ch/feed/
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Fasienspiegel.ch%2Ffeed%2F&include=id%3Dcontent`
   
