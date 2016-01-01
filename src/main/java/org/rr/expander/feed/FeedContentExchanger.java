@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -50,8 +51,6 @@ public class FeedContentExchanger {
 		} finally {
 			executor.shutdown();
 		}
-		
-			
 	}
 
 	private @Nullable SyndEntry exchange(@Nullable SyndEntry feedEntry) {
@@ -69,8 +68,33 @@ public class FeedContentExchanger {
 		return feedEntry;
 	}
 
+	/**
+	 * Applies the given html <code>pageContent</code> to the description or the first available
+	 * content element of the given <code>feedEntry</code>.
+	 * 
+	 * @param feedEntry The feed entry where the <code>pageContent</code> should be applied to.
+	 * @param pageContent The expanded html page which should be applied to the <code>feedEntry</code>.
+	 */
 	private void applyNewContentToEntry(@Nonnull SyndEntry feedEntry, @Nonnull String pageContent) {
-		SyndContent description = feedEntry.getDescription();
+		if(feedEntry.getDescription() != null) {
+			applyNewContentToEntry(feedEntry.getDescription(), pageContent);
+		} else if(feedEntry.getContents() != null) {
+			applyNewContentToFirstEntry(feedEntry, pageContent);
+		} else {
+			logger.warn(String.format("Can not find any element in the feed entry %s to apply the page content", feedEntry));
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void applyNewContentToFirstEntry(@Nonnull SyndEntry feedEntry, @Nonnull String pageContent) {
+		Optional.ofNullable(feedEntry.getContents())
+			.map(list -> ((List<SyndContent>) list).stream())
+			.get()
+			.findFirst()
+			.ifPresent(entry -> applyNewContentToEntry(entry, pageContent));
+	}
+
+	private void applyNewContentToEntry(@Nonnull SyndContent description, @Nonnull String pageContent) {
 		description.setValue(pageContent);
 		description.setType("html");
 	}
