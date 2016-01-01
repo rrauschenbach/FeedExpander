@@ -9,7 +9,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
 
 ## Install
  * Take the expander-x.x.x.jar, config.yml, whitelist.txt and htusers files and copy them all together where you want to run the feed expander. `cp config.yml htusers whitelist.txt target/expander-x.x.x.jar /tmp/`
- * Edit the config.yml and change the htuser file if you like. 
+ * Edit the config.yml and change the htuser and whitelist.txt. 
  * Start the service with `java -jar expander-x.x.x.jar server config.yml`
 
 ## Security hints
@@ -21,17 +21,14 @@ You need to have git, maven and java 1.8 installed before doing the following.
 It is generally a good idea to reduce the visibility of a service using a firewall or defining some iptable rules.  
   
 ## Usage
-  After starting the FeedExpander service, you can connect to it as configured with the config.yml. The
-  default configuration uses http://localhost:9998/expand as base url. You have to add the url parameters `feedUrl` 
-  containing the url which points to the url of the feed to be expanded. You also need the `includes` url parameter
-  which describes the part of the page, linked in the feed entries / articles.
+  Just enter the FeedExpander URL in your browser or feed reader to expand a rss or atom feed. The default configuration uses http://localhost:9998/expand as base url. You have to add the url parameters `feedUrl` containing the url which points to the url of the feed to be expanded. You also need to add the `includes` url parameter which describes the part of the web page, linked in the feed entries which shall be extracted and placed in the result feed. There is a simple page at http://localhost:9998/create which helps to create expanded feeds.
   
-  The `includes` url parameter expression, which selects a part of a html page describes a navigation path through the
+  The `includes` url parameter, which selects a part of a html page, describes a navigation path through the
   html tags. Each path element is separated by a slash and starts with the kind of element followed by a equality sign 
   followed by the search value.
   
   * `id=someId` selects the tag with the id `someId` somewhere in the page.
-  * `tag=div 3` selects the third div came up from the previous element or the body element if no previous one was defined.
+  * `tag=div 3` selects the third div counted from the parent element or the body element if no parent was defined.
   * `tag=*article` selects the first article tag somewhere in the page.
   
   To include multiple page parts, additional expressions can be added by separating them with a `|` character. The following example expression select the first three div child tags of the parent tag with the id `someId`.
@@ -39,7 +36,7 @@ It is generally a good idea to reduce the visibility of a service using a firewa
   * `id=someId/tag=div|id=someId/tag=div 2|id=someId/tag=div 3`
   
 ## Examples
-  Please note that the parameter values must be url encoded. You can use [url-encode-decode.com](http://www.url-encode-decode.com) for example. The following url configurations are randomly picked and only have to be understand as an example. There exists NO agreement with page proprietor which allows to expand their feeds for commercial or private reasons. 
+  Please note that the parameter values must be url encoded. The following url configurations are randomly picked and only used as examples. There exists NO agreement with page proprietor which allows to expand their feeds for commercial or private use. 
 
   * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the screen element, than the third div and the article element below `id=screen/tag=div 3/tag=article`.
     `http://localhost:9998/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DATOM1.0&include=id%3Dscreen%2Ftag%3Ddiv+3%2Ftag%3Darticle`

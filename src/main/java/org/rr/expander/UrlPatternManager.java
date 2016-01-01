@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class UrlPatternManager {
 	
 	@Nonnull
-	final static Logger logger = LoggerFactory.getLogger(UrlPatternManager.class);
+	private final static Logger logger = LoggerFactory.getLogger(UrlPatternManager.class);
 	
 	@Nullable
 	private List<String> urlPatterns;

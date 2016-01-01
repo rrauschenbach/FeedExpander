@@ -21,7 +21,7 @@ import com.google.common.base.Optional;
 public class ExpanderResource {
 	
 	@Nonnull
-	final static Logger logger = LoggerFactory.getLogger(ExpanderResource.class);
+	private final static Logger logger = LoggerFactory.getLogger(ExpanderResource.class);
 	
 	@Nullable
 	private String feedWhiteListFileName;

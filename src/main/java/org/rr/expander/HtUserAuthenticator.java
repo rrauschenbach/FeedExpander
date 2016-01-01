@@ -36,7 +36,7 @@ import io.dropwizard.auth.basic.BasicCredentials;
 public class HtUserAuthenticator implements Authenticator<BasicCredentials, BasicUserPrincipal> {
 	
 	@Nonnull
-	final static Logger logger = LoggerFactory.getLogger(HtUserAuthenticator.class);
+	private final static Logger logger = LoggerFactory.getLogger(HtUserAuthenticator.class);
 
 	@Nonnull
 	private String htusers;
