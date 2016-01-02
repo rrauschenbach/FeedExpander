@@ -11,6 +11,11 @@ You need to have git, maven and java 1.8 installed before doing the following.
 ## Run
  * Edit the config.yml and change the htuser and whitelist.txt. 
  * Start the service with `java -jar target/expander-x.x.x.jar server config.yml`
+ 
+## Update
+  * `cd /opt/FeedExpander`
+  * `git pull`
+  * `mvn install`
 
 ## Security hints
   The client have the possibility to make the FeedExpander service to load a feed and the linked html pages from some self defined url. This can for example be misused to run DDOS attacks or to load some unexpected things over this service. It`s highly recommended to use the white list functionality to prohibit those cases.
