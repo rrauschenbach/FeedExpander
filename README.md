@@ -3,14 +3,14 @@ Feed expander is a service which provides a generic way to create rss or atom fe
 
 ## Build
 You need to have git, maven and java 1.8 installed before doing the following.
+  * `cd /opt/`
   * `git clone https://github.com/meerkatzenwildschein/FeedExpander.git` 
   * `cd FeedExpander/` 
   * `mvn install` 
 
-## Install
- * Take the expander-x.x.x.jar, config.yml, whitelist.txt and htusers files and copy them all together where you want to run the feed expander. `cp config.yml htusers whitelist.txt target/expander-x.x.x.jar /tmp/`
+## Run
  * Edit the config.yml and change the htuser and whitelist.txt. 
- * Start the service with `java -jar expander-x.x.x.jar server config.yml`
+ * Start the service with `java -jar target/expander-x.x.x.jar server config.yml`
 
 ## Security hints
   The client have the possibility to make the FeedExpander service to load a feed and the linked html pages from some self defined url. This can for example be misused to run DDOS attacks or to load some unexpected things over this service. It`s highly recommended to use the white list functionality to prohibit those cases.
