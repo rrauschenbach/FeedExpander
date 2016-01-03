@@ -102,7 +102,7 @@ public class FeedContentExchanger {
 	}
 
 	private @Nonnull String loadPageContent(@Nonnull String link) throws IOException {
-		return new HttpLoader(link).getContent();
+		return new HttpLoader(link).getContentAsString();
 	}
 
 }

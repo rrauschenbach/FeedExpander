@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +30,7 @@ import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Optional;
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Fetch the content of a specified http url using the apache http client.
@@ -56,30 +57,31 @@ public class HttpLoader {
 	 * @throws IOException
 	 */
 	public @Nonnull InputStream getContentAsStream() throws IOException {
-		return new ByteArrayInputStream(getContent().getBytes(StandardCharsets.UTF_8));
+		return new ByteArrayInputStream(getContentAsString().getBytes(StandardCharsets.UTF_8));
 	}
 
-	public @Nonnull String getContent() throws IOException {
+	public @Nonnull String getContentAsString() throws IOException {
+		HttpResponse httpResponse = validateStatusCode(getHttpResponse());
+		HttpEntity entity = httpResponse.getEntity();
+		byte[] responseBytes = EntityUtils.toByteArray(entity);
+		IOUtils.closeQuietly(entity.getContent()); // ensure it is fully consumed	
+		return getResponseAsString(httpResponse, responseBytes);
+	}
+	
+	@VisibleForTesting
+	protected @Nonnull HttpResponse getHttpResponse() throws IOException {
 		RequestConfig.Builder requestBuilder = createRequestBuilder(DEFAULT_TIMEOUT);
 		HttpClient client = createHttpClient(requestBuilder);
 		HttpGet httpGet = createHttpGet(url);
 
-		HttpResponse response = client.execute(httpGet);
+		return client.execute(httpGet);
+	}
 
-		// The underlying HTTP connection is still held by the response object
-		// to allow the response content to be streamed directly from the network
-		// socket.
-		// In order to ensure correct deallocation of system resources
-		// the user MUST either fully consume the response content or abort request
-		// execution by calling HttpGet#releaseConnection().
+	private HttpResponse validateStatusCode(HttpResponse response) throws IOException {
 		if (response.getStatusLine().getStatusCode() != 200) {
 			throw new IOException(response.getStatusLine().toString());
 		}
-		
-		HttpEntity entity = response.getEntity();
-		byte[] responseBytes = EntityUtils.toByteArray(entity);
-		IOUtils.closeQuietly(entity.getContent()); // ensure it is fully consumed	
-		return getResponseAsString(response, responseBytes);
+		return response;
 	}
 
 	private String getResponseAsString(HttpResponse response, byte[] content) throws UnsupportedEncodingException {
@@ -89,9 +91,9 @@ public class HttpLoader {
 		}
 		return new String(content, detectOrGetDefaultEncoding(content));
 	}
-	
+
 	private @Nonnull String detectOrGetDefaultEncoding(@Nonnull byte[] content) {
-		return Optional.<String>fromNullable(detectEncoding(content)).or(Charset.defaultCharset().name());
+		return Optional.ofNullable(detectEncoding(content)).orElse(Charset.defaultCharset().name());
 	}
 	
 	private @Nullable String detectEncoding(@Nonnull byte[] content) {
@@ -117,12 +119,12 @@ public class HttpLoader {
 
 	private @Nullable String getResponseCharset(@Nonnull HttpResponse response) {
 		return Optional.of(response)
-			.transform(res -> res.getFirstHeader("Content-Type").getValue())
-			.transform(header -> substringAfter(header, "charset="))
-			.transform(charset -> remove(charset, ';'))
-			.transform(charset -> trim(charset))
-			.transform(charset -> upperCase(charset))
-			.get();
+			.map(res -> res.getFirstHeader("Content-Type").getValue())
+			.map(header -> substringAfter(header, "charset="))
+			.map(charset -> remove(charset, ';'))
+			.map(charset -> trim(charset))
+			.map(charset -> upperCase(charset))
+			.orElse(null);
 	}
 
 	private @Nonnull HttpGet createHttpGet(String url) {
