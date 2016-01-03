@@ -12,6 +12,8 @@ import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 
 import org.rr.expander.util.HttpLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -25,6 +27,9 @@ import com.sun.syndication.io.XmlReader;
  * process by simply invoking <code>loadFeed().expand(expression).build()</code>.
  */
 public class FeedBuilder {
+	
+	@Nonnull
+	private final static Logger logger = LoggerFactory.getLogger(FeedBuilder.class);
 
 	@Nonnull
 	private static final String APPLICATION = "application";
@@ -70,7 +75,7 @@ public class FeedBuilder {
 						return MediaType.APPLICATION_OCTET_STREAM_TYPE;
 					}
 				})
-				.orElseThrow((() -> new IllegalArgumentException("feed is not loaded.")));
+				.orElseThrow((() -> new IllegalArgumentException(String.format("Feed '%s' is not loaded.", feedUrl))));
 	}
 
 	/**
@@ -97,12 +102,21 @@ public class FeedBuilder {
 	 * @throws IllegalArgumentException if the feed was not loaded before.
 	 */
 	public @Nonnull byte[] build() throws FeedException {
-		if (loadedFeed != null) {
+		return Optional.ofNullable(loadedFeed)
+			.map(feed -> buildFeed(feed))
+			.orElseThrow(() -> (new IllegalArgumentException(
+					String.format("Feed '%s' is not loaded or could not be generated.", feedUrl))));
+	}
+
+	private @Nullable byte[] buildFeed(@Nonnull SyndFeed feed) {
+		try {
 			SyndFeedOutput output = new SyndFeedOutput();
-			loadedFeed.setEncoding(UTF_8.name());
-			return output.outputString(loadedFeed, true).getBytes(UTF_8);
+			feed.setEncoding(UTF_8.name());
+			return output.outputString(feed, true).getBytes(UTF_8);
+		} catch (FeedException e) {
+			logger.error(String.format("Failed to build feed '%s'", feedUrl), e);
 		}
-		throw new IllegalArgumentException("feed is not loaded.");
+		return null;
 	}
 
 	/**
@@ -115,7 +129,7 @@ public class FeedBuilder {
 	private @Nonnull List<SyndEntry> getEntries() {
 		return Optional.ofNullable(loadedFeed)
 				.map(feed -> feed.getEntries())
-				.orElseThrow(() -> new IllegalArgumentException("feed is not loaded."));
+				.orElseThrow(() -> new IllegalArgumentException(String.format("Feed '%s' is not loaded.", feedUrl)));
 	}
 
 }
