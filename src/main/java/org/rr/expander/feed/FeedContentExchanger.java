@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class FeedContentExchanger {
 	private final UrlLoaderFactory urlLoaderFactory;
 
 	public FeedContentExchanger(@Nonnull String includeExpression, @Nonnull UrlLoaderFactory urlLoaderFactory) {
-		this.includeExpression = includeExpression;
+		this.includeExpression = StringUtils.defaultString(includeExpression);
 		this.urlLoaderFactory = urlLoaderFactory;
 	}
 

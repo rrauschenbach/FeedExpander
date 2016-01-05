@@ -1,0 +1,60 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<title type="html">test.de</title>
+	<link rel="alternate" type="text/html" href="http://www.test.de/" />
+	<link rel="self" type="application/atom+xml" href="http://rss.test.de/rss.php?feed=ATOM1.0" />
+	<link rel="hub" href="http://test.superfeedr.com/" />
+	<subtitle type="html">Test feed</subtitle>
+	<id>http://www.test.de/</id>
+	<updated>2016-01-05T16:46:03Z</updated>
+	<dc:date>2016-01-05T16:46:03Z</dc:date>
+	<entry>
+		<title type="html">Title 1</title>
+		<link rel="alternate" type="text/html" href="test://content_x.html" />
+		<author>
+			<name>Heinz Müller</name>
+		</author>
+		<id>test://content_x.html
+		</id>
+		<updated>2016-01-05T16:44:09Z</updated>
+		<published>2016-01-05T16:44:09Z</published>
+		<summary type="html">Lorem ipsum dolor sit amet, consetetur
+			sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+			dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+			et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+			takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor
+			sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+			invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+			At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
+			kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+			amet.</summary>
+		<dc:creator>Heinz Müller</dc:creator>
+		<dc:date>2016-01-05T16:44:09Z</dc:date>
+	</entry>
+	<entry>
+		<title type="html">Title 2
+		</title>
+		<link rel="alternate" type="text/html" href="test://content_y.html" />
+		<author>
+			<name>Franz Schmidt</name>
+		</author>
+		<id>test://content_y.html
+		</id>
+		<updated>2016-01-05T16:24:08Z</updated>
+		<published>2016-01-05T16:24:08Z</published>
+		<summary type="html">Lorem ipsum dolor sit amet, consetetur
+			sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+			dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
+			et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+			takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor
+			sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+			invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+			At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
+			kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+			amet.</summary>
+		<dc:creator>Franz Schmidt</dc:creator>
+		<dc:date>2016-01-05T16:24:08Z</dc:date>
+	</entry>
+</feed>
+
