@@ -9,6 +9,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 /**
  * The {@link ExpanderUrlCreatorResource} is the registered resource for the html page which makes
  * it easier to create a FeedExpander url.
@@ -18,10 +21,14 @@ import javax.ws.rs.core.MediaType;
 public class ExpanderUrlCreatorResource {
 	
 	@Nonnull 
-	private String serverUrl;
+	private String serviceUrl;
 	
-	public ExpanderUrlCreatorResource(@Nonnull String serverUrl) {
-		this.serverUrl = serverUrl;
+	@Inject
+	public ExpanderUrlCreatorResource(@Named("ExpandServiceUrl") String serviceUrl) {
+		if(serviceUrl == null) {
+			throw new IllegalArgumentException("No ExpandServiceUrl specified.");
+		}
+		this.serviceUrl = serviceUrl;
 	}
 
 	@PermitAll
@@ -29,13 +36,13 @@ public class ExpanderUrlCreatorResource {
   public ExpanderUrlCreatorView getFeedUrl(
   		@FormParam("feedUrl") String feedUrl,
   		@FormParam("includeExpression") String includeExpression) {
-      return new ExpanderUrlCreatorView(serverUrl, feedUrl, includeExpression);
+      return new ExpanderUrlCreatorView(serviceUrl, feedUrl, includeExpression);
   }
 	
 	@PermitAll
 	@GET
   public ExpanderUrlCreatorView getIntro() {
-		return new ExpanderUrlCreatorView(serverUrl, null, null);
+		return new ExpanderUrlCreatorView(serviceUrl, null, null);
 	}
   		
 }

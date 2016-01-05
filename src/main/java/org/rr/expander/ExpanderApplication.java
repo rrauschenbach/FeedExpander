@@ -13,8 +13,14 @@ import javax.annotation.Nullable;
 
 import org.apache.http.auth.BasicUserPrincipal;
 import org.rr.expander.health.ConfigurationHealthCheck;
+import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.name.Names;
 
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
@@ -45,8 +51,9 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 
 	@Override
 	public void run(ExpanderConfiguration config, Environment environment) throws ClassNotFoundException {
-		registerExpanderResource(environment, config.getFeedWhiteList());
-		registerUrlCreatorResource(config, environment);
+		Injector injector = createInjector(config);
+		registerExpanderResource(environment, injector);
+		registerUrlCreatorResource(environment, injector);
 		registerBasicAuth(environment, config.getHtusers());
 		registerConfigurationHealthCheck(config, environment);
 	}
@@ -108,18 +115,34 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
     environment.healthChecks().register("configuration", healthCheck);
 	}
 
-	private void registerExpanderResource(Environment environment, String feedWhiteList) {
-		ExpanderResource resource = new ExpanderResource(feedWhiteList);
-		environment.jersey().register(resource);
+	private void registerExpanderResource(Environment environment, Injector injector) {
+		environment.jersey().register(injector.getInstance(ExpanderResource.class));
 	}
 	
-	private void registerUrlCreatorResource(ExpanderConfiguration config, Environment environment) {
+	private void registerUrlCreatorResource(Environment environment, Injector injector) {
+		environment.jersey().register(injector.getInstance(ExpanderUrlCreatorResource.class));
+	}
+	
+	private Injector createInjector(ExpanderConfiguration config) {
+    return Guice.createInjector(new AbstractModule() {
+        @Override
+        protected void configure() {
+        	bind(String.class).annotatedWith(Names.named("FeedWhiteList")).toInstance(config.getFeedWhiteList());
+        	bind(String.class).annotatedWith(Names.named("ExpandServiceUrl")).toInstance(getExpandServiceUrl(config));
+        	bind(UrlLoaderFactory.class).toInstance(UrlLoaderFactory.createURLLoaderFactory());
+        }
+    });
+	}
+	
+	private String getExpandServiceUrl(ExpanderConfiguration config) {
 		String serverUrl = Optional.ofNullable(Optional.ofNullable(getBindHost(config)).orElse(evaluateHostName()))
-			.map(host -> getProtocol(config) + "://" + host + ":" + getPort(config) + "/expand")
+			.map(host -> getExpandServiceUrl(config, host))
 			.orElse(EMPTY);
-		
-		ExpanderUrlCreatorResource resource = new ExpanderUrlCreatorResource(serverUrl);
-		environment.jersey().register(resource);
+		return serverUrl;
+	}
+
+	private String getExpandServiceUrl(ExpanderConfiguration config, String host) {
+		return getProtocol(config) + "://" + host + ":" + getPort(config) + "/expand";
 	}
 	
 	private void registerBasicAuth(Environment environment, String htusers) {

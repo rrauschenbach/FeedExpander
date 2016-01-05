@@ -11,11 +11,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.rr.expander.feed.FeedBuilder;
+import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 @Path("/expand")
 public class ExpanderResource {
@@ -24,10 +27,19 @@ public class ExpanderResource {
 	private final static Logger logger = LoggerFactory.getLogger(ExpanderResource.class);
 	
 	@Nullable
-	private String feedWhiteListFileName;
+	private String feedWhiteList;
 	
-	public ExpanderResource(@Nullable String feedWhiteListFileName) {
-		this.feedWhiteListFileName = feedWhiteListFileName;
+	@Nonnull
+	private UrlLoaderFactory urlLoaderFactory;
+	
+	@Inject
+	public ExpanderResource(@Named("FeedWhiteList") String feedWhiteList, UrlLoaderFactory urlLoaderFactory) {
+		this.feedWhiteList = feedWhiteList;
+		
+		if(urlLoaderFactory == null) {
+			throw new IllegalArgumentException("No UrlLoaderFactory specified.");
+		}
+		this.urlLoaderFactory = urlLoaderFactory;
 	}
 
 	@PermitAll
@@ -40,7 +52,7 @@ public class ExpanderResource {
 			public Response apply(@Nonnull String feedUrl) {
 				try {
 					if (isFeedAllowed(feedUrl)) {
-						FeedBuilder feedHandler = new FeedBuilder(feedUrl).loadFeed().expand(include.or("*"));
+						FeedBuilder feedHandler = new FeedBuilder(feedUrl, urlLoaderFactory).loadFeed().expand(include.or("*"));
 						return Response.ok(feedHandler.build(), feedHandler.getMediaType()).build();
 					}
 					logger.warn(String.format("Fetching feed '%s' is not allowed.", feedUrl));
@@ -54,8 +66,8 @@ public class ExpanderResource {
 	}
 
 	private boolean isFeedAllowed(@Nonnull String feedUrl) {
-		if (isNotBlank(feedWhiteListFileName)) {
-			return new UrlPatternManager().readPatternFile(feedWhiteListFileName).containsUrl(feedUrl);
+		if (isNotBlank(feedWhiteList)) {
+			return new UrlPatternManager().readPatternFile(feedWhiteList).containsUrl(feedUrl);
 		}
 		return true; // no white listing configured.
 	}

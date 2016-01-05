@@ -3,7 +3,9 @@ package org.rr.expander.feed;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 
-import org.rr.expander.util.HttpLoader;
+import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,13 +39,17 @@ public class FeedBuilder {
 	/** contains the http url to the feed that should be expanded. */
 	@Nonnull
 	private final String feedUrl;
+	
+	@Nonnull
+	private final UrlLoaderFactory urlLoaderFactory;
 
 	/** The loaded rss or atom feed. */
 	@Nullable
 	private SyndFeed loadedFeed;
 
-	public FeedBuilder(@Nonnull String feedUrl) {
+	public FeedBuilder(@Nonnull String feedUrl, @Nonnull UrlLoaderFactory urlLoaderFactory) {
 		this.feedUrl = feedUrl;
+		this.urlLoaderFactory = urlLoaderFactory;
 	}
 
 	/**
@@ -52,7 +58,8 @@ public class FeedBuilder {
 	 * @return This {@link FeedBuilder} instance.
 	 */
 	public @Nonnull FeedBuilder loadFeed() throws MalformedURLException, FeedException, IOException {
-		loadedFeed = new SyndFeedInput().build(new XmlReader(new HttpLoader(feedUrl).getContentAsStream()));
+		InputStream feedContentStream = urlLoaderFactory.getUrlLoader(feedUrl).getContentAsStream(StandardCharsets.UTF_8);
+		loadedFeed = new SyndFeedInput().build(new XmlReader(feedContentStream));
 		return this;
 	}
 
@@ -89,7 +96,7 @@ public class FeedBuilder {
 	 */
 	public @Nonnull FeedBuilder expand(@Nullable String includeExpression) {
 		Optional.<String> ofNullable(includeExpression)
-				.ifPresent(expression -> new FeedContentExchanger(expression).exchangeAll(getEntries()));
+				.ifPresent(expression -> new FeedContentExchanger(expression, urlLoaderFactory).exchangeAll(getEntries()));
 		return this;
 	}
 

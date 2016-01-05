@@ -1,4 +1,4 @@
-package org.rr.expander.util;
+package org.rr.expander.loader;
 
 import static org.apache.commons.lang3.math.NumberUtils.toInt;
 import static org.junit.Assert.assertEquals;
@@ -17,6 +17,7 @@ import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.rr.expander.loader.HttpUrlLoader;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -87,27 +88,40 @@ public class HttpLoaderTest {
 	}
 	
 	@Test
-	public void testHttpLoaderWithUtf8Stream() throws IOException {
+	public void testHttpLoaderWithUtf8ContentTypeStream() throws IOException {
 		byte[] exampleContent = createExampleContent(StandardCharsets.UTF_8);
 		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
 				.setContent(exampleContent)
 				.setContentType(UTF8_HTML_CONTENT_TYPE);
-		InputStream response = httpLoaderTestImpl.getContentAsStream();
+		InputStream response = httpLoaderTestImpl.getContentAsStream(StandardCharsets.UTF_8);
 		assertEquals(new String(exampleContent, StandardCharsets.UTF_8),
 				IOUtils.toString(response, StandardCharsets.UTF_8));
 	}
 	
 	@Test
-	public void testHttpLoaderWithIsoStream() throws IOException {
+	public void testHttpLoaderWithIsoContentTypeStream() throws IOException {
 		byte[] exampleContent = createExampleContent(StandardCharsets.ISO_8859_1);
 		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
 				.setContent(exampleContent)
 				.setContentType(ISO_HTML_CONTENT_TYPE);
-		InputStream response = httpLoaderTestImpl.getContentAsStream();
+		InputStream response = httpLoaderTestImpl.getContentAsStream(StandardCharsets.UTF_8);
 		
 		// the response stream must be always utf-8 encoded
 		assertEquals(new String(exampleContent, StandardCharsets.ISO_8859_1),
 				IOUtils.toString(response, StandardCharsets.UTF_8));
+	}
+	
+	@Test
+	public void testHttpLoaderWithIsoResultStream() throws IOException {
+		byte[] exampleContent = createExampleContent(StandardCharsets.ISO_8859_1);
+		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
+				.setContent(exampleContent)
+				.setContentType(ISO_HTML_CONTENT_TYPE);
+		InputStream response = httpLoaderTestImpl.getContentAsStream(StandardCharsets.ISO_8859_1);
+		
+		// the response stream must be always utf-8 encoded
+		assertEquals(new String(exampleContent, StandardCharsets.ISO_8859_1),
+				IOUtils.toString(response, StandardCharsets.ISO_8859_1));
 	}
 	
 	@Test(expected=IOException.class)
@@ -119,7 +133,7 @@ public class HttpLoaderTest {
 		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
 				.setContent(exampleContent)
 				.setStatusCode(toInt(statusCode));
-		httpLoaderTestImpl.getContentAsStream();
+		httpLoaderTestImpl.getContentAsStream(StandardCharsets.UTF_8);
 	}
 	
 	@Test(expected=IOException.class)
@@ -138,7 +152,7 @@ public class HttpLoaderTest {
 		return ("<html><head></head><body><p>" + SOME_SPECIAL_CHARACTERS + "</p></body></html>").getBytes(charset);
 	}
 
-	private class HttpLoaderTestImpl extends HttpLoader {
+	private class HttpLoaderTestImpl extends HttpUrlLoader {
 
 		private byte[] content;
 

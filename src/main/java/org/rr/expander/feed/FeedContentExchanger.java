@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.rr.expander.util.HttpLoader;
+import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +30,13 @@ public class FeedContentExchanger {
 
 	@Nonnull
 	private final String includeExpression;
+	
+	@Nonnull
+	private final UrlLoaderFactory urlLoaderFactory;
 
-	public FeedContentExchanger(@Nonnull String includeExpression) {
+	public FeedContentExchanger(@Nonnull String includeExpression, @Nonnull UrlLoaderFactory urlLoaderFactory) {
 		this.includeExpression = includeExpression;
+		this.urlLoaderFactory = urlLoaderFactory;
 	}
 
 	/**
@@ -102,7 +106,7 @@ public class FeedContentExchanger {
 	}
 
 	private @Nonnull String loadPageContent(@Nonnull String link) throws IOException {
-		return new HttpLoader(link).getContentAsString();
+		return urlLoaderFactory.getUrlLoader(link).getContentAsString();
 	}
 
 }

@@ -1,4 +1,4 @@
-package org.rr.expander.util;
+package org.rr.expander.loader;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.remove;
@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
@@ -33,14 +32,14 @@ import org.slf4j.LoggerFactory;
 import com.google.common.annotations.VisibleForTesting;
 
 /**
- * Fetch the content of a specified http url using the apache http client.
+ * Fetch the content of a specified http or https url using the apache http client.
  */
-public class HttpLoader {
+class HttpUrlLoader implements UrlLoader {
 
 	private static final int DEFAULT_TIMEOUT = 10000;
 	
 	@Nonnull
-	private final static Logger logger = LoggerFactory.getLogger(HttpLoader.class);
+	private final static Logger logger = LoggerFactory.getLogger(HttpUrlLoader.class);
 
 	@Nonnull
 	private String url;
@@ -48,7 +47,7 @@ public class HttpLoader {
 	@Nullable
 	private ByteArrayInputStream in;
 
-	public HttpLoader(@Nonnull String url) {
+	public HttpUrlLoader(@Nonnull String url) {
 		this.url = url;
 	}
 	
@@ -56,10 +55,12 @@ public class HttpLoader {
 	 * @return the content as InputStream with UTF-8 encoding.
 	 * @throws IOException
 	 */
-	public @Nonnull InputStream getContentAsStream() throws IOException {
-		return new ByteArrayInputStream(getContentAsString().getBytes(StandardCharsets.UTF_8));
+	@Override
+	public @Nonnull InputStream getContentAsStream(@Nonnull Charset charset) throws IOException {
+		return new ByteArrayInputStream(getContentAsString().getBytes(charset));
 	}
 
+	@Override
 	public @Nonnull String getContentAsString() throws IOException {
 		HttpResponse httpResponse = validateStatusCode(getHttpResponse());
 		HttpEntity entity = httpResponse.getEntity();
@@ -67,7 +68,7 @@ public class HttpLoader {
 		IOUtils.closeQuietly(entity.getContent()); // ensure it is fully consumed	
 		return getResponseAsString(httpResponse, responseBytes);
 	}
-	
+
 	@VisibleForTesting
 	protected @Nonnull HttpResponse getHttpResponse() throws IOException {
 		RequestConfig.Builder requestBuilder = createRequestBuilder(DEFAULT_TIMEOUT);
