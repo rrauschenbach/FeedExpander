@@ -46,13 +46,17 @@ public class ExpanderResource {
 	@GET
 	public Response expand(
 			final @QueryParam("feedUrl") Optional<String> feedUrl,
+			final @QueryParam("limit") Optional<Integer> limit,
 			final @QueryParam("include") Optional<String> include) {
 		return feedUrl.transform(new Function<String, Response>() {
 			@Override
 			public Response apply(@Nonnull String feedUrl) {
 				try {
 					if (isFeedAllowed(feedUrl)) {
-						FeedBuilder feedHandler = new FeedBuilder(feedUrl, urlLoaderFactory).loadFeed().expand(include.or("*"));
+						FeedBuilder feedHandler = new FeedBuilder(feedUrl, urlLoaderFactory)
+								.loadFeed()
+								.setLimit(limit.orNull())
+								.expand(include.or("*"));
 						return Response.ok(feedHandler.build(), feedHandler.getMediaType()).build();
 					}
 					logger.warn(String.format("Fetching feed '%s' is not allowed.", feedUrl));

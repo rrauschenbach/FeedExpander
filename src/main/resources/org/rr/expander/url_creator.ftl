@@ -4,7 +4,7 @@
     <body>
         <h1>
 	        <#if feedUrl?has_content>
-				Your expanded url is<br/><code>${feedUrl}</code>        	
+				Your expanded url is<br/><code>${finalFeedUrl}</code>        	
 	        <#else>
 	        	Please enter a feed URL
 			</#if>
@@ -12,10 +12,13 @@
     	<div style="width:800px">	        
 			<form action="create" method="post">
 		        <label for="feedUrl">Feed URL</label> 
-		        <input type="text" name="feedUrl">
+		        <input type="text" name="feedUrl" value="${feedUrl}">
 		 
-		        <label for="includeExpression">Include Expression</label>  
-		        <input type="text" name="includeExpression">
+		        <label for="includeExpression">Include expression</label>  
+		        <input type="text" name="includeExpression" value="${includeExpression}">
+		 
+		        <label for="limit">Max. feed entries</label>  
+		        <input type="text" name="limit" value="${limit}">
 		
 		        <button type="submit">Submit</button>
 			</form>

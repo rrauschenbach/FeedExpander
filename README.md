@@ -26,7 +26,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
 It is generally a good idea to reduce the visibility of a service using a firewall or defining some iptable rules.  
   
 ## Usage
-  Just enter the FeedExpander URL in your browser or feed reader to expand a rss or atom feed. The default configuration uses http://localhost:9998/expand as base url. You have to add the url parameters `feedUrl` containing the url which points to the url of the feed to be expanded. You also need to add the `includes` url parameter which describes the part of the web page, linked in the feed entries which shall be extracted and placed in the result feed. There is a simple page at http://localhost:9998/create which helps to create expanded feeds.
+  The default configuration uses http://localhost:9998/expand as base url. You have to add the url parameters `feedUrl` containing the url of the feed you wish to expand. You also need to add the `includes` url parameter which describes the part of the web page which should be extracted and placed in the result feed. There is a simple page at http://localhost:9998/create which helps to create expanded full feeds.
   
   The `includes` url parameter, which selects a part of a html page, describes a navigation path through the
   html tags. Each path element is separated by a slash and starts with the kind of element followed by a equality sign 
@@ -40,8 +40,11 @@ It is generally a good idea to reduce the visibility of a service using a firewa
   
   * `id=someId/tag=div|id=someId/tag=div 2|id=someId/tag=div 3`
   
+  To increase the performance of feeds with many entries, it may be a good idea to make use from the `limit` parameter which allows to reduce the number of entries in the feed. This makes sense for feeds which did not get updated too often or your feed reader fetches the feed frequently.
+  * `limit=10`
+  
 ## Examples
-  Please note that the parameter values must be url encoded. The following url configurations are randomly picked and only used as examples. There exists NO agreement with page proprietor which allows to expand their feeds for commercial or private use. 
+  You can make use of the feed creation page at http://localhost:9998/create which also does the url encoding for you. The following URL configurations are randomly picked and only used as examples. There exists NO agreement with page proprietor which allows to expand their feeds for commercial or private use. 
 
   * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the element with the id `screen`, than the third div element and than the article element below `id=screen/tag=div 3/tag=article`. The full encoded url looks as followed.
     `http://localhost:9998/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DATOM1.0&include=id%3Dscreen%2Ftag%3Ddiv+3%2Ftag%3Darticle`

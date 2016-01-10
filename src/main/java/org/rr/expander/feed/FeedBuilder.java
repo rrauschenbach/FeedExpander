@@ -1,6 +1,7 @@
 package org.rr.expander.feed;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,9 @@ public class FeedBuilder {
 	
 	@Nonnull
 	private final UrlLoaderFactory urlLoaderFactory;
+	
+	/** max number of feed entries for the result feed */
+	private int limit;
 
 	/** The loaded rss or atom feed. */
 	@Nullable
@@ -50,6 +55,7 @@ public class FeedBuilder {
 	public FeedBuilder(@Nonnull String feedUrl, @Nonnull UrlLoaderFactory urlLoaderFactory) {
 		this.feedUrl = feedUrl;
 		this.urlLoaderFactory = urlLoaderFactory;
+		this.limit = Integer.MAX_VALUE;
 	}
 
 	/**
@@ -96,7 +102,7 @@ public class FeedBuilder {
 	 */
 	public @Nonnull FeedBuilder expand(@Nullable String includeExpression) {
 		Optional.<String> ofNullable(includeExpression)
-				.ifPresent(expression -> new FeedContentExchanger(expression, urlLoaderFactory).exchangeAll(getEntries()));
+				.ifPresent(expression -> new FeedContentExchanger(expression, urlLoaderFactory).exchangeAll(sortAndReduceEntries()));
 		return this;
 	}
 
@@ -113,6 +119,18 @@ public class FeedBuilder {
 			.map(feed -> buildFeed(feed))
 			.orElseThrow(() -> (new IllegalArgumentException(
 					String.format("Feed '%s' is not loaded or could not be generated.", feedUrl))));
+	}
+
+	/**
+	 * Sets the number of entries in the result feed. All entries behind this limit will be removed
+	 * from the result feed and will not be expanded.
+	 * 
+	 * @param limit Number of feed entries kept for the result feed.
+	 */
+	@Nonnull
+	public FeedBuilder setLimit(@Nullable Integer limit) {
+		this.limit = limit != null && limit >= 0 ? limit : Integer.MAX_VALUE;
+		return this;
 	}
 
 	private @Nullable byte[] buildFeed(@Nonnull SyndFeed feed) {
@@ -139,4 +157,26 @@ public class FeedBuilder {
 				.orElseThrow(() -> new IllegalArgumentException(String.format("Feed '%s' is not loaded.", feedUrl)));
 	}
 
+	/**
+	 * First sorts the loaded feed entries by published date and than reduces the number of entries to
+	 * the limit which was defined with {@link #setLimit(Integer)}.
+	 * 
+	 * @return The sorted and reduces feed entry list.
+	 * @throws IllegalArgumentException if the feed is not loaded before.
+	 */
+	private @Nonnull List<SyndEntry> sortAndReduceEntries() {
+		return Optional.ofNullable(loadedFeed)
+			.map(feed -> getEntries().stream()
+			.sorted((d1, d2) ->  ObjectUtils.compare(d1.getPublishedDate(), d2.getPublishedDate()))
+			.limit(limit)
+			.collect(toList()))
+			.map(entries -> applyFeedEntries(entries))
+			.orElseThrow(() -> new IllegalArgumentException(String.format("Feed '%s' is not loaded.", feedUrl)));
+	}
+
+	private @Nonnull List<SyndEntry> applyFeedEntries(@Nonnull List<SyndEntry> entries) {
+		Optional.ofNullable(loadedFeed).ifPresent(feed -> feed.setEntries(entries));
+		return entries;
+	}
+	
 }

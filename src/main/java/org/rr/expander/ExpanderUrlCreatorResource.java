@@ -35,14 +35,15 @@ public class ExpanderUrlCreatorResource {
 	@POST
   public ExpanderUrlCreatorView getFeedUrl(
   		@FormParam("feedUrl") String feedUrl,
+  		@FormParam("limit") String limit,
   		@FormParam("includeExpression") String includeExpression) {
-      return new ExpanderUrlCreatorView(serviceUrl, feedUrl, includeExpression);
+      return new ExpanderUrlCreatorView(serviceUrl, feedUrl, limit, includeExpression);
   }
 	
 	@PermitAll
 	@GET
   public ExpanderUrlCreatorView getIntro() {
-		return new ExpanderUrlCreatorView(serviceUrl, null, null);
+		return new ExpanderUrlCreatorView(serviceUrl, null, null, null);
 	}
   		
 }
