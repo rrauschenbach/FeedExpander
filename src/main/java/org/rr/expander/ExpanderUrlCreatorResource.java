@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import jersey.repackaged.com.google.common.base.Preconditions;
+
 /**
  * The {@link ExpanderUrlCreatorResource} is the registered resource for the html page which makes
  * it easier to create a FeedExpander url.
@@ -25,9 +27,7 @@ public class ExpanderUrlCreatorResource {
 	
 	@Inject
 	public ExpanderUrlCreatorResource(@Named("ExpandServiceUrl") String serviceUrl) {
-		if(serviceUrl == null) {
-			throw new IllegalArgumentException("No ExpandServiceUrl specified.");
-		}
+		Preconditions.checkNotNull(serviceUrl);
 		this.serviceUrl = serviceUrl;
 	}
 

@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.rr.expander.cache.PageCache;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,9 @@ public class FeedBuilder {
 	@Nonnull
 	private final UrlLoaderFactory urlLoaderFactory;
 	
+	@Nonnull
+	private final PageCache pageCache;
+	
 	/** max number of feed entries for the result feed */
 	private int limit;
 
@@ -52,9 +56,10 @@ public class FeedBuilder {
 	@Nullable
 	private SyndFeed loadedFeed;
 
-	public FeedBuilder(@Nonnull String feedUrl, @Nonnull UrlLoaderFactory urlLoaderFactory) {
+	public FeedBuilder(@Nonnull String feedUrl, @Nonnull UrlLoaderFactory urlLoaderFactory, @Nonnull PageCache pageCache) {
 		this.feedUrl = feedUrl;
 		this.urlLoaderFactory = urlLoaderFactory;
+		this.pageCache = pageCache;
 		this.limit = Integer.MAX_VALUE;
 	}
 
@@ -102,7 +107,7 @@ public class FeedBuilder {
 	 */
 	public @Nonnull FeedBuilder expand(@Nullable String includeExpression) {
 		Optional.<String> ofNullable(includeExpression)
-				.ifPresent(expression -> new FeedContentExchanger(expression, urlLoaderFactory).exchangeAll(sortAndReduceEntries()));
+				.ifPresent(expression -> new FeedContentExchanger(expression, urlLoaderFactory, pageCache).exchangeAll(sortAndReduceEntries()));
 		return this;
 	}
 

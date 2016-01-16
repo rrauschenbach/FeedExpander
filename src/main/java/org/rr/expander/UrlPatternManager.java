@@ -53,7 +53,7 @@ public class UrlPatternManager {
 				.findFirst().isPresent();
 	}
 	
-	private boolean matches(String urlPattern, String url) {
+	private boolean matches(@Nonnull String urlPattern, @Nonnull String url) {
 		try {
 		return Pattern.compile(urlPattern).matcher(url).matches();
 		} catch(Exception e) {

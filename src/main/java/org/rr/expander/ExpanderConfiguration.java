@@ -9,6 +9,10 @@ public class ExpanderConfiguration extends Configuration {
 	private String htUsers;
 	
 	private String feedWhiteList;
+
+	private String pageCacheType;
+	
+	private int pageCacheSize;
 	
 	@JsonProperty
   public String getHtusers() {
@@ -28,5 +32,25 @@ public class ExpanderConfiguration extends Configuration {
   @JsonProperty
 	public void setFeedWhiteList(String feedWhiteList) {
 		this.feedWhiteList = feedWhiteList;
+	}
+
+  @JsonProperty
+  public String getPageCacheType() {
+		return pageCacheType;
+	}
+
+  @JsonProperty
+	public void setPageCacheType(String pageCacheType) {
+		this.pageCacheType = pageCacheType;
+	}
+
+	@JsonProperty
+	public void setPageCacheSize(int pageCacheSize) {
+		this.pageCacheSize = pageCacheSize;
+	}
+
+  @JsonProperty
+	public int getPageCacheSize() {
+		return pageCacheSize;
 	}  
 }

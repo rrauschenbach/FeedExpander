@@ -9,9 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.rr.expander.loader.UrlLoaderFactory;
 
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -98,10 +96,15 @@ public class FeedContentExchangerTest {
 	}
 
 	private FeedContentExchanger createFeedContentExchanger(String includeExpression) {
-		return new FeedContentExchanger(includeExpression, getTestUrlLoaderFactory());
+		return new FeedContentExchanger(includeExpression, createUrlLoaderFactory(), createPageCache());
+	}
+	
+	private DummyPageCache createPageCache() {
+		return new DummyPageCache();
 	}
 
-	private UrlLoaderFactory getTestUrlLoaderFactory() {
+	private TestUrlLoaderFactory createUrlLoaderFactory() {
 		return new TestUrlLoaderFactory();
-	}
+	}	
+
 }

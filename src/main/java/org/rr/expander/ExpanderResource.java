@@ -10,6 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.rr.expander.cache.PageCache;
+import org.rr.expander.cache.PageCacheFactory;
 import org.rr.expander.feed.FeedBuilder;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
@@ -27,21 +29,22 @@ public class ExpanderResource {
 	private final static Logger logger = LoggerFactory.getLogger(ExpanderResource.class);
 	
 	@Nullable
+	@Inject(optional = true)
+	@Named("FeedWhiteList")
 	private String feedWhiteList;
 	
 	@Nonnull
+	@Inject(optional = false)
 	private UrlLoaderFactory urlLoaderFactory;
 	
+	@Nonnull
+	private PageCache pageCache;
+	
 	@Inject
-	public ExpanderResource(@Named("FeedWhiteList") String feedWhiteList, UrlLoaderFactory urlLoaderFactory) {
-		this.feedWhiteList = feedWhiteList;
-		
-		if(urlLoaderFactory == null) {
-			throw new IllegalArgumentException("No UrlLoaderFactory specified.");
-		}
-		this.urlLoaderFactory = urlLoaderFactory;
+	public ExpanderResource(@Nonnull PageCacheFactory pageCacheFactory) {
+		this.pageCache = pageCacheFactory.getPageCache();
 	}
-
+	
 	@PermitAll
 	@GET
 	public Response expand(
@@ -53,7 +56,7 @@ public class ExpanderResource {
 			public Response apply(@Nonnull String feedUrl) {
 				try {
 					if (isFeedAllowed(feedUrl)) {
-						FeedBuilder feedHandler = new FeedBuilder(feedUrl, urlLoaderFactory)
+						FeedBuilder feedHandler = new FeedBuilder(feedUrl, urlLoaderFactory, pageCache)
 								.loadFeed()
 								.setLimit(limit.orNull())
 								.expand(include.or("*"));

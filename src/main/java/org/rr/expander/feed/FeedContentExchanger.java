@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
+import org.rr.expander.cache.PageCache;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +35,15 @@ public class FeedContentExchanger {
 	
 	@Nonnull
 	private final UrlLoaderFactory urlLoaderFactory;
+	
+	@Nonnull
+	private final PageCache pageCache;
 
-	public FeedContentExchanger(@Nonnull String includeExpression, @Nonnull UrlLoaderFactory urlLoaderFactory) {
+	public FeedContentExchanger(@Nonnull String includeExpression, @Nonnull UrlLoaderFactory urlLoaderFactory,
+			@Nonnull PageCache pageCache) {
 		this.includeExpression = StringUtils.defaultString(includeExpression);
 		this.urlLoaderFactory = urlLoaderFactory;
+		this.pageCache = pageCache;
 	}
 
 	/**
@@ -107,7 +113,12 @@ public class FeedContentExchanger {
 	}
 
 	private @Nonnull String loadPageContent(@Nonnull String link) throws IOException {
-		return urlLoaderFactory.getUrlLoader(link).getContentAsString();
+		String pageContent;
+		if((pageContent = pageCache.restore(link)) == null) {
+			pageContent = pageCache.store(link, 
+					urlLoaderFactory.getUrlLoader(link).getContentAsString());
+		}
+		return pageContent;
 	}
 
 }

@@ -71,3 +71,6 @@ htusers: htusers
 # Leave empty if no white listing is desired.
 feedWhiteList: whitelist.txt
 
+# Cache configuration for loaded web pages.  
+pageCacheType: MEMCACHE_BZIP
+pageCacheSize: 500

@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.junit.Test;
-import org.rr.expander.loader.UrlLoaderFactory;
 
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
@@ -91,7 +90,7 @@ public class FeedBuilderTest {
 	}
 
 	private String getHtmlPageContent(String page) throws IOException {
-		return getTestUrlLoaderFactory().getUrlLoader("test://" + page).getContentAsString();
+		return createUrlLoaderFactory().getUrlLoader("test://" + page).getContentAsString();
 	}
 
 	private String extractPageContent(String content1, String includeExpression) {
@@ -107,10 +106,14 @@ public class FeedBuilderTest {
 	}
 	
 	private FeedBuilder createFeedBuilder(String feed) {
-		return new FeedBuilder("test://" + feed, getTestUrlLoaderFactory());
+		return new FeedBuilder("test://" + feed, createUrlLoaderFactory(), createPageCache());
 	}
-	
-	private UrlLoaderFactory getTestUrlLoaderFactory() {
+
+	private DummyPageCache createPageCache() {
+		return new DummyPageCache();
+	}
+
+	private TestUrlLoaderFactory createUrlLoaderFactory() {
 		return new TestUrlLoaderFactory();
 	}
 	
