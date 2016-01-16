@@ -25,4 +25,10 @@ public class UrlLoaderFactoryTest {
 		UrlLoaderFactory urlLoaderFactory = UrlLoaderFactory.createURLLoaderFactory();
 		urlLoaderFactory.getUrlLoader("abcd://test.de");
 	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testNullLoader() {
+		UrlLoaderFactory urlLoaderFactory = UrlLoaderFactory.createURLLoaderFactory();
+		urlLoaderFactory.getUrlLoader(null);
+	}
 }
