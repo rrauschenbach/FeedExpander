@@ -83,7 +83,7 @@ public class HtUserAuthenticator implements Authenticator<BasicCredentials, Basi
 	}
 
 	private boolean isUserPassSchema(@Nullable String line) {
-		return line.matches(".+:.+");
+		return line != null && line.matches(".+:.+");
 	}
 
 	private boolean isCommentLine(@Nullable String htUserLine) {
