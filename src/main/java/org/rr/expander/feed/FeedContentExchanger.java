@@ -11,7 +11,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rr.expander.cache.PageCache;
@@ -55,7 +55,9 @@ public class FeedContentExchanger {
 		ForkJoinPool executor = new ForkJoinPool(10);
 		try {
 			executor.submit(() ->
-				feedEntries.parallelStream().forEach(feedEntry -> exchange(feedEntry))
+				feedEntries.parallelStream()
+				.filter(feedEntry -> feedEntry != null)
+				.forEach(feedEntry -> exchange(feedEntry))
 			).get();
 		} catch (InterruptedException | ExecutionException e) {
 			logger.error("Failed to fetch rss entries", e);
@@ -64,7 +66,7 @@ public class FeedContentExchanger {
 		}
 	}
 
-	private @Nullable SyndEntry exchange(@Nullable SyndEntry feedEntry) {
+	private void exchange(@NotNull SyndEntry feedEntry) {
 		try {
 			String link = feedEntry.getLink();
 			if (isNotBlank(link)) {
@@ -76,7 +78,6 @@ public class FeedContentExchanger {
 		} catch (IOException e) {
 			logger.warn(String.format("Failed to load link '%s'.", feedEntry.getLink()), e);
 		}
-		return feedEntry;
 	}
 
 	/**
