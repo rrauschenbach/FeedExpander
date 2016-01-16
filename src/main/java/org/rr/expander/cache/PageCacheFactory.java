@@ -31,6 +31,7 @@ public abstract class PageCacheFactory {
 		};
 	}
 
+	@Nonnull
 	public abstract PageCache getPageCache();
 
 }
