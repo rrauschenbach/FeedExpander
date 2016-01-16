@@ -11,7 +11,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.rr.expander.cache.PageCache;
-import org.rr.expander.cache.PageCacheFactory;
 import org.rr.expander.feed.FeedBuilder;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
@@ -38,12 +37,8 @@ public class ExpanderResource {
 	private UrlLoaderFactory urlLoaderFactory;
 	
 	@Nonnull
+	@Inject(optional = false)
 	private PageCache pageCache;
-	
-	@Inject
-	public ExpanderResource(@Nonnull PageCacheFactory pageCacheFactory) {
-		this.pageCache = pageCacheFactory.getPageCache();
-	}
 	
 	@PermitAll
 	@GET

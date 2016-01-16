@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.http.auth.BasicUserPrincipal;
+import org.rr.expander.cache.PageCache;
 import org.rr.expander.cache.PageCacheFactory;
 import org.rr.expander.cache.PageCacheFactory.CACHE_TYPE;
 import org.rr.expander.health.ConfigurationHealthCheck;
@@ -132,8 +133,8 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
         	bind(String.class).annotatedWith(Names.named("FeedWhiteList")).toInstance(config.getFeedWhiteList());
         	bind(String.class).annotatedWith(Names.named("ExpandServiceUrl")).toInstance(getExpandServiceUrl(config));
         	bind(UrlLoaderFactory.class).toInstance(UrlLoaderFactory.createURLLoaderFactory());
-        	bind(PageCacheFactory.class).toInstance(PageCacheFactory.createPageCacheFactory(
-        			CACHE_TYPE.valueOf(config.getPageCacheType()), config.getPageCacheSize()));
+        	bind(PageCache.class).toInstance(PageCacheFactory.createPageCacheFactory(
+        			CACHE_TYPE.valueOf(config.getPageCacheType()), config.getPageCacheSize()).getPageCache());
         }
     });
 	}
