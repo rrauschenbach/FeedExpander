@@ -44,8 +44,8 @@ public class FeedBuilderTest {
 		// the reduces feed contains one entries.
 		assertEquals(1, createSyndFeed(expandedFeed).getEntries().size());
 
-		// test that the newer entry is returned.
-		String extractedPageContent2 = stripHtml(extractPageContent(getHtmlPageContent("content_2.html"), CONTENT_EXPRESSION));
+		// test that the first entry is returned.
+		String extractedPageContent2 = stripHtml(extractPageContent(getHtmlPageContent("content_1.html"), CONTENT_EXPRESSION));
 		assertTrue(contains(expandedFeed, extractedPageContent2));
 	}
 
