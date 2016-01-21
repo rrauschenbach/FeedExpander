@@ -14,7 +14,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.rr.expander.cache.PageCache;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
@@ -107,7 +106,7 @@ public class FeedBuilder {
 	 */
 	public @Nonnull FeedBuilder expand(@Nullable String includeExpression) {
 		Optional.<String> ofNullable(includeExpression)
-				.ifPresent(expression -> new FeedContentExchanger(expression, urlLoaderFactory, pageCache).exchangeAll(sortAndReduceEntries()));
+				.ifPresent(expression -> new FeedContentExchanger(expression, urlLoaderFactory, pageCache).exchangeAll(reduceEntries()));
 		return this;
 	}
 
@@ -163,16 +162,14 @@ public class FeedBuilder {
 	}
 
 	/**
-	 * First sorts the loaded feed entries by published date and than reduces the number of entries to
-	 * the limit which was defined with {@link #setLimit(Integer)}.
+	 * Reduces the number of entries to the limit which was defined with {@link #setLimit(Integer)}.
 	 * 
-	 * @return The sorted and reduces feed entry list.
+	 * @return The reduces feed entry list.
 	 * @throws IllegalArgumentException if the feed is not loaded before.
 	 */
-	private @Nonnull List<SyndEntry> sortAndReduceEntries() {
+	private @Nonnull List<SyndEntry> reduceEntries() {
 		return Optional.ofNullable(loadedFeed)
 			.map(feed -> getEntries().stream()
-			.sorted((d1, d2) ->  ObjectUtils.compare(d1.getPublishedDate(), d2.getPublishedDate()))
 			.limit(limit)
 			.collect(toList()))
 			.map(entries -> applyFeedEntries(entries))
