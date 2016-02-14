@@ -41,7 +41,7 @@ public class FeedBuilderTest {
 	public void testBuildSuccessWithLimit() throws Exception {
 		String expandedFeed = new String(createFeedBuilder("feed_1.xml").loadFeed().setLimit(1).expand(CONTENT_EXPRESSION).build(), StandardCharsets.UTF_8);
 		
-		// the reduces feed contains one entries.
+		// the reduced feed contains one entry.
 		assertEquals(1, createSyndFeed(expandedFeed).getEntries().size());
 
 		// test that the first entry is returned.
