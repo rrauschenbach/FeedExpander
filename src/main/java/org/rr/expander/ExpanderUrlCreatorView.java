@@ -64,11 +64,11 @@ public class ExpanderUrlCreatorView extends View {
 	}
 	
 	public @Nonnull String getIncludeExpression() {
-		return includeExpression;
+		return Optional.ofNullable(includeExpression).orElse(EMPTY);
 	}
 	
 	public @Nonnull String getFeedUrl() {
-		return feedUrl;
+		return Optional.ofNullable(feedUrl).orElse(EMPTY);
 	}
 	
 	private @Nonnull String getEncodedIncludeExpression() {
