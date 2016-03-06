@@ -32,7 +32,7 @@
 			</p>
 			<ul>
 				<li><code>id=someId</code> selects the tag with the id <code>someId</code> somewhere in the page.</li>
-				<li><code>tag=div 3</code> selects the third div counted from the parent element. If no parent element is defined, the body element is automatically the parent.</li>
+				<li><code>tag=div 3</code> selects the third div under the parent element. If no parent element is defined, the body element is automatically the parent.</li>
 				<li><code>tag=*article</code> selects the first article tag somewhere in the page.</li>
 			</ul>	  
 			<p>	

@@ -33,7 +33,7 @@ It is generally a good idea to reduce the visibility of a service using a firewa
   followed by the search value.
   
   * `id=someId` selects the tag with the id `someId` somewhere in the page.
-  * `tag=div 3` selects the third div counted from the parent element or the body element if no parent was defined.
+  * `tag=div 3` selects the third div under the parent element or the body element if no parent was defined.
   * `tag=*article` selects the first article tag somewhere in the page.
   
   To include multiple page parts, additional expressions can be added by separating them with a `|` character. The following example expression select the first three div child tags of the parent tag with the id `someId`.
