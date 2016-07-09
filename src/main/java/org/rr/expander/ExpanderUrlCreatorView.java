@@ -82,7 +82,7 @@ public class ExpanderUrlCreatorView extends View {
 	}
 
 	/**
-	 * Add the http:// protocol part to the given url if it did not already contain it.
+	 * Attach the http:// protocol part to the given url if it did not already contain it.
 	 * 
 	 * @param url The url to be tested having a http protocol part.
 	 * @return The url with http protocol part.
