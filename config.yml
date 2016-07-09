@@ -71,6 +71,9 @@ htusers: htusers
 # Leave empty if no white listing is desired.
 feedWhiteList: whitelist.txt
 
-# Cache configuration for loaded web pages.  
-pageCacheType: MEMCACHE_BZIP
+# Cache configuration for loaded web pages linked by feeds.
+# Supported cache types are DISK_CACHE with a pageCacheSize in megabytes and a well configured pageCachePath which 
+# must have write permissions.
+pageCacheType: DISK_CACHE
 pageCacheSize: 500
+pageCachePath: /tmp/feed-cache/

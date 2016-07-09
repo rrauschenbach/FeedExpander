@@ -51,7 +51,7 @@ public class FeedContentExchangerImpl implements FeedContentExchanger {
 		ForkJoinPool executor = new ForkJoinPool(10);
 		try {
 			executor.submit(() ->
-				feedEntries.parallelStream()
+				feedEntries.stream()
 				.filter(feedEntry -> feedEntry != null)
 				.forEach(feedEntry -> exchange(feedEntry))
 			).get();

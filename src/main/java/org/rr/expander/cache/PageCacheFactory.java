@@ -10,23 +10,29 @@ import jersey.repackaged.com.google.common.base.Preconditions;
 public abstract class PageCacheFactory {
 
 	public static enum CACHE_TYPE {
-		MEMCACHE_BZIP {
+		DISK_CACHE {
+			
+			private DiskPageCache singleton;
+			
 			@Override
-			public PageCache createPageCache(int maxSize) {
-				return new BZip2MemPageCacheImpl(maxSize);
+			public PageCache createPageCache(long maxSize, String location) {
+				if(singleton == null) {
+					singleton = new DiskPageCache(maxSize, location);
+				}
+				return singleton;
 			}
 		};
 
-		public abstract PageCache createPageCache(int maxSize);
+		public abstract PageCache createPageCache(long maxSize, String location);
 	}
 
-	public static final PageCacheFactory createPageCacheFactory(@Nonnull CACHE_TYPE type, int maxSize) {
+	public static final PageCacheFactory createPageCacheFactory(@Nonnull CACHE_TYPE type, long maxSize, String location) {
 		Preconditions.checkNotNull(type);
 		return new PageCacheFactory() {
 
 			@Override
 			public PageCache getPageCache() {
-				return type.createPageCache(maxSize);
+				return type.createPageCache(maxSize, location);
 			}
 		};
 	}

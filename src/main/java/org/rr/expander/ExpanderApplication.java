@@ -141,7 +141,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
         	bind(String.class).annotatedWith(Names.named("ExpandServiceUrl")).toInstance(getExpandServiceUrl(config));
         	bind(UrlLoaderFactory.class).toInstance(UrlLoaderFactory.createURLLoaderFactory());
         	bind(PageCache.class).toInstance(PageCacheFactory.createPageCacheFactory(
-        			CACHE_TYPE.valueOf(config.getPageCacheType()), config.getPageCacheSize()).getPageCache());
+        			CACHE_TYPE.valueOf(config.getPageCacheType()), config.getPageCacheSize(), config.getPageCachePath()).getPageCache());
         	install(new FactoryModuleBuilder()
         	     .implement(FeedBuilder.class, FeedBuilderImpl.class)
         	     .build(FeedBuilderFactory.class));
