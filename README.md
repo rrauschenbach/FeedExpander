@@ -29,48 +29,37 @@ It is generally a good idea to reduce the visibility of a service using a firewa
   The default configuration uses http://localhost:9998/expand as base url. You have to add the url parameters `feedUrl` containing the url of the feed you wish to expand. You also need to add the `includes` url parameter which describes the part of the web page which should be extracted and placed in the result feed. There is a simple page at http://localhost:9998/create which helps to create expanded full feeds.
   
   The `includes` url parameter, which selects a part of a html page, describes a navigation path through the
-  html tags. Each path element is separated by a slash and starts with the kind of element followed by a equality sign 
-  followed by the search value.
+  html elements using a CSS (or jquery) like selector syntax.
   
-  * `id=someId` selects the tag with the id `someId` somewhere in the page.
-  * `tag=div 3` selects the third div under the parent element or the body element if no parent was defined.
-  * `tag=*article` selects the first article tag somewhere in the page.
+### Selector overview
+  `tagname`: find elements by tag, e.g. `a`
+  `ns|tag`: find elements by tag in a namespace, e.g. `fb|name finds <fb:name> elements`
+  `#id`: find elements by ID, e.g. `#logo`
+  `.class`: find elements by class name, e.g. `.masthead`
+  `[attribute]`: elements with attribute, e.g. `[href]`
+  `[^attr]`: elements with an attribute name prefix, e.g. `[^data-]` finds elements with HTML5 dataset attributes
+  `[attr=value]`: elements with attribute value, e.g. `[width=500]` (also quotable, like [data-name='launch sequence'])
+  `[attr^=value], [attr$=value], [attr*=value]`: elements with attributes that start with, end with, or contain the value, e.g. `[href*=/path/]`
+  `[attr~=regex]`: elements with attribute values that match the regular expression; e.g. `img[src~=(?i)\.(png|jpe?g)]`
+  `*`: all elements, e.g. `*`
   
-  To include multiple page parts, additional expressions can be added by separating them with a `|` character. The following example expression select the first three div child tags of the parent tag with the id `someId`.
-  
-  * `id=someId/tag=div|id=someId/tag=div 2|id=someId/tag=div 3`
-  
-  To increase the performance of feeds with many entries, it may be a good idea to make use from the `limit` parameter which allows to reduce the number of entries in the feed. This makes sense for feeds which did not get updated too often or your feed reader fetches the feed frequently.
-  * `limit=10`
+  See [Selector syntax](https://jsoup.org/apidocs/org/jsoup/select/Selector.html) for more details.
   
 ## Examples
   You can make use of the feed creation page at http://localhost:9998/create which also does the url encoding for you. The following URL configurations are randomly picked and only used as examples. There exists NO agreement with page proprietor which allows to expand their feeds for commercial or private use. 
 
-  * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the element with the id `screen`, than the third div element and than the article element below `id=screen/tag=div 3/tag=article`. The full encoded url looks as followed.
-    `http://localhost:9998/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DATOM1.0&include=id%3Dscreen%2Ftag%3Ddiv+3%2Ftag%3Darticle`
-  It is also possible to select the `article` element directly with simply `tag=*article` which selects all articles where the first one is automatically used. If there're more than
-  one, the right one can be selected with a separated number. For example with `tag=*article 1`.
-    `http://localhost:9998/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DATOM1.0&include=tag%3D%2Aarticle`
+  * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the article tag.
+  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DRSS2.0&include=article&limit=10`  
     
-  * heise.de feed at heise.de.feedsportal.com/c/35207/f/653902/index.rss can be expanded by including the article element under the element with the id `mitte_news` which cause the path statement `id=mitte_news/tag=article`. The full encoded url looks as followed.
-    `http://localhost:9998/expand?feedUrl=http%3A%2F%2Fheise.de.feedsportal.com%2Fc%2F35207%2Ff%2F653902%2Findex.rss&include=id%3Dmitte_news%2Ftag%3Darticle`
-  As in the golem feed example before it is possible again to select the `article` element directly with simply `tag=*article`. The url:
-    `http://localhost:9998/expand?feedUrl=http%3A%2F%2Fheise.de.feedsportal.com%2Fc%2F35207%2Ff%2F653902%2Findex.rss&include=tag%3D%2Aarticle`
-    
-  * ...
-    
-  * Java Code Geeks feeds.feedburner.com/JavaCodeGeeks
-  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FJavaCodeGeeks&include=id%3Dmain-content%2Ftag%3Ddiv%2Ftag%3Ddiv`
+  * Java revisited feed at feeds.feedburner.com/Javarevisited can be expanded by including the tag with the class named post.
+  `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FJavarevisited&include=.post`
   
-  * Java revisited feeds.feedburner.com/Javarevisited
-  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FJavarevisited&include=id%3DBlog1%2Ftag%3Ddiv%2Ftag%3Ddiv%2Ftag%3Ddiv%2Ftag%3Ddiv%2Ftag%3Ddiv`
+  * Pro Linux feed at pro-linux.de/rss/2/3/rss20_aktuell.xml can be expanded by selecting the tag with the id named news.
+  `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Fpro-linux.de%2Frss%2F2%2F3%2Frss20_aktuell.xml&include=%23news`
   
-  * Pro Linux pro-linux.de/rss/2/3/rss20_aktuell.xml
-  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Fwww.pro-linux.de%2Frss%2F2%2F3%2Frss20_aktuell.xml&include=id%3Dnews`
-  
-  * Android Police at feeds.feedburner.com/AndroidPolice
-  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FAndroidPolice&include=id%3Dap-body%2Ftag%3Ddiv+2%2Ftag%3Ddiv+1`
+  * Android Police at feeds.feedburner.com/AndroidPolice can be expanded by selecting the tag with the id which name begins with post-
+  `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FAndroidPolice&include=%5Bid%5E%3Dpost-%5D`
   
   * Asienspiegel asienspiegel.ch/feed/
-  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Fasienspiegel.ch%2Ffeed%2F&include=id%3Dcontent`
+  `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Fasienspiegel.ch%2Ffeed%2F&include=%23content`
   

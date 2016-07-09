@@ -15,6 +15,12 @@ import org.apache.http.auth.BasicUserPrincipal;
 import org.rr.expander.cache.PageCache;
 import org.rr.expander.cache.PageCacheFactory;
 import org.rr.expander.cache.PageCacheFactory.CACHE_TYPE;
+import org.rr.expander.feed.FeedBuilder;
+import org.rr.expander.feed.FeedBuilderFactory;
+import org.rr.expander.feed.FeedBuilderImpl;
+import org.rr.expander.feed.FeedContentExchanger;
+import org.rr.expander.feed.FeedContentExchangerFactory;
+import org.rr.expander.feed.FeedContentExchangerImpl;
 import org.rr.expander.health.ConfigurationHealthCheck;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
@@ -23,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
 import io.dropwizard.Application;
@@ -135,6 +142,13 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
         	bind(UrlLoaderFactory.class).toInstance(UrlLoaderFactory.createURLLoaderFactory());
         	bind(PageCache.class).toInstance(PageCacheFactory.createPageCacheFactory(
         			CACHE_TYPE.valueOf(config.getPageCacheType()), config.getPageCacheSize()).getPageCache());
+        	install(new FactoryModuleBuilder()
+        	     .implement(FeedBuilder.class, FeedBuilderImpl.class)
+        	     .build(FeedBuilderFactory.class));
+        	install(new FactoryModuleBuilder()
+       	     .implement(FeedContentExchanger.class, FeedContentExchangerImpl.class)
+       	     .build(FeedContentExchangerFactory.class));
+
         }
     });
 	}
