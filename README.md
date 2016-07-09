@@ -32,16 +32,16 @@ It is generally a good idea to reduce the visibility of a service using a firewa
   html elements using a CSS (or jquery) like selector syntax.
   
 ### Selector overview
-  `tagname`: find elements by tag, e.g. `a`
-  `ns|tag`: find elements by tag in a namespace, e.g. `fb|name finds <fb:name> elements`
-  `#id`: find elements by ID, e.g. `#logo`
-  `.class`: find elements by class name, e.g. `.masthead`
-  `[attribute]`: elements with attribute, e.g. `[href]`
-  `[^attr]`: elements with an attribute name prefix, e.g. `[^data-]` finds elements with HTML5 dataset attributes
-  `[attr=value]`: elements with attribute value, e.g. `[width=500]` (also quotable, like [data-name='launch sequence'])
-  `[attr^=value], [attr$=value], [attr*=value]`: elements with attributes that start with, end with, or contain the value, e.g. `[href*=/path/]`
-  `[attr~=regex]`: elements with attribute values that match the regular expression; e.g. `img[src~=(?i)\.(png|jpe?g)]`
-  `*`: all elements, e.g. `*`
+  - `tagname`: find elements by tag, e.g. `a`
+  - `ns|tag`: find elements by tag in a namespace, e.g. `fb|name finds <fb:name> elements`
+  - `#id`: find elements by ID, e.g. `#logo`
+  - `.class`: find elements by class name, e.g. `.masthead`
+  - `[attribute]`: elements with attribute, e.g. `[href]`
+  - `[^attr]`: elements with an attribute name prefix, e.g. `[^data-]` finds elements with HTML5 dataset attributes
+  - `[attr=value]`: elements with attribute value, e.g. `[width=500]` (also quotable, like [data-name='launch sequence'])
+  - `[attr^=value], [attr$=value], [attr*=value]`: elements with attributes that start with, end with, or contain the value, e.g. `[href*=/path/]`
+  - `[attr~=regex]`: elements with attribute values that match the regular expression; e.g. `img[src~=(?i)\.(png|jpe?g)]`
+  - `*`: all elements, e.g. `*`
   
   See [Selector syntax](https://jsoup.org/apidocs/org/jsoup/select/Selector.html) for more details.
   
