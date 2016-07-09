@@ -36,8 +36,8 @@ public class ExpanderUrlCreatorResource {
   public ExpanderUrlCreatorView getFeedUrl(
   		@FormParam("feedUrl") String feedUrl,
   		@FormParam("limit") String limit,
-  		@FormParam("includeExpression") String includeExpression) {
-      return new ExpanderUrlCreatorView(serviceUrl, feedUrl, limit, includeExpression);
+  		@FormParam("includeCssSelector") String includeCssSelector) {
+      return new ExpanderUrlCreatorView(serviceUrl, feedUrl, limit, includeCssSelector);
   }
 	
 	@PermitAll

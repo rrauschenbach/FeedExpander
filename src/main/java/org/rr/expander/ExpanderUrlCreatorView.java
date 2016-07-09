@@ -32,25 +32,25 @@ public class ExpanderUrlCreatorView extends View {
 	private String limit;
 	
 	@Nullable
-	private String includeExpression;
+	private String includeCssSelector;
 	
 	@Nonnull
 	private final String serverUrl;
 
 	public ExpanderUrlCreatorView(@Nonnull String serverUrl, @Nullable String feedUrl, @Nullable String limit,
-			@Nullable String includeExpression) {
+			@Nullable String includeCssSelector) {
 		super(URL_CREATOR_HTML_TEMPLATE);
 		this.serverUrl = serverUrl;
 		this.feedUrl = feedUrl;
 		this.limit = limit;
-		this.includeExpression= includeExpression;
+		this.includeCssSelector= includeCssSelector;
 	}
 	
 	public @Nonnull String getFinalFeedUrl() {
 		String encodedFeedUrl = getEncodedFeedUrl();
 		if(isNotBlank(encodedFeedUrl)) {
 			return String.format("%s?feedUrl=%s&include=%s&limit=%s", 
-					serverUrl, getEncodedFeedUrl(), getEncodedIncludeExpression(), getLimit());
+					serverUrl, getEncodedFeedUrl(), getEncodedincludeCssSelector(), getLimit());
 		}
 		return EMPTY;
 	}
@@ -63,16 +63,16 @@ public class ExpanderUrlCreatorView extends View {
 		return Optional.ofNullable(limit).orElse("10");
 	}
 	
-	public @Nonnull String getIncludeExpression() {
-		return Optional.ofNullable(includeExpression).orElse(EMPTY);
+	public @Nonnull String getincludeCssSelector() {
+		return Optional.ofNullable(includeCssSelector).orElse(EMPTY);
 	}
 	
 	public @Nonnull String getFeedUrl() {
 		return Optional.ofNullable(feedUrl).orElse(EMPTY);
 	}
 	
-	private @Nonnull String getEncodedIncludeExpression() {
-		return getEncodedValue(getIncludeExpression());
+	private @Nonnull String getEncodedincludeCssSelector() {
+		return getEncodedValue(getincludeCssSelector());
 	}
 	
 	private @Nonnull String getEncodedValue(@Nullable String value) {

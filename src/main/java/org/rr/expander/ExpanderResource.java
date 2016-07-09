@@ -10,9 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import org.rr.expander.cache.PageCache;
-import org.rr.expander.feed.FeedBuilder;
-import org.rr.expander.loader.UrlLoaderFactory;
+import org.rr.expander.feed.FeedBuilderFactory;
+import org.rr.expander.feed.FeedBuilderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,14 +30,10 @@ public class ExpanderResource {
 	@Inject(optional = true)
 	@Named("FeedWhiteList")
 	private String feedWhiteList;
-	
+
 	@Nonnull
 	@Inject(optional = false)
-	private UrlLoaderFactory urlLoaderFactory;
-	
-	@Nonnull
-	@Inject(optional = false)
-	private PageCache pageCache;
+	private FeedBuilderFactory feedBuilderFactory;
 	
 	@PermitAll
 	@GET
@@ -51,7 +46,7 @@ public class ExpanderResource {
 			public Response apply(@Nonnull String feedUrl) {
 				try {
 					if (isFeedAllowed(feedUrl)) {
-						FeedBuilder feedHandler = new FeedBuilder(feedUrl, urlLoaderFactory, pageCache)
+						FeedBuilderImpl feedHandler = feedBuilderFactory.createFeedBuilder(feedUrl)
 								.loadFeed()
 								.setLimit(limit.orNull())
 								.expand(include.or("*"));

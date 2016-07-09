@@ -14,8 +14,8 @@
 		        <label for="feedUrl">Feed URL</label> 
 		        <input type="text" name="feedUrl" value="${feedUrl}">
 		 
-		        <label for="includeExpression">Include expression</label>  
-		        <input type="text" name="includeExpression" value="${includeExpression}">
+		        <label for="includeCssSelector">Include expression</label>  
+		        <input type="text" name="includeCssSelector" value="${includeCssSelector}">
 		 
 		        <label for="limit">Max. feed entries</label>  
 		        <input type="text" name="limit" value="${limit}">

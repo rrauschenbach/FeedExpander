@@ -10,7 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.rr.expander.cache.PageCache;
+import org.rr.expander.loader.UrlLoaderFactory;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
@@ -20,7 +26,7 @@ public class FeedContentExchangerTest {
 	@Test
 	public void testFeedContentExchangerSuccess() {
 		List<SyndEntry> entries = createValidLinkedEntriesWithEmptyDescription(EMPTY);
-		createFeedContentExchanger("id=main").exchangeAll(entries);
+		createFeedContentExchanger("#main").exchangeAll(entries);
 		for (SyndEntry entry : entries) {
 			// description must no longer be empty
 			assertTrue(isNotBlank(entry.getDescription().getValue()));
@@ -30,7 +36,7 @@ public class FeedContentExchangerTest {
 	@Test
 	public void testFeedContentExchangerFailWithNoMatchingExpression() {
 		List<SyndEntry> entries = createValidLinkedEntriesWithEmptyDescription("Test");
-		createFeedContentExchanger("id=not_exists").exchangeAll(entries);
+		createFeedContentExchanger("#not_exists").exchangeAll(entries);
 		for (SyndEntry entry : entries) {
 			// description must be empty because nothing has matched in the web page
 			assertTrue(isBlank(entry.getDescription().getValue()));
@@ -40,7 +46,7 @@ public class FeedContentExchangerTest {
 	@Test
 	public void testFeedContentExchangerFailWithInvalidLinks() {
 		List<SyndEntry> entries = createInvalidLinkedEntriesWithTestDescription();
-		createFeedContentExchanger("id=not_exists").exchangeAll(entries);
+		createFeedContentExchanger("#not_exists").exchangeAll(entries);
 		for (SyndEntry entry : entries) {
 			// description must stay unchanged because no page content could be loaded.
 			assertEquals("Test", entry.getDescription().getValue());
@@ -48,19 +54,9 @@ public class FeedContentExchangerTest {
 	}
 	
 	@Test
-	public void testFeedContentExchangerWithNullExpression() {
-		List<SyndEntry> entries = createValidLinkedEntriesWithEmptyDescription("Test");
-		createFeedContentExchanger(null).exchangeAll(entries);
-		for (SyndEntry entry : entries) {
-			// description must be empty because nothing has matched in the web page
-			assertTrue(isBlank(entry.getDescription().getValue()));
-		}
-	}
-	
-	@Test
 	public void testFeedContentExchangerWithNullEntries() {
 		// do nothing but log a NullPointerException
-		createFeedContentExchanger(null).exchangeAll(null);
+		createFeedContentExchanger(EMPTY).exchangeAll(null);
 	}
 
 	private List<SyndEntry> createInvalidLinkedEntriesWithTestDescription() {
@@ -95,16 +91,33 @@ public class FeedContentExchangerTest {
 		return Arrays.asList(entry1, entry2);
 	}
 
-	private FeedContentExchanger createFeedContentExchanger(String includeExpression) {
-		return new FeedContentExchanger(includeExpression, createUrlLoaderFactory(), createPageCache());
+	private FeedContentExchanger createFeedContentExchanger(String includeCssSelector) {
+		return createInjector().getInstance(FeedContentExchangerFactory.class).createFeedContentExchanger(includeCssSelector);
 	}
 	
-	private DummyPageCache createPageCache() {
+	private DummyPageCache createDummyPageCache() {
 		return new DummyPageCache();
 	}
 
-	private TestUrlLoaderFactory createUrlLoaderFactory() {
+	private TestUrlLoaderFactory createTestUrlLoaderFactory() {
 		return new TestUrlLoaderFactory();
-	}	
+	}
+	
+	private Injector createInjector() {
+    return Guice.createInjector(new AbstractModule() {
+        @Override
+        protected void configure() {
+        	bind(UrlLoaderFactory.class).toInstance(createTestUrlLoaderFactory());
+        	bind(PageCache.class).toInstance(createDummyPageCache());
+        	install(new FactoryModuleBuilder()
+        	     .implement(FeedBuilder.class, FeedBuilderImpl.class)
+        	     .build(FeedBuilderFactory.class));
+        	install(new FactoryModuleBuilder()
+       	     .implement(FeedContentExchanger.class, FeedContentExchangerImpl.class)
+       	     .build(FeedContentExchangerFactory.class));
+
+        }
+    });
+	}
 
 }
