@@ -77,7 +77,18 @@ public class ExpanderUrlCreatorView extends View {
 	
 	private @Nonnull String getEncodedValue(@Nullable String value) {
 		return Optional.ofNullable(value)
+				.map(url -> prependHttp(url))
 				.map(url -> urlEncode(url)).orElse(EMPTY);
+	}
+
+	/**
+	 * Add the http:// protocol part to the given url if it did not already contain it.
+	 * 
+	 * @param url The url to be tested having a http protocol part.
+	 * @return The url with http protocol part.
+	 */
+	private @Nonnull String prependHttp(@Nonnull String url) {
+		return url.startsWith("http") ? url : "http://" + url;
 	}
 	
 	private @Nonnull String urlEncode(@Nonnull String value) {
