@@ -10,6 +10,9 @@ import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.MemoryUnit;
 
+/**
+ * {@link PageCache} implementation which uses ehcache in a disk persistence configuration.
+ */
 public class DiskPageCache implements PageCache {
 	
 	private static final String DEFAULT_CACHE_FILE_LOCATION = System.getProperty("java.io.tmpdir") + File.separator + "feed-cache";
@@ -30,14 +33,18 @@ public class DiskPageCache implements PageCache {
 	private void init() {
 		PersistentCacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
 		    .with(CacheManagerBuilder.persistence(getStoragePath())) 
-		    .withCache("persistent-cache", CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, String.class,
+		    .withCache(getCacheName(), CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, String.class,
 		        ResourcePoolsBuilder.newResourcePoolsBuilder()
 		            .heap(10, MemoryUnit.MB)
 		            .disk(maxSize, MemoryUnit.MB, true)) 
 		        )
 		    .build(true);
 		
-		cache = cacheManager.getCache("persistent-cache", String.class, String.class);
+		cache = cacheManager.getCache(getCacheName(), String.class, String.class);
+	}
+
+	private String getCacheName() {
+		return "persistent-cache";
 	}
 	
 	private String getStoragePath() {
