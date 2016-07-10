@@ -1,12 +1,9 @@
 package org.rr.expander;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -29,14 +26,9 @@ public class ExpanderResource {
 	
 	@Nonnull
 	private final static Logger logger = LoggerFactory.getLogger(ExpanderResource.class);
-	
-	@Nullable
-	@Inject(optional = true)
-	@Named("FeedWhiteList")
-	private String feedWhiteList;
 
-	@Nullable
-	@Inject(optional = true)
+	@Nonnull
+	@Inject(optional = false)
 	@Named("FeedSitesManager")
 	private FeedSitesManager feedSitesManager;
 	
@@ -46,38 +38,11 @@ public class ExpanderResource {
 	
 	@PermitAll
 	@GET
-	public Response expand(
-			@QueryParam("feedUrl") Optional<String> feedUrl,
-			@QueryParam("limit") Optional<Integer> limit,
-			@QueryParam("include") Optional<String> include,
-			@QueryParam("alias") Optional<String> alias) {
+	public Response expand(@QueryParam("alias") Optional<String> alias) {
 		if(alias.isPresent()) {
 			return expandByAlias(alias);
 		}
-		return expandByFeedUrl(feedUrl, limit, include);
-	}
-	
-	@Nonnull
-	private Response expandByFeedUrl(
-			@Nonnull Optional<String> feedUrl, 
-			@Nonnull Optional<Integer> limit, 
-			@Nonnull Optional<String> include) {
-		return feedUrl.transform(new Function<String, Response>() {
-			@Override
-			public Response apply(@Nonnull String feedUrl) {
-				try {
-					if (isFeedAllowed(feedUrl)) {
-						FeedBuilderImpl feedHandler = createFeedHandler(limit, include, feedUrl);
-						return getSuccessResponse(feedHandler);
-					}
-					logger.warn(String.format("Fetching feed url '%s' is not allowed.", feedUrl));
-					return getForbiddenResponse();
-				} catch (Exception e) {
-					logger.warn(String.format("Fetching feed url '%s' has failed.", feedUrl), e);
-					return getInternalServerErrorResponse();
-				}
-			}
-		}).or(getBadRequestResponse()); // (no feedUrl)
+		return getBadRequestResponse();
 	}
 	
 	@Nonnull
@@ -100,13 +65,6 @@ public class ExpanderResource {
 		}).or(getBadRequestResponse()); // (no alias)
 	}
 
-	private boolean isFeedAllowed(@Nonnull String feedUrl) {
-		if (isNotBlank(feedWhiteList)) {
-			return new UrlPatternManager().readPatternFile(feedWhiteList).containsUrl(feedUrl);
-		}
-		return true; // no white listing configured.
-	}
-	
 	@Nonnull
 	private FeedBuilderImpl createFeedHandler(@Nonnull Optional<Integer> limit, @Nonnull Optional<String> include,
 			@Nonnull String feedUrl) throws MalformedURLException, FeedException, IOException {

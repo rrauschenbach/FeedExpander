@@ -121,7 +121,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 
 	private void registerConfigurationHealthCheck(ExpanderConfiguration config, Environment environment) {
 		final ConfigurationHealthCheck healthCheck =
-        new ConfigurationHealthCheck(config.getHtusers(), config.getFeedWhiteList());
+        new ConfigurationHealthCheck(config.getHtusers());
     environment.healthChecks().register("configuration", healthCheck);
 	}
 
@@ -137,7 +137,6 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
     return Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
-        	bind(String.class).annotatedWith(Names.named("FeedWhiteList")).toInstance(config.getFeedWhiteList());
         	bind(FeedSitesManager.class).annotatedWith(Names.named("FeedSitesManager")).toInstance(new FeedSitesManager(config.getFeedSites()));
         	bind(String.class).annotatedWith(Names.named("ExpandServiceUrl")).toInstance(getExpandServiceUrl(config));
         	bind(UrlLoaderFactory.class).toInstance(UrlLoaderFactory.createURLLoaderFactory());

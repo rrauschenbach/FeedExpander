@@ -1,2 +1,0 @@
-# Alias | Description | FeedUrl | Selector | Limit
-heise | Heise News | http://www.heise.de/newsticker/heise-atom.xml | article | 10

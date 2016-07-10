@@ -21,20 +21,15 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * Look for changes between you old and the updated config.yml
 
 ## Security hints
-  The client have the possibility to make the FeedExpander service to load a feed and the linked html pages from some self defined url. This can for example be misused to run DDOS attacks or to load some unexpected things over this service. It`s highly recommended to use the white list functionality to prohibit those cases.
-  
-  If you plan to use the FeedExpander service as some private service you have to configure the htusers files where you can simply add some users and their password which are allowed to get access. It would also be much more safe to use https instead of the preconfigured http setup.
+  If you plan to use the FeedExpander service as some private service you have to configure the htusers files where you can simply add some users and their password which are allowed to get access. It would be also be much more safe to use https instead of the preconfigured http setup.
   
   In the case that FeedExpander is running on the same machine as the feed reader you are using (for example TTRSS) it would be a good idea configure FeedExpander with `bindHost: 127.0.0.1` which is already the default configuration. 
 It is generally a good idea to reduce the visibility of a service using a firewall or defining some iptable rules.  
   
 ## Usage
-### For private space
-  The default configuration uses http://localhost:9998/expand as base url. You have to add the url parameters `feedUrl` containing the url of the feed you wish to expand. You also need to add the `includes` url parameter which is CSS selector that describes the part of the web page which should be extracted and placed in the result feed. There is a simple page at http://localhost:9998/create which may helps to create expanded full feeds.
+  Before the FeedExpander can be used, the feeds that should be expanded have to be configured in the `feed-sites.config` file. The alias which is configured in the `feed-sites.config` file can be used to load the expanded feed. The default configured url is `http://localhost:9998/expand?alias=abc`. The alias `abc` have to be replaced with this one specified in the config file. 
   
-  The `includes` url parameter, which selects a part of a html page, describes a navigation path through the
-  html elements using a CSS (or jquery) like selector syntax.
-  
+  The `selector` in the `feed-sites.config` file selects a part of a html page. It describes a navigation path through the html elements using a CSS (or jquery) like selector syntax.
   
 ### Selector overview
   - `tagname`: find elements by tag, e.g. `a`
@@ -49,22 +44,3 @@ It is generally a good idea to reduce the visibility of a service using a firewa
   - `*`: all elements, e.g. `*`
   
   See [Selector syntax](https://jsoup.org/apidocs/org/jsoup/select/Selector.html) for more details.
-  
-## Examples
-  You can make use of the feed creation page at http://localhost:9998/create which also does the url encoding for you. The following URL configurations are randomly picked and only used as examples. There exists NO agreement with page proprietor which allows to expand their feeds for commercial or private use. 
-
-  * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the `article` tag.
-  `http://localhost:9998/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DRSS2.0&include=article&limit=10`  
-    
-  * Java revisited feed at feeds.feedburner.com/Javarevisited can be expanded by including the tag with the class named `post`.
-  `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FJavarevisited&include=.post`
-  
-  * Pro Linux feed at pro-linux.de/rss/2/3/rss20_aktuell.xml can be expanded by selecting the tag with the id named `news`.
-  `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Fpro-linux.de%2Frss%2F2%2F3%2Frss20_aktuell.xml&include=%23news`
-  
-  * Android Police at feeds.feedburner.com/AndroidPolice can be expanded by selecting the tag with the id which name begins with `post-`
-  `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FAndroidPolice&include=%5Bid%5E%3Dpost-%5D`
-  
-  * Asienspiegel asienspiegel.ch/feed/
-  `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Fasienspiegel.ch%2Ffeed%2F&include=%23content`
-  

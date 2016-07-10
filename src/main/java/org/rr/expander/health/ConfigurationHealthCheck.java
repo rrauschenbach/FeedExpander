@@ -14,12 +14,8 @@ public class ConfigurationHealthCheck extends HealthCheck {
 	@Nullable
 	private final String htusers;
 	
-	@Nullable
-	private final String feedWhiteList;
-
-	public ConfigurationHealthCheck(String htusers, String feedWhiteList) {
+	public ConfigurationHealthCheck(String htusers) {
 		this.htusers = htusers;
-		this.feedWhiteList = feedWhiteList;
 	}
 
 	@Override
@@ -27,11 +23,7 @@ public class ConfigurationHealthCheck extends HealthCheck {
 		if(negate(checkConfigurationFile(htusers))) {
 			return Result.unhealthy("A htusers file was configured but did not exists.");
 		}
-		
-		if(negate(checkConfigurationFile(feedWhiteList))) {
-			return Result.unhealthy("A feedWhiteList file was configured but did not exists.");
-		}
-		
+
 		return Result.healthy();
 	}
 	
