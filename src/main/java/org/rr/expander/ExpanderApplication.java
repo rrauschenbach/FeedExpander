@@ -160,7 +160,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 	}
 
 	private String getExpandServiceUrl(ExpanderConfiguration config, String host) {
-		return getProtocol(config) + "://" + host + ":" + getPort(config) + "/expand";
+		return getProtocol(config) + "://" + host + ":" + getPort(config);
 	}
 	
 	private void registerBasicAuth(Environment environment, String htusers) {

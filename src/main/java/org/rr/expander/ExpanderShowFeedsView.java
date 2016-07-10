@@ -49,12 +49,6 @@ public class ExpanderShowFeedsView extends View {
 	public String getFeedUrl(String alias) {
 		return serverUrl + "/expand?alias=" + urlEncode(alias);
 	}
-	
-	private @Nonnull String getEncodedValue(@Nullable String value) {
-		return Optional.ofNullable(value)
-				.map(url -> prependHttp(url))
-				.map(url -> urlEncode(url)).orElse(EMPTY);
-	}
 
 	/**
 	 * Attach the http:// protocol part to the given url if it did not already contain it.
