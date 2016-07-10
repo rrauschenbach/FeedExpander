@@ -68,8 +68,12 @@ htusers: htusers
 
 # It is highly recommended to restrict the feeds to be expanded to those you know they're save. Otherwise an 
 # attacker can load an own feed which links to something you won't your server have to fetch from the internet.
-# Leave empty if no white listing is desired.
-feedWhiteList: whitelist.txt
+# Leave empty if no white listing is desired. Point to an empty file to disable all excepting preconfigured sites.
+feedWhiteList: 
+
+# Allow to define url's with selector and alias which are available with the alias url parameter. The sited
+# defined here are not need to be defined in the whitelist.
+feedSites: feed-sites.txt
 
 # Cache configuration for loaded web pages linked by feeds.
 # Supported cache types are DISK_CACHE with a pageCacheSize in megabytes and a well configured pageCachePath which 

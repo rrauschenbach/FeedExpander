@@ -29,10 +29,12 @@ You need to have git, maven and java 1.8 installed before doing the following.
 It is generally a good idea to reduce the visibility of a service using a firewall or defining some iptable rules.  
   
 ## Usage
-  The default configuration uses http://localhost:9998/expand as base url. You have to add the url parameters `feedUrl` containing the url of the feed you wish to expand. You also need to add the `includes` url parameter which describes the part of the web page which should be extracted and placed in the result feed. There is a simple page at http://localhost:9998/create which helps to create expanded full feeds.
+### For private space
+  The default configuration uses http://localhost:9998/expand as base url. You have to add the url parameters `feedUrl` containing the url of the feed you wish to expand. You also need to add the `includes` url parameter which is CSS selector that describes the part of the web page which should be extracted and placed in the result feed. There is a simple page at http://localhost:9998/create which may helps to create expanded full feeds.
   
   The `includes` url parameter, which selects a part of a html page, describes a navigation path through the
   html elements using a CSS (or jquery) like selector syntax.
+  
   
 ### Selector overview
   - `tagname`: find elements by tag, e.g. `a`
@@ -51,16 +53,16 @@ It is generally a good idea to reduce the visibility of a service using a firewa
 ## Examples
   You can make use of the feed creation page at http://localhost:9998/create which also does the url encoding for you. The following URL configurations are randomly picked and only used as examples. There exists NO agreement with page proprietor which allows to expand their feeds for commercial or private use. 
 
-  * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the article tag.
+  * golem.de feed at rss.golem.de/rss.php?feed=ATOM1.0 can be expanded by including the `article` tag.
   `http://localhost:9998/expand?feedUrl=http%3A%2F%2Frss.golem.de%2Frss.php%3Ffeed%3DRSS2.0&include=article&limit=10`  
     
-  * Java revisited feed at feeds.feedburner.com/Javarevisited can be expanded by including the tag with the class named post.
+  * Java revisited feed at feeds.feedburner.com/Javarevisited can be expanded by including the tag with the class named `post`.
   `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FJavarevisited&include=.post`
   
-  * Pro Linux feed at pro-linux.de/rss/2/3/rss20_aktuell.xml can be expanded by selecting the tag with the id named news.
+  * Pro Linux feed at pro-linux.de/rss/2/3/rss20_aktuell.xml can be expanded by selecting the tag with the id named `news`.
   `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Fpro-linux.de%2Frss%2F2%2F3%2Frss20_aktuell.xml&include=%23news`
   
-  * Android Police at feeds.feedburner.com/AndroidPolice can be expanded by selecting the tag with the id which name begins with post-
+  * Android Police at feeds.feedburner.com/AndroidPolice can be expanded by selecting the tag with the id which name begins with `post-`
   `http://127.0.0.1:9998/expand?feedUrl=http%3A%2F%2Ffeeds.feedburner.com%2FAndroidPolice&include=%5Bid%5E%3Dpost-%5D`
   
   * Asienspiegel asienspiegel.ch/feed/

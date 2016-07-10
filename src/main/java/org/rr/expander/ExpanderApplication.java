@@ -138,6 +138,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
         @Override
         protected void configure() {
         	bind(String.class).annotatedWith(Names.named("FeedWhiteList")).toInstance(config.getFeedWhiteList());
+        	bind(FeedSitesManager.class).annotatedWith(Names.named("FeedSitesManager")).toInstance(new FeedSitesManager(config.getFeedSites()));
         	bind(String.class).annotatedWith(Names.named("ExpandServiceUrl")).toInstance(getExpandServiceUrl(config));
         	bind(UrlLoaderFactory.class).toInstance(UrlLoaderFactory.createURLLoaderFactory());
         	bind(PageCache.class).toInstance(PageCacheFactory.createPageCacheFactory(
@@ -148,7 +149,6 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
         	install(new FactoryModuleBuilder()
        	     .implement(FeedContentExchanger.class, FeedContentExchangerImpl.class)
        	     .build(FeedContentExchangerFactory.class));
-
         }
     });
 	}
