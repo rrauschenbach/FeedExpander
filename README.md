@@ -9,7 +9,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `mvn install` 
 
 ## Run
- * Edit the config.yml and change the htuser and whitelist.txt. 
+ * Edit the config.yml and change the htuser and feed-sites.config. 
  * Start the service with `java -jar target/expander-x.x.x.jar server config.yml`
  
 ## Update
@@ -27,9 +27,10 @@ You need to have git, maven and java 1.8 installed before doing the following.
 It is generally a good idea to reduce the visibility of a service using a firewall or defining some iptable rules.  
   
 ## Usage
-  Before the FeedExpander can be used, the feeds that should be expanded have to be configured in the `feed-sites.config` file. The alias which is configured in the `feed-sites.config` file can be used to load the expanded feed. The default configured url is `http://localhost:9998/expand?alias=abc`. The alias `abc` have to be replaced with this one specified in the config file. 
+  Before the FeedExpander can be used, the feeds that should be expanded have to be configured in the `feed-sites.config` file. The alias which is configured in the `feed-sites.config` file can be used to load the expanded feed. The default configured url is `http://localhost:9998/expand?alias=abc`. The alias `abc` have to be replaced with this one specified in the config file.
   
   The `selector` in the `feed-sites.config` file selects a part of a html page. It describes a navigation path through the html elements using a CSS (or jquery) like selector syntax.
+  
   
 ### Selector overview
   - `tagname`: find elements by tag, e.g. `a`

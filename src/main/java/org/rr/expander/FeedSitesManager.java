@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -105,25 +106,30 @@ public class FeedSitesManager {
 	}
 	
 	@Nullable
-	public String getDescription(String alias) throws IOException {
+	public String getDescription(@Nullable String alias) throws IOException {
 		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getDescription();
 	}
 	
 	@Nullable
-	public String getFeedUrl(String alias) throws IOException {
+	public String getFeedUrl(@Nullable String alias) throws IOException {
 		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getFeedUrl();
 	}
 
 	@Nullable
-	public String getSelector(String alias) throws IOException {
+	public String getSelector(@Nullable String alias) throws IOException {
 		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getSelector();
 	}
 	
 	@Nullable
-	public Integer getLimit(String alias) throws IOException {
+	public Integer getLimit(@Nullable String alias) throws IOException {
 		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getLimit();
 	}	
 	
+	@Nonnull
+	public Set<String> getAliases() throws IOException {
+		return getEntries().keySet();
+	}
+
 	@Nonnull
 	private Map<String, Entry>  getEntries() throws IOException {
 		if(feedSiteEntries == null || isReReadFeedSitesFileNecessary()) {
