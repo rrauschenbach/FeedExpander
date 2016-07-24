@@ -1,5 +1,5 @@
 # FeedExpander
-Feed expander is a service which provides a generic way to create rss or atom feeds containing a specific part of the linked page. In other words, with FeedExpander you can convert a cropped feed into a full feed.  
+Feed expander is a java service which provides a generic way to create rss or atom feeds containing a specific part of the linked page. In other words, with FeedExpander you can convert a cropped feed into a full feed.  
 
 ## Build
 You need to have git, maven and java 1.8 installed before doing the following.
