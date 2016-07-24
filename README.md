@@ -18,7 +18,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `git fetch --all`
   * `git reset --hard origin/master`
   * `mvn install`
-  * Look for changes between you old and the updated config.yml
+  * Look for changes between your old and the updated config.yml
 
 ## Security hints
   If you plan to use the FeedExpander service as some private service you have to configure the htusers files where you can simply add some users and their password which are allowed to get access. It would be also be much more safe to use https instead of the preconfigured http setup.
