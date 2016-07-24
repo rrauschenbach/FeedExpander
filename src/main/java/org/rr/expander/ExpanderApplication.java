@@ -21,6 +21,9 @@ import org.rr.expander.feed.FeedBuilderImpl;
 import org.rr.expander.feed.FeedContentExchanger;
 import org.rr.expander.feed.FeedContentExchangerFactory;
 import org.rr.expander.feed.FeedContentExchangerImpl;
+import org.rr.expander.feed.FeedContentFilter;
+import org.rr.expander.feed.FeedContentFilterFactory;
+import org.rr.expander.feed.FeedContentFilterImpl;
 import org.rr.expander.health.HtUserHealthCheck;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
@@ -143,6 +146,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
         	bindPageCache(config);
         	bindFeedBuilder();
         	bindFeedContentExchanger();
+        	bindFeedContentFilter();
         }
 
 				private void bindFeedContentExchanger() {
@@ -151,6 +155,12 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
        	     .build(FeedContentExchangerFactory.class));
 				}
 
+				private void bindFeedContentFilter() {
+					install(new FactoryModuleBuilder()
+       	     .implement(FeedContentFilter.class, FeedContentFilterImpl.class)
+       	     .build(FeedContentFilterFactory.class));
+				}
+				
 				private void bindFeedBuilder() {
 					install(new FactoryModuleBuilder()
         	     .implement(FeedBuilder.class, FeedBuilderImpl.class)

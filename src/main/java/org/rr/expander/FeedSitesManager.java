@@ -50,7 +50,12 @@ public class FeedSitesManager {
 		private String selector;
 		@JsonProperty("limit")
 		private int limit;
-
+		@JsonProperty("includeFilter")
+		private String includeFilter;
+		@JsonProperty("excludeFilter")
+		private String excludeFilter;
+		
+		
 		public String getDescription() {
 			return description;
 		}
@@ -69,6 +74,14 @@ public class FeedSitesManager {
 
 		public String getAlias() {
 			return alias;
+		}
+
+		public String getIncludeFilter() {
+			return includeFilter;
+		}
+
+		public String getExcludeFilter() {
+			return excludeFilter;
 		}
 	}
 	
@@ -115,6 +128,16 @@ public class FeedSitesManager {
 	@Nullable
 	public String getSelector(@Nullable String alias) throws IOException {
 		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getSelector();
+	}
+	
+	@Nullable
+	public String getIncludeFilter(@Nullable String alias) throws IOException {
+		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getIncludeFilter();
+	}
+	
+	@Nullable
+	public String getExcludeFilter(@Nullable String alias) throws IOException {
+		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getExcludeFilter();
 	}
 	
 	@Nullable

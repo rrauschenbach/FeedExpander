@@ -2,6 +2,7 @@ package org.rr.expander.feed;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,9 +47,6 @@ public class FeedBuilderImpl implements FeedBuilder{
 	@Inject(optional = false)
 	@Nonnull
 	private UrlLoaderFactory urlLoaderFactory;
-	
-	/** max number of feed entries for the result feed */
-	private int limit;
 
 	/** The loaded rss or atom feed. */
 	@Nullable
@@ -57,12 +55,16 @@ public class FeedBuilderImpl implements FeedBuilder{
 	@Inject(optional = false)
 	@Nonnull
 	private FeedContentExchangerFactory feedContentExchangerFactory;
+	
+	@Inject(optional = false)
+	@Nonnull
+	private FeedContentFilterFactory feedContentFilterFactory;
+
 
 	@Inject
 	public FeedBuilderImpl(
 			@Assisted @Nonnull String feedUrl) {
 		this.feedUrl = feedUrl;
-		this.limit = Integer.MAX_VALUE;
 	}
 
 	@Override
@@ -90,8 +92,20 @@ public class FeedBuilderImpl implements FeedBuilder{
 
 	@Override
 	public @Nonnull FeedBuilderImpl expand(@Nullable String includeCssSelector) {
-		Optional.<String> ofNullable(includeCssSelector)
-				.ifPresent(expression -> feedContentExchangerFactory.createFeedContentExchanger(expression).exchangeAll(reduceEntries()));
+		if(isNotBlank(includeCssSelector)) {
+			Optional.<String> of(includeCssSelector)
+					.ifPresent(selector -> feedContentExchangerFactory.createFeedContentExchanger(selector).exchangeAll(getEntries()));
+		}
+		return this;
+	}
+	
+
+	@Override
+	public @Nonnull FeedBuilderImpl filter(@Nullable String includeFilter, @Nullable String excludeFilter) {
+		Optional.<String> ofNullable(includeFilter).ifPresent(filter -> 
+			applyFeedEntries(feedContentFilterFactory.createFeedContentFilter(filter).filterInclude(getEntries())));
+		Optional.<String> ofNullable(excludeFilter).ifPresent(filter -> 
+		  applyFeedEntries(feedContentFilterFactory.createFeedContentFilter(filter).filterExclude(getEntries())));
 		return this;
 	}
 
@@ -105,8 +119,8 @@ public class FeedBuilderImpl implements FeedBuilder{
 
 	@Override
 	@Nonnull
-	public FeedBuilderImpl setLimit(@Nullable Integer limit) {
-		this.limit = limit != null && limit >= 0 ? limit : Integer.MAX_VALUE;
+	public FeedBuilderImpl applyLimit(@Nullable Integer limit) {
+		reduceEntries(limit != null && limit >= 0 ? limit : Integer.MAX_VALUE);
 		return this;
 	}
 
@@ -135,13 +149,13 @@ public class FeedBuilderImpl implements FeedBuilder{
 	}
 
 	/**
-	 * Reduces the number of entries to the limit which was defined with {@link #setLimit(Integer)}.
+	 * Reduces the number of entries to the limit which was defined with {@link #applyLimit(Integer)}.
 	 * 
 	 * @return The reduces feed entry list.
 	 * @throws IllegalArgumentException if the feed is not loaded before.
 	 */
-	private @Nonnull List<SyndEntry> reduceEntries() {
-		return Optional.ofNullable(loadedFeed)
+	private @Nonnull void reduceEntries(int limit) {
+		Optional.ofNullable(loadedFeed)
 			.map(feed -> getEntries().stream()
 			.limit(limit)
 			.collect(toList()))
@@ -149,6 +163,13 @@ public class FeedBuilderImpl implements FeedBuilder{
 			.orElseThrow(() -> new IllegalArgumentException(String.format("Feed '%s' is not loaded.", feedUrl)));
 	}
 
+	/**
+	 * Applies the given feed entries to the {@link #loadedFeed} instance which makes them public available. This is
+	 * always necessary if entries gets added or removed or newly arranged.
+	 * 
+	 * @param entries The entries to be applied.
+	 * @return The given feed entries.
+	 */
 	private @Nonnull List<SyndEntry> applyFeedEntries(@Nonnull List<SyndEntry> entries) {
 		Optional.ofNullable(loadedFeed).ifPresent(feed -> feed.setEntries(entries));
 		return entries;

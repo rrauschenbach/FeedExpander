@@ -64,22 +64,14 @@ public class ExpanderResource {
 	}
 
 	@Nonnull
-	private FeedBuilderImpl createFeedHandler(@Nonnull Optional<Integer> limit, @Nonnull Optional<String> include,
-			@Nonnull String feedUrl) throws MalformedURLException, FeedException, IOException {
-		FeedBuilderImpl feedHandler = feedBuilderFactory.createFeedBuilder(feedUrl)
-				.loadFeed()
-				.setLimit(limit.orNull())
-				.expand(include.or("*"));
-		return feedHandler;
-	}
-
-	@Nonnull
 	private FeedBuilderImpl createFeedHandlerForAlias(@Nonnull String alias)
 			throws MalformedURLException, FeedException, IOException {
 		FeedBuilderImpl feedHandler = feedBuilderFactory.createFeedBuilder(feedSitesManager.getFeedUrl(alias))
 				.loadFeed()
-				.setLimit(feedSitesManager.getLimit(alias))
-				.expand(feedSitesManager.getSelector(alias));
+				.applyLimit(feedSitesManager.getLimit(alias))
+				.filter(feedSitesManager.getIncludeFilter(alias), feedSitesManager.getExcludeFilter(alias))
+				.expand(feedSitesManager.getSelector(alias))
+				.filter(feedSitesManager.getIncludeFilter(alias), feedSitesManager.getExcludeFilter(alias));
 		return feedHandler;
 	}
 	

@@ -39,6 +39,15 @@ public interface FeedBuilder {
 	public @Nonnull FeedBuilderImpl expand(@Nullable String includeCssSelector);
 
 	/**
+	 * Filter feed entries using regular expressions.
+	 * 
+	 * @param includeFilter Filter away all feed entries matching to this regular expression.
+	 * @param excludeFilter Filter away all feed entries not matching to this regular expression.
+	 * @return This {@link FeedBuilderImpl} instance.
+	 */
+	FeedBuilderImpl filter(String includeFilter, String excludeFilter);
+
+	/**
 	 * Create a new, utf-8 encoded feed from the current, modified loaded feed. The
 	 * {@link #loadFeed()} method must be invoked first.
 	 * 
@@ -55,6 +64,6 @@ public interface FeedBuilder {
 	 * @param limit Number of feed entries kept for the result feed.
 	 */
 	@Nonnull
-	public FeedBuilderImpl setLimit(@Nullable Integer limit);
+	public FeedBuilderImpl applyLimit(@Nullable Integer limit);
 
 }
