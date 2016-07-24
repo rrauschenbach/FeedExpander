@@ -63,7 +63,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 	public void run(ExpanderConfiguration config, Environment environment) throws ClassNotFoundException {
 		Injector injector = createInjector(config);
 		registerExpanderResource(environment, injector);
-		registerSHowFeedsResource(environment, injector);
+		registerShowFeedsResource(environment, injector);
 		registerBasicAuth(environment, config.getHtusers());
 		registerConfigurationHealthCheck(config, environment);
 	}
@@ -129,7 +129,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 		environment.jersey().register(injector.getInstance(ExpanderResource.class));
 	}
 	
-	private void registerSHowFeedsResource(Environment environment, Injector injector) {
+	private void registerShowFeedsResource(Environment environment, Injector injector) {
 		environment.jersey().register(injector.getInstance(ExpanderShowFeedsResource.class));
 	}
 	
