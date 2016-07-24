@@ -137,7 +137,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
     return Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
-        	bind(FeedSitesManager.class).annotatedWith(Names.named("FeedSitesManager")).toInstance(new FeedSitesManager(config.getFeedSites()));
+        	bind(FeedSitesManager.class).toInstance(new FeedSitesManager(config.getFeedSites()));
         	bind(String.class).annotatedWith(Names.named("ExpandServiceUrl")).toInstance(getExpandServiceUrl(config));
         	bind(UrlLoaderFactory.class).toInstance(UrlLoaderFactory.createURLLoaderFactory());
         	bind(PageCache.class).toInstance(PageCacheFactory.createPageCacheFactory(

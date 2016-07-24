@@ -29,7 +29,6 @@ public class ExpanderResource {
 
 	@Nonnull
 	@Inject(optional = false)
-	@Named("FeedSitesManager")
 	private FeedSitesManager feedSitesManager;
 	
 	@Nonnull
