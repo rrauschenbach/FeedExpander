@@ -9,12 +9,12 @@ import javax.annotation.Nullable;
 
 import com.codahale.metrics.health.HealthCheck;
 
-public class ConfigurationHealthCheck extends HealthCheck {
+public class HtUserHealthCheck extends HealthCheck {
 	
 	@Nullable
 	private final String htusers;
 	
-	public ConfigurationHealthCheck(String htusers) {
+	public HtUserHealthCheck(String htusers) {
 		this.htusers = htusers;
 	}
 

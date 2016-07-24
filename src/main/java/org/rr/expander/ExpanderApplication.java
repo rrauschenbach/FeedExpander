@@ -21,7 +21,7 @@ import org.rr.expander.feed.FeedBuilderImpl;
 import org.rr.expander.feed.FeedContentExchanger;
 import org.rr.expander.feed.FeedContentExchangerFactory;
 import org.rr.expander.feed.FeedContentExchangerImpl;
-import org.rr.expander.health.ConfigurationHealthCheck;
+import org.rr.expander.health.HtUserHealthCheck;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,9 +120,9 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 	}
 
 	private void registerConfigurationHealthCheck(ExpanderConfiguration config, Environment environment) {
-		final ConfigurationHealthCheck healthCheck =
-        new ConfigurationHealthCheck(config.getHtusers());
-    environment.healthChecks().register("configuration", healthCheck);
+		final HtUserHealthCheck healthCheck =
+        new HtUserHealthCheck(config.getHtusers());
+    environment.healthChecks().register("htuser", healthCheck);
 	}
 
 	private void registerExpanderResource(Environment environment, Injector injector) {
@@ -137,18 +137,42 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
     return Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
-        	bind(FeedSitesManager.class).toInstance(new FeedSitesManager(config.getFeedSites()));
-        	bind(String.class).annotatedWith(Names.named("ExpandServiceUrl")).toInstance(getExpandServiceUrl(config));
-        	bind(UrlLoaderFactory.class).toInstance(UrlLoaderFactory.createURLLoaderFactory());
-        	bind(PageCache.class).toInstance(PageCacheFactory.createPageCacheFactory(
-        			CACHE_TYPE.valueOf(config.getPageCacheType()), config.getPageCacheSize(), config.getPageCachePath()).getPageCache());
-        	install(new FactoryModuleBuilder()
-        	     .implement(FeedBuilder.class, FeedBuilderImpl.class)
-        	     .build(FeedBuilderFactory.class));
-        	install(new FactoryModuleBuilder()
+        	bindFeedSitesManager(config);
+        	bindExpandServiceUrl(config);
+        	bindUrlLoaderFactory();
+        	bindPageCache(config);
+        	bindFeedBuilder();
+        	bindFeedContentExchanger();
+        }
+
+				private void bindFeedContentExchanger() {
+					install(new FactoryModuleBuilder()
        	     .implement(FeedContentExchanger.class, FeedContentExchangerImpl.class)
        	     .build(FeedContentExchangerFactory.class));
-        }
+				}
+
+				private void bindFeedBuilder() {
+					install(new FactoryModuleBuilder()
+        	     .implement(FeedBuilder.class, FeedBuilderImpl.class)
+        	     .build(FeedBuilderFactory.class));
+				}
+
+				private void bindPageCache(ExpanderConfiguration config) {
+					bind(PageCache.class).toInstance(PageCacheFactory.createPageCacheFactory(
+        			CACHE_TYPE.valueOf(config.getPageCacheType()), config.getPageCacheSize(), config.getPageCachePath()).getPageCache());
+				}
+
+				private void bindUrlLoaderFactory() {
+					bind(UrlLoaderFactory.class).toInstance(UrlLoaderFactory.createURLLoaderFactory());
+				}
+
+				private void bindExpandServiceUrl(ExpanderConfiguration config) {
+					bind(String.class).annotatedWith(Names.named("ExpandServiceUrl")).toInstance(getExpandServiceUrl(config));
+				}
+
+				private void bindFeedSitesManager(ExpanderConfiguration config) {
+					bind(FeedSitesManager.class).toInstance(new FeedSitesManager(config.getFeedSites()));
+				}
     });
 	}
 	
