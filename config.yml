@@ -67,7 +67,7 @@ metrics:
 htusers: htusers
 
 # Allow to define url's with selector and alias which are available with the alias url parameter.
-feedSites: feed-sites.config
+feedSites: expand-feeds.config
 
 # Cache configuration for loaded web pages linked by feeds.
 # Supported cache types are DISK_CACHE with a pageCacheSize in megabytes and a well configured pageCachePath which 

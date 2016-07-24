@@ -1,51 +1,70 @@
 package org.rr.expander;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.junit.Assert.assertEquals;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.stream.Stream;
+import java.nio.file.Path;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.annotation.Nonnull;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class FeedSitesManagerTest {
 	
-	private static final String SUCCESSFUL_CONFIG_LINE = "test | Test News | http://www.heise.de/newsticker/heise-atom.xml | article | 10"; 
+	private static String TWO_ENTRIES_CONFIG = "{\"feeds\":[{\"alias\":\"heise\",\"description\":\"Heise news\",\"feedUrl\":\"http://www.heise.de/newsticker/heise-atom.xml\",\"selector\":\"article\",\"limit\":10},{\"alias\":\"golem\",\"description\":\"Golem news\",\"feedUrl\":\"http://rss.golem.de/rss.php?feed=RSS2.0\",\"selector\":\"article\",\"limit\":11}]}";
 	
-	private static final String FLAWED_CONFIG_LINE_MISSING_PART = "test | http://www.heise.de/newsticker/heise-atom.xml | article | 10";
-	
-	private static final String COMMENT_LINE = "# comment here";
-	
-	public FeedSitesManager getFeedSitesManager(final String feedSites) {
+	public FeedSitesManager getFeedSitesManager(String feedsConfig) {
 		return new FeedSitesManager(EMPTY) {
 
 			@Override
-			protected Stream<String> getFeedSitesStream() throws IOException {
-				return Stream.of(StringUtils.split(feedSites, '\n'));
+			protected String readFeedSitesConfig(@Nonnull Path feedSitesFile) throws IOException {
+				return feedsConfig; 
 			}
 			
 		};
 	}
 	
 	@Test
-	public void testSimpleSuccessfulCase() throws IOException {
-		assertTrue(getFeedSitesManager(SUCCESSFUL_CONFIG_LINE).containsAlias("test"));
-		assertEquals("Test News", getFeedSitesManager(SUCCESSFUL_CONFIG_LINE).getDescription("test"));
-		assertEquals("http://www.heise.de/newsticker/heise-atom.xml", getFeedSitesManager(SUCCESSFUL_CONFIG_LINE).getFeedUrl("test"));
-		assertEquals(Integer.valueOf(10), getFeedSitesManager(SUCCESSFUL_CONFIG_LINE).getLimit("test"));
-		assertEquals("article", getFeedSitesManager(SUCCESSFUL_CONFIG_LINE).getSelector("test"));
+	public void testDefaultConfigFileContainsExampleEntries() throws IOException {
+		FeedSitesManager feedSitesManager = getFeedSitesManager(FileUtils.readFileToString(new File("expand-feeds.config")));
+		assertTrue(feedSitesManager.size() > 0);
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
-	public void testSimpleMissingConfigPart() throws IOException {
-		getFeedSitesManager(FLAWED_CONFIG_LINE_MISSING_PART).size();
+	@Test(expected = JsonMappingException.class)
+	public void testEmptyContent() throws IOException {
+		FeedSitesManager feedSitesManager = getFeedSitesManager(EMPTY);
+		feedSitesManager.size();
+	}
+	
+	@Test(expected = JsonMappingException.class)
+	public void testInvalidContent() throws IOException {
+		FeedSitesManager feedSitesManager = getFeedSitesManager(EMPTY);
+		feedSitesManager.size();
 	}
 	
 	@Test
-	public void testCommentSuccessfulCase() throws IOException {
-		assertEquals(0, getFeedSitesManager(COMMENT_LINE).size());
+	public void testValidConfig() throws IOException {
+		FeedSitesManager feedSitesManager = getFeedSitesManager(TWO_ENTRIES_CONFIG);
+		assertTrue(feedSitesManager.size() == 2);
+		
+		for (String alias : feedSitesManager.getAliases()) {
+			assertTrue(isNotBlank(alias));
+			assertTrue(TWO_ENTRIES_CONFIG.contains(quote(alias)));
+			assertTrue(TWO_ENTRIES_CONFIG.contains(quote(feedSitesManager.getDescription(alias))));
+			assertTrue(TWO_ENTRIES_CONFIG.contains(quote(feedSitesManager.getFeedUrl(alias))));
+			assertTrue(TWO_ENTRIES_CONFIG.contains(quote(feedSitesManager.getSelector(alias))));
+			assertTrue(TWO_ENTRIES_CONFIG.contains(String.valueOf(feedSitesManager.getLimit(alias))));
+		}
+	}
+	
+	private static String quote(String s) {
+		return "\"" + s + "\"";
 	}
 	
 }
