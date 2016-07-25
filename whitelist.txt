@@ -1,4 +1,0 @@
-# Specify your allowed feed urls here. It is allowed to use the '*' character as wild card.
-# There is no dns lookup. You have to list the urls as requested with the GET parameter 'feedUrl'. 
-rss.golem.de/rss.php?*
-heise.de.feedsportal.com/*
