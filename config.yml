@@ -63,8 +63,8 @@ metrics:
   frequency: 10s
 
 # Define the file that contains all users and password. User and password has to be separated with a single ':' character.
-# Leave empty if no authentication is desired.
-htusers: htusers
+# Uncomment and edit htusers file if http auth is required.
+# htusers: htusers
 
 # Allow to define url's with selector and alias which are available with the alias url parameter.
 feedSites: expand-feeds.config
