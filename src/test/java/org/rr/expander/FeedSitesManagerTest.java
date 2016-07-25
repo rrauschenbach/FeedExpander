@@ -32,7 +32,7 @@ public class FeedSitesManagerTest {
 	
 	@Test
 	public void testDefaultConfigFileContainsExampleEntries() throws IOException {
-		FeedSitesManager feedSitesManager = getFeedSitesManager(FileUtils.readFileToString(new File("expand-feeds.config")));
+		FeedSitesManager feedSitesManager = getFeedSitesManager(FileUtils.readFileToString(new File("feed-config.json")));
 		assertTrue(feedSitesManager.size() > 0);
 	}
 	
