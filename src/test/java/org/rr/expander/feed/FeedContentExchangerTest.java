@@ -107,16 +107,39 @@ public class FeedContentExchangerTest {
     return Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
-        	bind(UrlLoaderFactory.class).toInstance(createTestUrlLoaderFactory());
-        	bind(PageCache.class).toInstance(createDummyPageCache());
-        	install(new FactoryModuleBuilder()
-        	     .implement(FeedBuilder.class, FeedBuilderImpl.class)
-        	     .build(FeedBuilderFactory.class));
-        	install(new FactoryModuleBuilder()
-       	     .implement(FeedContentExchanger.class, FeedContentExchangerImpl.class)
-       	     .build(FeedContentExchangerFactory.class));
+        	bindUrlLoaderFactory();
+        	bindPageCache();
+        	bindFeedBuilder();
+        	bindFeedContentExchanger();
+        	bindFeedContentFilter();
 
         }
+
+				private void bindUrlLoaderFactory() {
+					bind(UrlLoaderFactory.class).toInstance(createTestUrlLoaderFactory());
+				}
+
+				private void bindPageCache() {
+					bind(PageCache.class).toInstance(createDummyPageCache());
+				}
+
+				private void bindFeedBuilder() {
+					install(new FactoryModuleBuilder()
+        	     .implement(FeedBuilder.class, FeedBuilderImpl.class)
+        	     .build(FeedBuilderFactory.class));
+				}
+
+				private void bindFeedContentExchanger() {
+					install(new FactoryModuleBuilder()
+       	     .implement(FeedContentExchanger.class, FeedContentExchangerImpl.class)
+       	     .build(FeedContentExchangerFactory.class));
+				}
+
+				private void bindFeedContentFilter() {
+					install(new FactoryModuleBuilder()
+        	     .implement(FeedContentFilter.class, FeedContentFilterImpl.class)
+        	     .build(FeedContentFilterFactory.class));
+				}
     });
 	}
 
