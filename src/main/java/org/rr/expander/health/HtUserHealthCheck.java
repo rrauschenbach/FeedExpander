@@ -20,7 +20,7 @@ public class HtUserHealthCheck extends HealthCheck {
 
 	@Override
 	protected Result check() throws Exception {
-		if(negate(checkConfigurationFile(htusers))) {
+		if(htusers != null && negate(checkConfigurationFile(htusers))) {
 			return Result.unhealthy("A htusers file was configured but did not exists.");
 		}
 
