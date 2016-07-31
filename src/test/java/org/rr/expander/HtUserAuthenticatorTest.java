@@ -15,53 +15,53 @@ public class HtUserAuthenticatorTest {
 
 	@Test
 	public void testSimpleSuccessfulAuth() throws AuthenticationException {
-		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("kalle", "kanns")).orNull());
+		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("kalle", "kanns")).orElse(null));
 	}
 	
 	@Test
 	public void testSuccessfulAuthWithMultipleColons() throws AuthenticationException {
-		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("peter", "sec:ure")).orNull());
+		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("peter", "sec:ure")).orElse(null));
 	}
 	
 	@Test
 	public void testSuccessfulAuthWithMultipleColonsAtBegin() throws AuthenticationException {
-		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("fred", ":secure")).orNull());
+		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("fred", ":secure")).orElse(null));
 	}
 	
 	@Test
 	public void testSuccessfulAuthWithMultipleColonsAtBeginAndEnd() throws AuthenticationException {
-		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("clara", ":secure:")).orNull());
+		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("clara", ":secure:")).orElse(null));
 	}
 	
 	@Test
 	public void testSuccessfulAuthWithHash() throws AuthenticationException {
-		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("gerda", "#pass")).orNull());
+		assertNotNull(createHtUserAuthenticator().authenticate(new BasicCredentials("gerda", "#pass")).orElse(null));
 	}
 	
 	@Test
 	public void testSimpleUnSuccessfulAuthWithWrongPass() throws AuthenticationException {
-		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials("kalle", "wronk")).orNull());
+		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials("kalle", "wronk")).orElse(null));
 	}
 	
 	@Test
 	public void testSimpleUnSuccessfulAuthWithUnknownUser() throws AuthenticationException {
-		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials("rumpelstilzchen", "unknown")).orNull());
+		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials("rumpelstilzchen", "unknown")).orElse(null));
 	}
 	
 	@Test
 	public void testSimpleUnSuccessfulAuthWithEmptyUser() throws AuthenticationException {
-		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials(EMPTY, "unknown")).orNull());
+		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials(EMPTY, "unknown")).orElse(null));
 	}
 	
 	@Test
 	public void testSimpleUnSuccessfulAuthWithEmptyPass() throws AuthenticationException {
-		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials("rumpelstilzchen", EMPTY)).orNull());
+		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials("rumpelstilzchen", EMPTY)).orElse(null));
 	}
 	
 	@Test
 	public void testSimpleUnSuccessfulAuthWithEmptyDefinedPass() throws AuthenticationException {
 		// an empty pass can be defined but should never be accepted for authentication.
-		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials("morgana", EMPTY)).orNull());
+		assertNull(createHtUserAuthenticator().authenticate(new BasicCredentials("morgana", EMPTY)).orElse(null));
 	}
 	
 	private HtUserAuthenticator createHtUserAuthenticator() {

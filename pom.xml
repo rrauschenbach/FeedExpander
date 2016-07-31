@@ -11,7 +11,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<dropwizard.version>0.9.1</dropwizard.version>
+		<dropwizard.version>1.0.0</dropwizard.version>
 		<jdbi.version>2.70</jdbi.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

@@ -3,6 +3,7 @@ package org.rr.expander;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.BooleanUtils.negate;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
@@ -11,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collector;
 
 import javax.annotation.Nonnull;
@@ -23,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
 
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
@@ -66,7 +67,7 @@ public class HtUserAuthenticator implements Authenticator<BasicCredentials, Basi
 	}
 	
 	private @Nullable String getPassword(@Nullable String user) {
-		return Optional.fromNullable(userPasses).transform(map -> Optional.fromNullable(map.get(user))).get().orNull();
+		return Optional.ofNullable(userPasses).map(map -> Optional.ofNullable(map.get(user))).get().orElse(EMPTY);
 	}
 
 	private @Nonnull Collector<ImmutablePair<String, String>, ?, Map<String, String>> getUserPassMapCollector() {
@@ -97,7 +98,7 @@ public class HtUserAuthenticator implements Authenticator<BasicCredentials, Basi
 		String htUsersPass = readHtUsers().getPassword(loginUserName);
 		if(negate(comparePasswords(loginPassword, htUsersPass))) {
 			logger.info("Failed to login " + loginUserName);
-			return Optional.absent();
+			return Optional.empty();
 		}
 		return Optional.of(new BasicUserPrincipal(loginUserName));
 	}
