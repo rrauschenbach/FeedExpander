@@ -22,7 +22,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * Look for changes between your backuped and the updated config files.
 
 ## Security hints
-  If you plan to use the FeedExpander service as some private service you may configure the htusers files where you can simply add some users and their password which are allowed to get access. It would be also be much more safe to use https instead of the preconfigured http setup.
+  If you plan to use the FeedExpander service as some private service you may configure the htusers files where you can simply add some users and their password which are allowed to get access. Feed readers must have simple http auth support for using this. It would be also be much more safe to use https instead of the preconfigured http setup.
   
   In the case that FeedExpander is running on the same machine as the feed reader you are using (for example TTRSS) it would be a good idea configure FeedExpander with `bindHost: 127.0.0.1` which is already the default configuration.
   
