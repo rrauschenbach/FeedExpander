@@ -22,10 +22,9 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * Look for changes between your backuped and the updated config files.
 
 ## Security hints
-  If you plan to use the FeedExpander service as some private service you have to configure the htusers files where you can simply add some users and their password which are allowed to get access. It would be also be much more safe to use https instead of the preconfigured http setup.
+  If you plan to use the FeedExpander service as some private service you may configure the htusers files where you can simply add some users and their password which are allowed to get access. It would be also be much more safe to use https instead of the preconfigured http setup.
   
-  In the case that FeedExpander is running on the same machine as the feed reader you are using (for example TTRSS) it would be a good idea configure FeedExpander with `bindHost: 127.0.0.1` which is already the default configuration. 
-It is generally a good idea to reduce the visibility of a service using a firewall or defining some iptable rules.  
+  In the case that FeedExpander is running on the same machine as the feed reader you are using (for example TTRSS) it would be a good idea configure FeedExpander with `bindHost: 127.0.0.1` which is already the default configuration.
   
 ## Usage
   Before the FeedExpander can be used, the feeds that should be expanded have to be configured in the `feed-config.json` file. The alias which is configured in the `feed-config.json` file is used as a part of the expander's feed url. The default configured url is `http://localhost:9998/expand?alias=abc`. The alias `abc` have to be replaced with this one specified in the config file. All configured, expanded url's can be listed with the url `http://localhost:9998/feeds`.

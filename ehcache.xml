@@ -1,0 +1,57 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+	monitoring="autodetect" dynamicConfig="true">
+
+	<!--
+	
+	    DiskStore configuration
+	    =======================
+	
+	    The diskStore element is optional. To turn off disk store path creation, comment out the diskStore
+	    element below.
+	
+	    Configure it if you have disk persistence enabled for any cache or if you use
+	    unclustered indexed search.
+	
+	    If it is not configured, and a cache is created which requires a disk store, a warning will be
+	     issued and java.io.tmpdir will automatically be used.
+	
+	    diskStore has only one attribute - "path". It is the path to the directory where
+	    any required disk files will be created.
+	
+	    If the path is one of the following Java System Property it is replaced by its value in the
+	    running VM. For backward compatibility these should be specified without being enclosed in the ${token}
+	    replacement syntax.
+	
+	    The following properties are translated:
+	    * user.home - User's home directory
+	    * user.dir - User's current working directory
+	    * java.io.tmpdir - Default temp file path
+	    * ehcache.disk.store.dir - A system property you would normally specify on the command line
+	      e.g. java -Dehcache.disk.store.dir=/u01/myapp/diskdir ...
+	
+	    Subdirectories can be specified below the property e.g. java.io.tmpdir/one
+	
+	    
+	-->
+	<diskStore path="java.io.tmpdir/feedexpander"/>
+
+	<!-- Sample cache named cache1
+    This cache contains a maximum in memory of 100 elements, and will expire
+    an element if it is idle or lives for more than a day.
+
+    If there are more than 100 elements it will overflow to the
+    disk cache, which in this configuration will go to wherever java.io.tmp is
+    defined on your system. On a standard Linux system this will be /tmp" -->
+	<cache name="pageContentCache"
+		maxEntriesLocalHeap="100"
+		maxEntriesLocalDisk="5000"
+		eternal="false"
+		diskSpoolBufferSizeMB="500"
+		timeToIdleSeconds="86400" timeToLiveSeconds="86400"
+		memoryStoreEvictionPolicy="LFU"
+		transactionalMode="off">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+</ehcache>

@@ -17,4 +17,14 @@ public class DummyPageCache implements PageCache {
 		return null;
 	}
 
+	@Override
+	public double getCacheHitCount() {
+		return 0;
+	}
+
+	@Override
+	public double getCacheMissCount() {
+		return 0;
+	}
+
 }

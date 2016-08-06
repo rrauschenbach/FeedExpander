@@ -12,9 +12,7 @@ public class ExpanderConfiguration extends Configuration {
 
 	private String pageCacheType;
 	
-	private long pageCacheSize;
-	
-	private String pageCachePath;
+	private String pageCacheConfigurationFileName;
 	
 	@JsonProperty
   public String getHtusers() {
@@ -26,10 +24,12 @@ public class ExpanderConfiguration extends Configuration {
       this.htUsers = htUsers;
   }
 
+  @JsonProperty
   public String getFeedSites() {
 		return feedSites;
 	}
 
+  @JsonProperty
 	public void setFeedSites(String feedSites) {
 		this.feedSites = feedSites;
 	}
@@ -44,23 +44,14 @@ public class ExpanderConfiguration extends Configuration {
 		this.pageCacheType = pageCacheType;
 	}
 
-	@JsonProperty
-	public void setPageCacheSize(long pageCacheSize) {
-		this.pageCacheSize = pageCacheSize;
+  @JsonProperty
+	public String getPageCacheConfigurationFileName() {
+		return pageCacheConfigurationFileName;
 	}
 
   @JsonProperty
-	public long getPageCacheSize() {
-		return pageCacheSize;
+	public void setPageCacheConfigurationFileName(String pageCacheConfigurationFileName) {
+		this.pageCacheConfigurationFileName = pageCacheConfigurationFileName;
 	}
 
-  @JsonProperty
-	public String getPageCachePath() {
-		return pageCachePath;
-	}
-
-  @JsonProperty
-	public void setPageCachePath(String pageCachePath) {
-		this.pageCachePath = pageCachePath;
-	}  
 }

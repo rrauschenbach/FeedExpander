@@ -10,34 +10,34 @@ import jersey.repackaged.com.google.common.base.Preconditions;
 public abstract class PageCacheFactory {
 
 	public static enum CACHE_TYPE {
-		DISK_CACHE {
+		EH_CACHE {
 			
-			private DiskPageCache singleton;
+			private EhCache singleton;
 			
 			@Override
-			public PageCache createPageCache(long maxSize, String location) {
+			public PageCache createPageCache(String configurationFileName) {
 				if(singleton == null) {
-					singleton = new DiskPageCache(maxSize, location);
+					singleton = new EhCache(configurationFileName);
 				}
 				return singleton;
 			}
 		};
 
-		public abstract PageCache createPageCache(long maxSize, String location);
+		public abstract PageCache createPageCache(String configurationFileName);
 	}
 
-	public static final PageCacheFactory createPageCacheFactory(@Nonnull CACHE_TYPE type, long maxSize, String location) {
+	public static final PageCacheFactory createPageCacheFactory(@Nonnull CACHE_TYPE type) {
 		Preconditions.checkNotNull(type);
 		return new PageCacheFactory() {
 
 			@Override
-			public PageCache getPageCache() {
-				return type.createPageCache(maxSize, location);
+			public PageCache getPageCache(String configurationFileName) {
+				return type.createPageCache(configurationFileName);
 			}
 		};
 	}
 
 	@Nonnull
-	public abstract PageCache getPageCache();
+	public abstract PageCache getPageCache(String configurationFileName);
 
 }

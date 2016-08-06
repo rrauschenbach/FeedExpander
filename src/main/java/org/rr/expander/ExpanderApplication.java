@@ -25,6 +25,7 @@ import org.rr.expander.feed.FeedContentFilter;
 import org.rr.expander.feed.FeedContentFilterFactory;
 import org.rr.expander.feed.FeedContentFilterImpl;
 import org.rr.expander.health.HtUserHealthCheck;
+import org.rr.expander.health.PageCacheHealthCheck;
 import org.rr.expander.loader.UrlLoaderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +69,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 		registerExpanderResource(environment, injector);
 		registerShowFeedsResource(environment, injector);
 		registerBasicAuth(environment, config.getHtusers());
-		registerConfigurationHealthCheck(config, environment);
+		registerConfigurationHealthCheck(config, environment, injector);
 	}
 	
 	private String evaluateHostName() {
@@ -122,10 +123,9 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 				serverFactory.getClass().getName()));
 	}
 
-	private void registerConfigurationHealthCheck(ExpanderConfiguration config, Environment environment) {
-		final HtUserHealthCheck healthCheck =
-        new HtUserHealthCheck(config.getHtusers());
-    environment.healthChecks().register("htuser", healthCheck);
+	private void registerConfigurationHealthCheck(ExpanderConfiguration config, Environment environment, Injector injector) {
+    environment.healthChecks().register("htuser", new HtUserHealthCheck(config.getHtusers()));
+    environment.healthChecks().register("page-cache", new PageCacheHealthCheck(injector.getInstance(PageCache.class)));
 	}
 
 	private void registerExpanderResource(Environment environment, Injector injector) {
@@ -169,7 +169,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 
 				private void bindPageCache(ExpanderConfiguration config) {
 					bind(PageCache.class).toInstance(PageCacheFactory.createPageCacheFactory(
-        			CACHE_TYPE.valueOf(config.getPageCacheType()), config.getPageCacheSize(), config.getPageCachePath()).getPageCache());
+        			CACHE_TYPE.valueOf(config.getPageCacheType())).getPageCache(config.getPageCacheConfigurationFileName()));
 				}
 
 				private void bindUrlLoaderFactory() {

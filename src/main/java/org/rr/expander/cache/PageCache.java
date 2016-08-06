@@ -2,6 +2,9 @@ package org.rr.expander.cache;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Specifies common methods for page caching.
@@ -27,4 +30,18 @@ public interface PageCache {
 	 */
 	@Nullable
 	String restore(@Nonnull String url);
+
+	/**
+	 * Get the count of requests which could be satisfied by the cache.
+	 * 
+	 * @return number of cache hits.
+	 */
+	double getCacheHitCount();
+
+	/**
+	 * Get the count of requests which could not be satisfied by the cache.
+	 * 
+	 * @return number of cache misses.
+	 */
+	double getCacheMissCount();
 }

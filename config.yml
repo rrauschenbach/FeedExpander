@@ -70,8 +70,7 @@ metrics:
 feedSites: feed-config.json
 
 # Cache configuration for loaded web pages linked by feeds.
-# Supported cache types are DISK_CACHE with a pageCacheSize in megabytes and a well configured pageCachePath which 
-# must have write permissions.
-pageCacheType: DISK_CACHE
-pageCacheSize: 500
-pageCachePath: /tmp/feed-cache/
+# Supported cache types are EH_CACHE which needs to have a pageCacheConfigurationFileName which points to a ehcache
+# configuration file.
+pageCacheType: EH_CACHE
+pageCacheConfigurationFileName: ehcache.xml
