@@ -27,7 +27,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
   In the case that FeedExpander is running on the same machine as the feed reader you are using (for example TTRSS) it would be a good idea configure FeedExpander with `bindHost: 127.0.0.1` which is already the default configuration.
   
 ## Usage
-  Before the FeedExpander can be used, the feeds that should be expanded have to be configured in the `feed-config.yml` file. The alias which is configured in the `feed-config.yml` file is used as a part of the expander's feed url. The default configured url is `http://localhost:9998/expand?alias=abc`. The alias `abc` have to be replaced with this one specified in the config file. All configured, expanded url's can be listed with the url `http://localhost:9998/feeds`.
+  Before the FeedExpander can be used, the feeds that should be expanded have to be configured in the `feed-config.yml` file. The unique alias which is configured for each feed must be a parameter of the expanded feed url. For example an alias `abc` in the feed configuration will cause a expanded feed url like `http://localhost:9998/expand?alias=abc`. All configured, expanded url's can be listed with the url `http://localhost:9998/feeds`.
   
 ### Expand feeds 
   The `selector` in the `feed-config.yml` file selects a part of a html page. It describes a navigation path through the html elements using a CSS (or jquery) like selector syntax. The selected part will be shown as article content in the result feed.
