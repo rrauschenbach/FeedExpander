@@ -3,7 +3,6 @@ package org.rr.expander.feed;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.BooleanUtils.negate;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.lowerCase;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,7 @@ public class FeedContentFilterImpl implements FeedContentFilter {
 
 	@Inject
 	public FeedContentFilterImpl(@Assisted @Nonnull String regex) {
-		this.regex = Pattern.compile(lowerCase(regex));
+		this.regex = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 	}
 	
 	@Override
@@ -70,7 +69,7 @@ public class FeedContentFilterImpl implements FeedContentFilter {
 	}
 	
 	private boolean match(@Nullable String text) {
-		return Optional.ofNullable(text).map(t -> regex.matcher(lowerCase(t)).find()).orElse(Boolean.FALSE);
+		return Optional.ofNullable(text).map(t -> regex.matcher(t).find()).orElse(Boolean.FALSE);
 	}
 
 }

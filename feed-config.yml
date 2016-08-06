@@ -15,11 +15,11 @@ feeds:
 # Max number if feed entries to be loaded. Use a low value for feeds which did not get an update too often.
 # 
 # includeFilter:
-# A regular expression which is used to filter feed entries. Each feed entry which matches to this expression 
+# A case insensitive regular expression which is used to filter feed entries. Each feed entry which matches to this expression 
 # will be filtered and not shown in the result feed.
 #
 # excludeFilter
-# A regular expression which is used to filter feed entries. Each feed entry which did not matches to this expression 
+# A case insensitive regular expression which is used to filter feed entries. Each feed entry which did not matches to this expression 
 # will be filtered and not shown in the result feed. 
 
 

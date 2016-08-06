@@ -48,6 +48,12 @@ public class FeedContentFilterTest {
 		assertTrue(filterInclude.size() == createEntries().size() -1);
 	}
 	
+	@Test
+	public void testFilterIncludeWithWeirdCase() {
+		FeedContentFilter feedContentFilter = createFeedContentFilter("tEsT");
+		List<SyndEntry> filterInclude = feedContentFilter.filterInclude(createEntries());
+		assertTrue(filterInclude.size() == createEntries().size() -1);
+	}
 	
 	@Test
 	public void testFilterIncludeTwo() {
