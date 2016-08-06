@@ -9,7 +9,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `mvn install` 
 
 ## Run
- * Edit the config.yml and change the htuser and feed-sites.config. 
+ * Edit the config.yml and change the `htuser` and `feed-config.json`. 
  * Start the service with `java -jar target/expander-x.x.x.jar server config.yml`
  
 ## Update
