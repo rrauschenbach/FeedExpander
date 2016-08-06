@@ -1,14 +1,38 @@
 feeds:
+# alias:
+# The alias used as parameter of the expanded url.
+# 
+# description:  
+# The description is only for used for display reasons.
+#
+# feedUrl:  
+# The url to the feed which should be expanded. Currently only http and https are supported.
+#
+# selector:
+# A css selector which is used to identify the part of the web page to be loaded into the feed.
+#
+# limit:  
+# Max number if feed entries to be loaded. Use a low value for feeds which did not get an update too often.
+# 
+# includeFilter:
+# A regular expression which is used to filter feed entries. Each feed entry which matches to this expression 
+# will be filtered and not shown in the result feed.
+#
+# excludeFilter
+# A regular expression which is used to filter feed entries. Each feed entry which did not matches to this expression 
+# will be filtered and not shown in the result feed. 
+
+
 - alias: heise
   description: Heise news
   feedUrl: http://www.heise.de/newsticker/heise-atom.xml
-  selector: article
+  selector: "article"
   limit: 10
   
 - alias: golem
   description: Golem news
   feedUrl: http://rss.golem.de/rss.php?feed=RSS2.0
-  selector: article
+  selector: "article"
   limit: 10
   includeFilter: "(apple|ipad|iphone)"
   excludeFilter: ''
@@ -40,7 +64,7 @@ feeds:
 - alias: javacodegeeks
   description: Java Code Geeks
   feedUrl: http://feeds.feedburner.com/JavaCodeGeeks
-  selector: article
+  selector: "article"
   limit: 10
   
 - alias: trycatchfinally_opensource
