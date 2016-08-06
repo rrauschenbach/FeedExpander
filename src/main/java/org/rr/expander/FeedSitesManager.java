@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.annotations.VisibleForTesting;
 
 /**
@@ -167,7 +168,7 @@ public class FeedSitesManager {
 	private Map<String, Entry> readFeedSitesFile() throws IOException {
 			feedSitesFileModified = feedSitesFile.toFile().lastModified();
 			
-			return new ObjectMapper().readValue(readFeedSitesConfig(feedSitesFile), Entries.class).getEntries().stream()
+			return new ObjectMapper(new YAMLFactory()).readValue(readFeedSitesConfig(feedSitesFile), Entries.class).getEntries().stream()
 				.collect(toMap(entry -> entry.getAlias(), entry -> entry));
 	}
 	
