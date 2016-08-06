@@ -1,5 +1,5 @@
 # FeedExpander
-Feed expander is a java service which provides a generic way to create rss or atom feeds containing a specific part of the linked page. In other words, with FeedExpander you can convert a cropped feed into a full feed.  
+Feed expander is a java service which provides a generic way to create rss or atom feeds containing a specific part of the linked page. In other words, with FeedExpander you can convert a cropped feed into a full feed. Additionally there is also a filter functions which allows to filter feeds using regular expressions.  
 
 ## Build
 You need to have git, maven and java 1.8 installed before doing the following.
@@ -9,7 +9,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `mvn install` 
 
 ## Run
- * Edit the config.yml and change the `htuser` and `feed-config.json`. 
+ * Edit the `config.yml` and change it to your needs. 
  * Start the service with `java -jar target/expander-x.x.x.jar server config.yml`
  
 ## Update
@@ -19,7 +19,7 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `git fetch --all`
   * `git reset --hard origin/master`
   * `mvn install`
-  * Look for changes between your old and the updated `config.yml` and `feed-config.json`.
+  * Look for changes between your backuped and the updated config files.
 
 ## Security hints
   If you plan to use the FeedExpander service as some private service you have to configure the htusers files where you can simply add some users and their password which are allowed to get access. It would be also be much more safe to use https instead of the preconfigured http setup.
