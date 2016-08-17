@@ -1,5 +1,6 @@
 package org.rr.expander.feed;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -113,9 +114,19 @@ public class FeedContentExchangerImpl implements FeedContentExchanger {
 		String pageContent;
 		if((pageContent = pageCache.restore(link)) == null) {
 			pageContent = pageCache.store(link, 
-					urlLoaderFactory.getUrlLoader(link).getContentAsString());
+					removeControlCharacters(urlLoaderFactory.getUrlLoader(link).getContentAsString()));
 		}
 		return pageContent;
+	}
+
+	/**
+	 * Remove ASCII control characters from the given <code>text</code>.
+	 * 
+	 * @param text The string where the control characters should be removed from.
+	 * @return The cleaned text.
+	 */
+	private String removeControlCharacters(@Nonnull String text) {
+		return text.replaceAll("\\p{C}", EMPTY);
 	}
 
 }
