@@ -114,19 +114,26 @@ public class FeedContentExchangerImpl implements FeedContentExchanger {
 		String pageContent;
 		if((pageContent = pageCache.restore(link)) == null) {
 			pageContent = pageCache.store(link, 
-					removeControlCharacters(urlLoaderFactory.getUrlLoader(link).getContentAsString()));
+					removeInvalidXMLCharacters(urlLoaderFactory.getUrlLoader(link).getContentAsString()));
 		}
 		return pageContent;
 	}
 
 	/**
-	 * Remove ASCII control characters from the given <code>text</code>.
+	 * Remove ASCII control characters and other unicode characters which are not valid for XML
+	 * processing from the given <code>text</code>.
 	 * 
-	 * @param text The string where the control characters should be removed from.
+	 * @param text The string where the invalid characters should be removed from.
 	 * @return The cleaned text.
 	 */
-	private String removeControlCharacters(@Nonnull String text) {
-		return text.replaceAll("\\p{C}", EMPTY);
+	private String removeInvalidXMLCharacters(@Nonnull String text) {
+		String xml10pattern = "[^"
+        + "\u0009\r\n"
+        + "\u0020-\uD7FF"
+        + "\uE000-\uFFFD"
+        + "\uD800\uDC00-\uDBFF\uDFFF"
+        + "]";
+		return text.replaceAll(xml10pattern, EMPTY);
 	}
 
 }
