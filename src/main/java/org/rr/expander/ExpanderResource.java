@@ -76,8 +76,8 @@ public class ExpanderResource {
 	}
 	
 	@Nonnull
-	private Response getSuccessResponse(FeedBuilderImpl feedHandler) throws FeedException {
-		return Response.ok(feedHandler.build(), feedHandler.getMediaType()).build();
+	private Response getSuccessResponse(FeedBuilderImpl feedBuilder) throws FeedException {
+		return Response.ok(feedBuilder.build(), feedBuilder.getMediaType()).build();
 	}
 
 	@Nonnull
