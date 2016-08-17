@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -30,9 +31,18 @@ public class PageContentExtractor {
 	public @Nonnull List<String> extractPageElements(@Nonnull String pageContent, @Nonnull String baseUri) 
 			throws IllegalStateException{
 		return getSelectedPageElements(pageContent, baseUri).stream()
-				.map(element -> element.outerHtml())
+				.map(element -> toHtml(element))
 				.map(bodyHtml -> cleanHtml(bodyHtml))
 				.collect(toList());
+	}
+
+	private String toHtml(Element element) {
+		return makeImageUrlsAbsolute(element).outerHtml();
+	}
+
+	private Element makeImageUrlsAbsolute(Element element) {
+		element.select("img").spliterator().forEachRemaining(e -> e.attr("src", e.absUrl("src")));
+		return element;
 	}
 	
 	private @Nonnull String cleanHtml(@Nonnull String bodyHtml) {
