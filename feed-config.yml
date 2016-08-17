@@ -67,6 +67,12 @@ feeds:
   selector: "article"
   limit: 10
   
+- alias: hardwareluxx
+  description: Hardware LUXX
+  feedUrl: http://www.hardwareluxx.de/index.php/component/obrss/hardwareluxx-rss-feed.feed
+  selector: "div[itemprop=articleBody]"
+  limit: 10
+  
 - alias: trycatchfinally_opensource
   description: Filtered, open source only feed for "Try catch finally"
   feedUrl: http://blubberbart.blogspot.com/feeds/posts/default
