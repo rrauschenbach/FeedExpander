@@ -8,9 +8,10 @@ You need to have git, maven and java 1.8 installed before doing the following.
   * `cd FeedExpander/` 
   * `mvn install` 
 
-## Run
- * Edit the `config.yml` and change it to your needs. 
- * Start the service with `java -jar target/expander-x.x.x.jar server config.yml`
+## Run (Linux)
+ * Edit the `config.yml` and change it to your needs.
+ * Make the start script executable `chmod a+x start.sh`.  
+ * Run the shell script `./start.sh`. 
  
 ## Update
   * Stop feedexpander if running.
