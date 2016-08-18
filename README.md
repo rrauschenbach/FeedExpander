@@ -2,13 +2,13 @@
 Feed expander is a java service which provides a generic way to create rss or atom feeds containing a specific part of the linked page. In other words, with FeedExpander you can convert a cropped feed into a full feed. Additionally there is also a filter functions which allows to filter feeds using regular expressions.  
 
 ## Build
-You need to have git, maven and java 1.8 installed before doing the following.
+You need to have **git**, **maven** and **java 1.8** installed before doing the following.
   * `cd /opt/`
   * `git clone https://github.com/meerkatzenwildschein/FeedExpander.git` 
   * `cd FeedExpander/` 
   * `mvn install` 
 
-## Run (Linux)
+## Run
  * Edit the `config.yml` and change it to your needs.
  * Make the start script executable `chmod a+x start.sh`.  
  * Run the shell script `./start.sh`. 
