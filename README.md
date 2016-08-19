@@ -19,7 +19,8 @@ You need to have **git**, **maven** and **java 1.8** installed before doing the 
  * Create a new user `sudo useradd feedexpander`
  * Create a new service file `sudo vi /etc/systemd/system/feedexpander.service` with the following content.
  
-```[Unit]
+```
+[Unit]
 Description=FeedExpander
 
 [Service]
@@ -30,7 +31,8 @@ User=feedexpander
 WorkingDirectory=/opt/FeedExpander
 
 [Install]
-WantedBy=multi-user.target```
+WantedBy=multi-user.target
+```
 
   * Make systemd reloads the service files `sudo systemctl daemon-reload`.
   * Make systemd starts the FeedExpander automatically on boot `sudo systemctl enable feedexpander`.
