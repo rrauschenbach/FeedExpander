@@ -50,11 +50,7 @@ class HttpUrlLoader implements UrlLoader {
 	public HttpUrlLoader(@Nonnull String url) {
 		this.url = url;
 	}
-	
-	/**
-	 * @return the content as InputStream with UTF-8 encoding.
-	 * @throws IOException
-	 */
+
 	@Override
 	public @Nonnull InputStream getContentAsStream(@Nonnull Charset charset) throws IOException {
 		return new ByteArrayInputStream(getContentAsString().getBytes(charset));
