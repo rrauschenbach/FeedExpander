@@ -10,8 +10,31 @@ You need to have **git**, **maven** and **java 1.8** installed before doing the 
 
 ## Run
  * Edit the `config.yml` and change it to your needs.
- * Make the start script executable `chmod a+x start.sh`.  
- * Run the shell script `./start.sh`. 
+
+### Shell
+ * Make the start script executable `sudo chmod a+x start.sh`.  
+ * Run the shell script `./start.sh`.
+
+### As systemd service
+ * Create a new user `sudo useradd feedexpander`
+ * Create a new service file `sudo vi /etc/systemd/system/feedexpander.service` with the following content.
+ 
+```[Unit]
+Description=FeedExpander
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "java -Xmx256M -jar /opt/FeedExpander/target/expander-0.0.1.jar server config.yml > /var/log/FeedExpander.log"
+ExecStop=killall --user feedexpander
+User=feedexpander
+WorkingDirectory=/opt/FeedExpander
+
+[Install]
+WantedBy=multi-user.target```
+
+  * Make systemd reloads the service files `sudo systemctl daemon-reload`.
+  * Make systemd starts the FeedExpander automatically on boot `sudo systemctl enable feedexpander`.
+  * Start the Feedexpander service the first time `sudo systemctl start feedexpander`.
  
 ## Update
   * Stop feedexpander if running.
