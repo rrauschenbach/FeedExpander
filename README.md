@@ -4,16 +4,16 @@ Feed expander is a java service which provides a generic way to create rss or at
 ## Build
 You need to have **git**, **maven** and **java 1.8** installed before doing the following.
   * `cd /opt/`
-  * `git clone https://github.com/meerkatzenwildschein/FeedExpander.git` 
+  * `sudo git clone https://github.com/meerkatzenwildschein/FeedExpander.git` 
   * `cd FeedExpander/` 
-  * `mvn install` 
+  * `sudo mvn install` 
 
 ## Run
  * Edit the `config.yml` and change it to your needs.
 
 ### Shell
  * Make the start script executable `sudo chmod a+x start.sh`.  
- * Run the shell script `./start.sh`.
+ * Run the shell script `sudo ./start.sh`.
 
 ### As systemd service
  * Create a new user `sudo useradd feedexpander`
