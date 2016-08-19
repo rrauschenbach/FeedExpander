@@ -30,7 +30,8 @@ User=feedexpander
 WorkingDirectory=/opt/FeedExpander
 
 [Install]
-WantedBy=multi-user.target```
+WantedBy=multi-user.target
+```
 
   * Make systemd reloads the service files `sudo systemctl daemon-reload`.
   * Make systemd starts the FeedExpander automatically on boot `sudo systemctl enable feedexpander`.
