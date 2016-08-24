@@ -1,5 +1,5 @@
 # FeedExpander
-Feed expander is a java service which provides a generic way to create rss or atom feeds containing a specific part of the linked page. In other words, with FeedExpander you can convert a cropped feed into a full feed. Additionally there is also a filter functions which allows to filter feeds using regular expressions.  
+Feed expander is a java service which provides a generic way to create rss or atom feeds containing a specific part of the linked page. In other words, FeedExpander enables you to convert a cropped feed into a full text feed. Additionally there is also a filter functions which allows to filter feeds using regular expressions.  
 
 ## Build
 You need to have **git**, **maven** and **java 1.8** installed before doing the following.
@@ -11,11 +11,11 @@ You need to have **git**, **maven** and **java 1.8** installed before doing the 
 ## Run
  * Edit the `config.yml` and change it to your needs.
 
-### Shell
+### Run in a Shell
  * Make the start script executable `sudo chmod a+x start.sh`.  
  * Run the shell script `sudo ./start.sh`.
 
-### As systemd service
+### Run as systemd service
  * Create a new user `sudo useradd feedexpander`
  * Create a new service file `sudo vi /etc/systemd/system/feedexpander.service` with the following content.
  
