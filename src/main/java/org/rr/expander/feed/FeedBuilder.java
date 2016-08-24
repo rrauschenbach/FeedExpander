@@ -2,6 +2,7 @@ package org.rr.expander.feed;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,11 +42,11 @@ public interface FeedBuilder {
 	/**
 	 * Filter feed entries using regular expressions.
 	 * 
-	 * @param includeFilter Filter away all feed entries matching to this regular expression.
-	 * @param excludeFilter Filter away all feed entries not matching to this regular expression.
+	 * @param includeFilter Filter away all feed entries matching to any of the regular expressions.
+	 * @param excludeFilter Filter away all feed entries not matching to any of the regular expressions.
 	 * @return This {@link FeedBuilderImpl} instance.
 	 */
-	FeedBuilderImpl filter(String includeFilter, String excludeFilter);
+	FeedBuilderImpl filter(@Nonnull List<String> includeFilter, @Nonnull List<String> excludeFilter);
 
 	/**
 	 * Create a new, utf-8 encoded feed from the current, modified loaded feed. The

@@ -101,11 +101,11 @@ public class FeedBuilderImpl implements FeedBuilder{
 	
 
 	@Override
-	public @Nonnull FeedBuilderImpl filter(@Nullable String includeFilter, @Nullable String excludeFilter) {
-		Optional.<String> ofNullable(includeFilter).ifPresent(filter -> 
+	public @Nonnull FeedBuilderImpl filter(@Nonnull List<String> includeFilter, @Nonnull List<String> excludeFilter) {
+		includeFilter.stream().forEach(filter -> 
 			applyFeedEntries(feedContentFilterFactory.createFeedContentFilter(filter).filterInclude(getEntries())));
-		Optional.<String> ofNullable(excludeFilter).ifPresent(filter -> 
-		  applyFeedEntries(feedContentFilterFactory.createFeedContentFilter(filter).filterExclude(getEntries())));
+		excludeFilter.stream().forEach(filter -> 
+	  applyFeedEntries(feedContentFilterFactory.createFeedContentFilter(filter).filterExclude(getEntries())));
 		return this;
 	}
 

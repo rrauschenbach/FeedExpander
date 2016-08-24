@@ -1,15 +1,19 @@
 package org.rr.expander;
 
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.rr.expander.FeedSitesManager.Entries.Entry;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +32,61 @@ import com.google.common.annotations.VisibleForTesting;
  */
 public class FeedSitesManager {
 	
-	private static class Entries {
+	static class Entries {
+		
+		static class Entry {
+			
+			static class Filter {
+				@JsonProperty("include")
+				private String include;
+				@JsonProperty("exclude")
+				private String exclude;
+				
+				public String getInclude() {
+					return include;
+				}
+				public String getExclude() {
+					return exclude;
+				}
+			}
+			
+			@JsonProperty("alias")
+			private String alias;
+			@JsonProperty("description")
+			private String description;
+			@JsonProperty("feedUrl")
+			private String feedUrl;
+			@JsonProperty("selector")
+			private String selector;
+			@JsonProperty("limit")
+			private int limit;
+			@JsonProperty("filter")
+			private List<Filter> filter;
+			
+			public String getDescription() {
+				return description;
+			}
+
+			public String getFeedUrl() {
+				return feedUrl;
+			}
+
+			public String getSelector() {
+				return selector;
+			}
+
+			public int getLimit() {
+				return limit;
+			}
+
+			public String getAlias() {
+				return alias;
+			}
+
+			public Optional<List<Filter>> getFilter() {
+				return Optional.ofNullable(filter);
+			}
+		}
 		
     @JsonProperty("feeds")
     private List<Entry> entries;
@@ -36,54 +94,6 @@ public class FeedSitesManager {
     public List<Entry> getEntries() {
         return entries;
     }
-
-	}
-	
-	private static class Entry {
-		
-		@JsonProperty("alias")
-		private String alias;
-		@JsonProperty("description")
-		private String description;
-		@JsonProperty("feedUrl")
-		private String feedUrl;
-		@JsonProperty("selector")
-		private String selector;
-		@JsonProperty("limit")
-		private int limit;
-		@JsonProperty("includeFilter")
-		private String includeFilter;
-		@JsonProperty("excludeFilter")
-		private String excludeFilter;
-		
-		
-		public String getDescription() {
-			return description;
-		}
-
-		public String getFeedUrl() {
-			return feedUrl;
-		}
-
-		public String getSelector() {
-			return selector;
-		}
-
-		public int getLimit() {
-			return limit;
-		}
-
-		public String getAlias() {
-			return alias;
-		}
-
-		public String getIncludeFilter() {
-			return includeFilter;
-		}
-
-		public String getExcludeFilter() {
-			return excludeFilter;
-		}
 	}
 	
 	@Nonnull
@@ -131,14 +141,39 @@ public class FeedSitesManager {
 		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getSelector();
 	}
 	
-	@Nullable
-	public String getIncludeFilter(@Nullable String alias) throws IOException {
-		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getIncludeFilter();
+
+	@Nonnull
+	private List<String> getFilter(@Nullable String alias, @Nonnull Function<? super Entry.Filter, ? extends String> mapper) throws IOException {
+		return Optional.ofNullable(getEntries().get(alias))
+				.orElse(new Entry())
+				.getFilter()
+				.orElse(Collections.emptyList())
+				.stream()
+				.map(mapper)
+				.filter(s -> s != null)
+				.collect(toList());
 	}
 	
-	@Nullable
-	public String getExcludeFilter(@Nullable String alias) throws IOException {
-		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getExcludeFilter();
+	@Nonnull
+	public List<String> getIncludeFilter(@Nullable String alias) throws IOException {
+		return getFilter(alias, new Function<Entry.Filter, String>() {
+
+			@Override
+			public String apply(Entry.Filter f) {
+				return f.getInclude();
+			}
+		});
+	}
+
+	@Nonnull
+	public List<String> getExcludeFilter(@Nullable String alias) throws IOException {
+		return getFilter(alias, new Function<Entry.Filter, String>() {
+
+			@Override
+			public String apply(Entry.Filter f) {
+				return f.getExclude();
+			}
+		});
 	}
 	
 	@Nullable
