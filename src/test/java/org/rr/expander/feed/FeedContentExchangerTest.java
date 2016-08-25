@@ -77,13 +77,13 @@ public class FeedContentExchangerTest {
 
 	private List<SyndEntry> createValidLinkedEntriesWithEmptyDescription(String content) {
 		SyndEntry entry1 = new SyndEntryImpl();
-		entry1.setLink("test://content_1.html");
+		entry1.setLink("test://feeds/valid_feed/content_1.html");
 		SyndContentImpl syndContent1 = new SyndContentImpl();
 		syndContent1.setValue(content);
 		entry1.setDescription(syndContent1);
 
 		SyndEntry entry2 = new SyndEntryImpl();
-		entry2.setLink("test://content_2.html");
+		entry2.setLink("test://feeds/valid_feed/content_2.html");
 		SyndContentImpl syndContent2 = new SyndContentImpl();
 		syndContent2.setValue(content);
 		entry2.setDescription(syndContent2);

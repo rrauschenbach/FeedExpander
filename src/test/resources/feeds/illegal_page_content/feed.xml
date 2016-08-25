@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<title type="html">test.de</title>
+	<subtitle type="html">Test feed</subtitle>
+	<id>http://www.test.de/</id>
+	<updated>2016-01-05T16:46:03Z</updated>
+	<dc:date>2016-01-05T16:46:03Z</dc:date>
+	<entry>
+		<title type="html">Title 1</title>
+		<link rel="alternate" type="text/html" href="test://feeds/illegal_page_content/content_1.html" />
+		<author>
+			<name>Heinz Müller</name>
+		</author>
+		<id>test://content_1.html
+		</id>
+		<updated>2016-01-05T16:44:09Z</updated>
+		<published>2016-01-05T16:44:09Z</published>
+		<summary type="html">Lorem ipsum dolor sit amet.</summary>
+		<dc:creator>Heinz Müller</dc:creator>
+		<dc:date>2016-01-05T16:44:09Z</dc:date>
+	</entry>
+	<entry>
+		<title type="html">Title 1</title>
+		<link rel="alternate" type="text/html" href="test://feeds/illegal_page_content/content_2.html" />
+		<author>
+			<name>Heinz Müller</name>
+		</author>
+		<id>test://content_1.html
+		</id>
+		<updated>2016-01-05T16:44:09Z</updated>
+		<published>2016-01-05T16:44:09Z</published>
+		<summary type="html">Lorem ipsum dolor sit amet.</summary>
+		<dc:creator>Heinz Müller</dc:creator>
+		<dc:date>2016-01-05T16:44:09Z</dc:date>
+	</entry>
+</feed>
+
