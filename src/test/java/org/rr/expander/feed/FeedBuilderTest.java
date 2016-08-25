@@ -3,6 +3,7 @@ package org.rr.expander.feed;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.contains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -32,67 +33,94 @@ public class FeedBuilderTest {
 
 	@Test
 	public void testBuildSuccess() throws Exception {
-		String expandedFeed = new String(createFeedBuilder("feed_1.xml").loadFeed().expand(CONTENT_CSS_SELECTOR).build(), StandardCharsets.UTF_8);
-		String extractedPageContent1 = stripHtml(extractPageContent(getHtmlPageContent("content_1.html"), CONTENT_CSS_SELECTOR));
-		String extractedPageContent2 = stripHtml(extractPageContent(getHtmlPageContent("content_2.html"), CONTENT_CSS_SELECTOR));
+		String expandedFeed = new String(createFeedBuilder("feeds/valid_feed/feed.xml").loadFeed().expand(CONTENT_CSS_SELECTOR).build(), StandardCharsets.UTF_8);
+		String extractedPageContent1 = stripHtml(extractPageContent(getHtmlPageContent("feeds/valid_feed/content_1.html"), CONTENT_CSS_SELECTOR));
+		String extractedPageContent2 = stripHtml(extractPageContent(getHtmlPageContent("feeds/valid_feed/content_2.html"), CONTENT_CSS_SELECTOR));
 		
 		// the feed contains two entries.
 		assertEquals(2, createSyndFeed(expandedFeed).getEntries().size());
+		
+		// take sure that the context was exchanged and test for the original feed content.
+		assertFalse(contains(expandedFeed, "Lorem ipsum"));
 		
 		assertTrue(contains(expandedFeed, extractedPageContent1));
 		assertTrue(contains(expandedFeed, extractedPageContent2));
 	}
 	
+	/**
+	 * Test for illegal xml content which must not cause any parse or feed creation exception. Illegal
+	 * characters must be escaped or removed by the feed expander.
+	 */
+	@Test
+	public void testBuildSuccessWithIllegalPageContent() throws Exception {
+		String expandedFeed = new String(createFeedBuilder("feeds/illegal_page_content/feed.xml").loadFeed().expand(CONTENT_CSS_SELECTOR).build(), StandardCharsets.UTF_8);
+		
+		// the feed contains two entries.
+		assertEquals(2, createSyndFeed(expandedFeed).getEntries().size());
+		
+		// take sure that the context was exchanged and test for the original feed content.
+		assertFalse(contains(expandedFeed, "Lorem ipsum"));
+	}
+	
+	/**
+	 * Test that the feed entry limit is taken under account. 
+	 */
 	@Test
 	public void testBuildSuccessWithLimit() throws Exception {
-		String expandedFeed = new String(createFeedBuilder("feed_1.xml").loadFeed().applyLimit(1).expand(CONTENT_CSS_SELECTOR).build(), StandardCharsets.UTF_8);
+		String expandedFeed = new String(createFeedBuilder("feeds/valid_feed/feed.xml").loadFeed().applyLimit(1).expand(CONTENT_CSS_SELECTOR).build(), StandardCharsets.UTF_8);
 		
 		// the reduced feed contains one entry.
 		assertEquals(1, createSyndFeed(expandedFeed).getEntries().size());
 
 		// test that the first entry is returned.
-		String extractedPageContent2 = stripHtml(extractPageContent(getHtmlPageContent("content_1.html"), CONTENT_CSS_SELECTOR));
+		String extractedPageContent2 = stripHtml(extractPageContent(getHtmlPageContent("feeds/valid_feed/content_1.html"), CONTENT_CSS_SELECTOR));
 		assertTrue(contains(expandedFeed, extractedPageContent2));
 	}
 
-	@Test(expected=IOException.class)
-	public void testBuildFailedNonExistingFeed() throws Exception {
-		new String(createFeedBuilder("not_existing.xml").loadFeed().expand(CONTENT_CSS_SELECTOR).build(), StandardCharsets.UTF_8);
-	}
-	
+	/**
+	 * Test for unexpected xml instead of some valid feed data. This will cause an empty feed.
+	 */
 	@Test
-	public void testBuildFailedInvalidFeed() throws Exception {
-		String feed = new String(createFeedBuilder("invalid_feed.xml").loadFeed().build(), StandardCharsets.UTF_8);
+	public void testBuildFailedInvalidFeedXmlContent() throws Exception {
+		String feed = new String(createFeedBuilder("feeds/invalid_xml_content/feed.xml").loadFeed().build(), StandardCharsets.UTF_8);
 		assertTrue(contains(feed, "<feed xmlns=\"http://www.w3.org/2005/Atom\" />")); // empty feed
 	}
 
+	/**
+	 * Test for dead links which should cause that the feed entry stays untouched.
+	 */
 	@Test
 	public void testBuildFailedInvalidFeedLinks() throws Exception {
-		String feed = new String(createFeedBuilder("invalid_feed_links.xml").loadFeed().expand(CONTENT_CSS_SELECTOR).build(), StandardCharsets.UTF_8);
+		String feed = new String(createFeedBuilder("feeds/invalid_links_feed/feed.xml").loadFeed().expand(CONTENT_CSS_SELECTOR).build(), StandardCharsets.UTF_8);
 		String extractedResultFeedContent = stripHtml(extractPageContent(feed, "summary"));
-		String extractedOriginalFeedContent = stripHtml(extractPageContent(getHtmlPageContent("invalid_feed_links.xml"), "summary"));
+		String extractedOriginalFeedContent = stripHtml(extractPageContent(getHtmlPageContent("feeds/invalid_links_feed/feed.xml"), "summary"));
 
 		// the feed entries must leave untouched if the links can't be loaded.
 		assertEquals(extractedResultFeedContent, extractedOriginalFeedContent);
 	}
 	
+	/**
+	 * Test for a page selector which did not match to the loaded page content. This must cause an empty feed entry content.
+	 */
 	@Test
 	public void testBuildFailedInvalidNonMatchingPageSelector() throws Exception {
-		String feed = new String(createFeedBuilder("feed_1.xml").loadFeed().expand("#unknown").build(), StandardCharsets.UTF_8);
+		String feed = new String(createFeedBuilder("feeds/valid_feed/feed.xml").loadFeed().expand("#unknown").build(), StandardCharsets.UTF_8);
 		String extractedFeedContent = stripHtml(extractPageContent(feed, "summary"));
 		
 		// the feed entries must be empty if the selector did not match somewhere in the linked page.
 		assertEquals(EMPTY, extractedFeedContent);
 	}
 	
-	@Test(expected=IOException.class)
+	/**
+	 * Test for a a feed which could not be loaded for some reason which must cause an {@link IOException}..
+	 */	
+	@Test(expected = IOException.class)
 	public void testBuildFailedFeedDidNotExists() throws Exception {
 		createFeedBuilder("not_existing.xml").loadFeed();
 	}
 	
 	private SyndFeed createSyndFeed(String expandedFeed) throws FeedException, IOException {
-		SyndFeed feed = new SyndFeedInput().build(new XmlReader(new ByteArrayInputStream(expandedFeed.getBytes())));
-		return feed;
+		return new SyndFeedInput().build(new XmlReader(new ByteArrayInputStream(expandedFeed.getBytes())));
 	}
 
 	private String getHtmlPageContent(String page) throws IOException {
@@ -113,10 +141,6 @@ public class FeedBuilderTest {
 	
 	private FeedBuilder createFeedBuilder(String feed) {
 		return createInjector().getInstance(FeedBuilderFactory.class).createFeedBuilder("test://" + feed);
-	}
-
-	private DummyPageCache createPageCache() {
-		return new DummyPageCache();
 	}
 
 	private TestUrlLoaderFactory createUrlLoaderFactory() {
@@ -140,7 +164,7 @@ public class FeedBuilderTest {
 				}
 
 				private void bindPageCache() {
-					bind(PageCache.class).toInstance(createPageCache());
+					bind(PageCache.class).toInstance(new DummyPageCache());
 				}
 
 				private void bindFeedBuilder() {
