@@ -24,13 +24,15 @@ feeds:
 
 
 - alias: heise
-  description: Heise news
+  description: News und Foren zu Computer, IT, Wissenschaft, Medien und Politik.
+    Preisvergleich von Hardware und Software sowie Downloads bei Heise Medien
   feedUrl: http://www.heise.de/newsticker/heise-atom.xml
   selector: 'article'
   limit: 10
   
 - alias: golem
-  description: Golem news
+  description: Golem.de - Ständig aktuelle IT-News für Profis und Videos aus Politik,
+    Wirtschaft und Wissenschaft über Hardware, Software, Telekommunikation, Games.
   feedUrl: http://rss.golem.de/rss.php?feed=RSS2.0
   selector: 'article'
   limit: 10
@@ -39,44 +41,63 @@ feeds:
     exclude: ''
   
 - alias: javarevisited
-  description: Java revisited
+  description: Java revisited - Tutorials and Interview questions for Java, data 
+    structures, algorithms, programming, coding, FIX Protocol, Tibco RV, UNIX, SQL,
+    books, certifications.
   feedUrl: http://feeds.feedburner.com/Javarevisited
   selector: '.post'
   limit: 10
   
 - alias: prolinux
-  description: Pro Linux news
+  description: Magazin mit Schwerpunkten auf Open Source, Android und Linux. 
+    Angebote wie News, Artikel, Berichte, Workshops, Tipps, Kalender.
   feedUrl: http://pro-linux.de/rss/2/3/rss20_aktuell.xml
   selector: '#news'
   limit: 10
   
 - alias: androidpolice
-  description: Android Police
+  description: Android Police - Android News, Apps, Games, Phones, Tablets.
   feedUrl: http://feeds.feedburner.com/AndroidPolice
   selector: '.post-hero,.post-content'
   limit: 10
   
 - alias: asienspiegel
-  description: Asienspiegel
+  description: Asienspiegel - News aus Japan.
   feedUrl: http://asienspiegel.ch/feed/
   selector: '#content'
   limit: 3
   
 - alias: javacodegeeks
-  description: Java Code Geeks
+  description: JavaCodeGeeks - Learn Java online. Android development tutorials, 
+    Java tutorials for beginners, Java books, Scala, Groovy and JRuby news, tutorials, 
+    code examples and ...
   feedUrl: http://feeds.feedburner.com/JavaCodeGeeks
   selector: 'article'
   limit: 10
   
 - alias: hardwareluxx
-  description: Hardware LUXX
+  description: Tägliche IT-News, Testberichte über Notebooks, Smartphones, 
+    Prozessoren, Grafikkarten und anderen Komponenten rund um PC-Hardware.
   feedUrl: http://www.hardwareluxx.de/index.php/component/obrss/hardwareluxx-rss-feed.feed
   selector: 'div[itemprop=articleBody]'
   limit: 10
   
+- alias: mydealz
+  description: myDealZ - Schnäppchen, Gutscheine, Preisfehler.
+  feedUrl: https://feeds.feedburner.com/myDealZ?format=xml
+  selector: '.thread-body'
+  limit: 10
+  
 - alias: trycatchfinally_opensource
-  description: Filtered, open source only feed for "Try catch finally"
+  description: Filtered, open source only feed for the "Try catch finally" blog
   feedUrl: http://blubberbart.blogspot.com/feeds/posts/default
   filter:
   - exclude: opensource
   limit: 10
+  
+- alias: nhk
+  description: The latest news from Asia, plus feature stories and special reports 
+    from across the region.
+  feedUrl: http://www.nhk.or.jp/rss/news/cat0.xml
+  selector: '#main > article.module.module--detail'
+  limit: 5
