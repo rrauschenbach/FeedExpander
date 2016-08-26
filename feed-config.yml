@@ -82,12 +82,6 @@ feeds:
   selector: 'div[itemprop=articleBody]'
   limit: 10
   
-- alias: mydealz
-  description: myDealZ - Schnäppchen, Gutscheine, Preisfehler.
-  feedUrl: https://feeds.feedburner.com/myDealZ?format=xml
-  selector: '.thread-body'
-  limit: 10
-  
 - alias: trycatchfinally_opensource
   description: Filtered, open source only feed for the "Try catch finally" blog
   feedUrl: http://blubberbart.blogspot.com/feeds/posts/default
