@@ -29,26 +29,44 @@ public class HttpLoaderTest {
 
 	private static final String EXAMPLE_FEED_URL = "http://some.feed.de/path";
 
-	private static final String UTF8_HTML_CONTENT_TYPE = "text/html;charset=utf-8";
+	private static final String UTF8_HTML_CONTENT_TYPE_WITH_MIME_PREFIX = "text/html;charset=utf-8";
 	
-	private static final String ISO_HTML_CONTENT_TYPE = "text/html;charset=iso-8859-1";
+	private static final String UTF8_HTML_CONTENT_TYPE_WITH_MIME_SUFFIX = "text/html;charset=utf-8";
+	
+	private static final String UTF8_HTML_CONTENT_TYPE = "charset=utf-8";
+	
+	private static final String ISO_HTML_CONTENT_TYPE_WITH_MIME_PREFIX = "text/html;charset=iso-8859-1";
+	
+	private static final String ISO_HTML_CONTENT_TYPE_WITH_MIME_SUFFIX = "charset=iso-8859-1;text/html";
+	
+	private static final String ISO_HTML_CONTENT_TYPE = "charset=iso-8859-1";
 
+	@Parameters({ 
+		UTF8_HTML_CONTENT_TYPE_WITH_MIME_PREFIX,
+		UTF8_HTML_CONTENT_TYPE_WITH_MIME_SUFFIX,
+		UTF8_HTML_CONTENT_TYPE,
+		})
 	@Test
-	public void testSuccessHttpLoaderWithUtf8() throws IOException {
+	public void testSuccessHttpLoaderWithUtf8(String contentType) throws IOException {
 		byte[] exampleContent = createExampleContent(StandardCharsets.UTF_8);
 		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
 				.setContent(exampleContent)
-				.setContentType(UTF8_HTML_CONTENT_TYPE);
+				.setContentType(contentType);
 		String response = httpLoaderTestImpl.getContentAsString();
 		assertEquals(new String(exampleContent, StandardCharsets.UTF_8), response);
 	}
-	
+
+	@Parameters({ 
+		ISO_HTML_CONTENT_TYPE_WITH_MIME_PREFIX,
+		ISO_HTML_CONTENT_TYPE_WITH_MIME_SUFFIX,
+		ISO_HTML_CONTENT_TYPE
+		})
 	@Test
-	public void testSuccessHttpLoaderWithIso() throws IOException {
+	public void testSuccessHttpLoaderWithIso(String contentType) throws IOException {
 		byte[] exampleContent = createExampleContent(StandardCharsets.ISO_8859_1);
 		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
 				.setContent(exampleContent)
-				.setContentType(ISO_HTML_CONTENT_TYPE);
+				.setContentType(contentType);
 		String response = httpLoaderTestImpl.getContentAsString();
 		assertEquals(new String(exampleContent, StandardCharsets.ISO_8859_1), response);
 	}
@@ -58,7 +76,7 @@ public class HttpLoaderTest {
 		byte[] exampleContent = createExampleContent(StandardCharsets.UTF_8);
 		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
 				.setContent(exampleContent)
-				.setContentType(ISO_HTML_CONTENT_TYPE);
+				.setContentType(ISO_HTML_CONTENT_TYPE_WITH_MIME_PREFIX);
 		String response = httpLoaderTestImpl.getContentAsString();
 		
 		// the wrong encoding from the http header must be used.
@@ -87,12 +105,17 @@ public class HttpLoaderTest {
 		assertEquals(new String(exampleContent, StandardCharsets.UTF_8), response);
 	}
 	
+	@Parameters({ 
+		UTF8_HTML_CONTENT_TYPE_WITH_MIME_PREFIX,
+		UTF8_HTML_CONTENT_TYPE_WITH_MIME_SUFFIX,
+		UTF8_HTML_CONTENT_TYPE
+		})
 	@Test
-	public void testHttpLoaderWithUtf8ContentTypeStream() throws IOException {
+	public void testHttpLoaderWithUtf8ContentTypeStream(String contentType) throws IOException {
 		byte[] exampleContent = createExampleContent(StandardCharsets.UTF_8);
 		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
 				.setContent(exampleContent)
-				.setContentType(UTF8_HTML_CONTENT_TYPE);
+				.setContentType(contentType);
 		InputStream response = httpLoaderTestImpl.getContentAsStream(StandardCharsets.UTF_8);
 		assertEquals(new String(exampleContent, StandardCharsets.UTF_8),
 				IOUtils.toString(response, StandardCharsets.UTF_8));
@@ -103,7 +126,7 @@ public class HttpLoaderTest {
 		byte[] exampleContent = createExampleContent(StandardCharsets.ISO_8859_1);
 		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
 				.setContent(exampleContent)
-				.setContentType(ISO_HTML_CONTENT_TYPE);
+				.setContentType(ISO_HTML_CONTENT_TYPE_WITH_MIME_PREFIX);
 		InputStream response = httpLoaderTestImpl.getContentAsStream(StandardCharsets.UTF_8);
 		
 		// the response stream must be always utf-8 encoded
@@ -111,12 +134,17 @@ public class HttpLoaderTest {
 				IOUtils.toString(response, StandardCharsets.UTF_8));
 	}
 	
+	@Parameters({ 
+		ISO_HTML_CONTENT_TYPE_WITH_MIME_PREFIX,
+		ISO_HTML_CONTENT_TYPE_WITH_MIME_SUFFIX,
+		ISO_HTML_CONTENT_TYPE
+		})
 	@Test
-	public void testHttpLoaderWithIsoResultStream() throws IOException {
+	public void testHttpLoaderWithIsoResultStream(String contentType) throws IOException {
 		byte[] exampleContent = createExampleContent(StandardCharsets.ISO_8859_1);
 		HttpLoaderTestImpl httpLoaderTestImpl = new HttpLoaderTestImpl(EXAMPLE_FEED_URL)
 				.setContent(exampleContent)
-				.setContentType(ISO_HTML_CONTENT_TYPE);
+				.setContentType(contentType);
 		InputStream response = httpLoaderTestImpl.getContentAsStream(StandardCharsets.ISO_8859_1);
 		
 		// the response stream must be always utf-8 encoded
@@ -124,7 +152,7 @@ public class HttpLoaderTest {
 				IOUtils.toString(response, StandardCharsets.ISO_8859_1));
 	}
 	
-	@Test(expected=IOException.class)
+	@Test(expected = IOException.class)
 	@Parameters({ 
 		"500", "404", "302", "204"
 		})	
@@ -136,7 +164,7 @@ public class HttpLoaderTest {
 		httpLoaderTestImpl.getContentAsStream(StandardCharsets.UTF_8);
 	}
 	
-	@Test(expected=IOException.class)
+	@Test(expected = IOException.class)
 	@Parameters({ 
 		"500", "404", "302", "204"
 	})	

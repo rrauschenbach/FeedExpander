@@ -1,7 +1,7 @@
 package org.rr.expander.loader;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.remove;
+import static org.apache.commons.lang3.StringUtils.split;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.commons.lang3.StringUtils.upperCase;
@@ -109,7 +109,7 @@ class HttpUrlLoader implements UrlLoader {
 		try {
 			return isNotBlank(charset) && Charset.isSupported(charset);
 		} catch(IllegalCharsetNameException e) {
-			logger.warn(String.format("response with unknown character encoding '%s' detected.", charset));
+			logger.warn(String.format("response from '%s' with unknown character encoding '%s' detected.", url, charset));
 		}
 		return false;
 	}
@@ -118,7 +118,7 @@ class HttpUrlLoader implements UrlLoader {
 		return Optional.of(response)
 			.map(res -> res.getFirstHeader("Content-Type").getValue())
 			.map(header -> substringAfter(header, "charset="))
-			.map(charset -> remove(charset, ';'))
+			.map(charset -> split(charset, "; ")[0])
 			.map(charset -> trim(charset))
 			.map(charset -> upperCase(charset))
 			.orElse(null);
