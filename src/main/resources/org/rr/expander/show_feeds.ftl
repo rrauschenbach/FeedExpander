@@ -1,6 +1,8 @@
 <#-- @ftlvariable name="" type="org.rr.expander.ExpanderUrlCreatorView" -->
 <html>
-	<head></head>
+	<head>
+		<meta name="robots" content="noindex,nofollow"/>
+	</head>
     <body>
 		<#list feedAliases as alias>
 			${getDescription(alias)}<br/>

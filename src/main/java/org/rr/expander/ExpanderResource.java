@@ -77,7 +77,9 @@ public class ExpanderResource {
 	
 	@Nonnull
 	private Response getSuccessResponse(FeedBuilderImpl feedBuilder) throws FeedException {
-		return Response.ok(feedBuilder.build(), feedBuilder.getMediaType()).build();
+		return Response.ok(feedBuilder.build(), feedBuilder.getMediaType())
+				.header("X-Robots-Tag", "noindex, nofollow")
+				.build();
 	}
 
 	@Nonnull
