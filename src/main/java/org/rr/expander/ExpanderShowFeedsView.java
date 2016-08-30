@@ -1,5 +1,6 @@
 package org.rr.expander;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.io.IOException;
@@ -9,11 +10,11 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.dropwizard.views.View;
-
 /**
  * The {@link View} provides data for the html page which makes it easier to create a FeedExpander url.
  */
@@ -41,7 +42,7 @@ public class ExpanderShowFeedsView extends View {
 	}
 	
 	public String getDescription(String alias) throws IOException {
-		return feedSitesManager.getDescription(alias);
+		return StringEscapeUtils.escapeHtml4(feedSitesManager.getDescription(alias));
 	}
 	
 	public String getFeedUrl(String alias) {
@@ -60,7 +61,7 @@ public class ExpanderShowFeedsView extends View {
 	
 	private @Nonnull String urlEncode(@Nonnull String value) {
 		try {
-			return URLEncoder.encode(value, "UTF-8");
+			return URLEncoder.encode(value, UTF_8.name());
 		} catch (UnsupportedEncodingException e) {
 			logger.error(String.format("Failed to url encode the value '%s'.", value));
 		}

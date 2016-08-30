@@ -1,9 +1,9 @@
 package org.rr.expander;
 
-import static java.util.stream.Collectors.toMap;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.rr.expander.FeedSitesManager.Entries.Entry;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.io.FileUtils;
+import org.rr.expander.FeedSitesManager.Entries.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.annotations.VisibleForTesting;
-
 /**
  * Manager which is able to parse and provide values from the configuration file specified with the constructor. 
  */
@@ -209,7 +209,7 @@ public class FeedSitesManager {
 	
 	@VisibleForTesting
 	protected String readFeedSitesConfig(@Nonnull Path feedSitesFile) throws IOException {
-		 return FileUtils.readFileToString(feedSitesFile.toFile());
+		 return FileUtils.readFileToString(feedSitesFile.toFile(), UTF_8);
 	}
 
 }
