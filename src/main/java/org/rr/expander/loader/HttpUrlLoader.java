@@ -1,9 +1,6 @@
 package org.rr.expander.loader;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.split;
-import static org.apache.commons.lang3.StringUtils.substringAfter;
-import static org.apache.commons.lang3.StringUtils.trim;
 import static org.apache.commons.lang3.StringUtils.upperCase;
 
 import java.io.ByteArrayInputStream;
@@ -13,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,6 +35,8 @@ import com.google.common.annotations.VisibleForTesting;
 class HttpUrlLoader implements UrlLoader {
 
 	private static final int DEFAULT_TIMEOUT = 10000;
+	
+	private static final Pattern CHARSET_PATTERN = Pattern.compile(".*charset=([\\w-]*).*");
 	
 	@Nonnull
 	private final static Logger logger = LoggerFactory.getLogger(HttpUrlLoader.class);
@@ -115,13 +115,11 @@ class HttpUrlLoader implements UrlLoader {
 	}
 
 	private @Nullable String getResponseCharset(@Nonnull HttpResponse response) {
-		return Optional.of(response)
-			.map(res -> res.getFirstHeader("Content-Type").getValue())
-			.map(header -> substringAfter(header, "charset="))
-			.map(charset -> split(charset, "; ")[0])
-			.map(charset -> trim(charset))
-			.map(charset -> upperCase(charset))
-			.orElse(null);
+		return Optional.ofNullable(response.getFirstHeader("Content-Type").getValue())
+				.map(contentType -> CHARSET_PATTERN.matcher(contentType))
+				.filter(matcher -> matcher.matches())
+				.map(matcher -> matcher.group(1))
+				.orElse(null);
 	}
 
 	private @Nonnull HttpGet createHttpGet(String url) {

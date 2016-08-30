@@ -40,11 +40,14 @@ public class HttpLoaderTest {
 	private static final String ISO_HTML_CONTENT_TYPE_WITH_MIME_SUFFIX = "charset=iso-8859-1;text/html";
 	
 	private static final String ISO_HTML_CONTENT_TYPE = "charset=iso-8859-1";
+	
+	private static final String MIME_ONLY = "text/html";
 
 	@Parameters({ 
 		UTF8_HTML_CONTENT_TYPE_WITH_MIME_PREFIX,
 		UTF8_HTML_CONTENT_TYPE_WITH_MIME_SUFFIX,
 		UTF8_HTML_CONTENT_TYPE,
+		MIME_ONLY
 		})
 	@Test
 	public void testSuccessHttpLoaderWithUtf8(String contentType) throws IOException {
@@ -59,7 +62,8 @@ public class HttpLoaderTest {
 	@Parameters({ 
 		ISO_HTML_CONTENT_TYPE_WITH_MIME_PREFIX,
 		ISO_HTML_CONTENT_TYPE_WITH_MIME_SUFFIX,
-		ISO_HTML_CONTENT_TYPE
+		ISO_HTML_CONTENT_TYPE,
+		MIME_ONLY
 		})
 	@Test
 	public void testSuccessHttpLoaderWithIso(String contentType) throws IOException {
