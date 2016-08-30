@@ -19,7 +19,7 @@ import io.dropwizard.views.View;
  */
 public class ExpanderShowFeedsView extends View {
 	
-	private static final String URL_CREATOR_HTML_TEMPLATE = "show_feeds.ftl";
+	private static final String URL_CREATOR_HTML_TEMPLATE = "/web/show_feeds.ftl";
 
 	@Nonnull
 	private final static Logger logger = LoggerFactory.getLogger(ExpanderShowFeedsView.class);

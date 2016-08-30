@@ -37,6 +37,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.jetty.ConnectorFactory;
@@ -60,7 +61,8 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 	
 	@Override
 	public void initialize(Bootstrap<ExpanderConfiguration> bootstrap) {
-		bootstrap.addBundle(new ViewBundle<ExpanderConfiguration>());
+    bootstrap.addBundle(new AssetsBundle("/web/css", "/css", null, "css"));
+    bootstrap.addBundle(new ViewBundle<ExpanderConfiguration>());
 	}
 
 	@Override
