@@ -95,3 +95,9 @@ feeds:
   feedUrl: http://www.nhk.or.jp/rss/news/cat0.xml
   selector: '#main > article.module.module--detail'
   limit: 5
+  
+- alias: only_in_japan
+  description: Japan Travel Info Blog | Only in Japan - JNTO
+  feedUrl: http://us.jnto.go.jp/blog/feed/
+  selector: 'article'
+  limit: 5
