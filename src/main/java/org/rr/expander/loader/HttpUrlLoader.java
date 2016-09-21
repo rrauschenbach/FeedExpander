@@ -21,6 +21,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.mozilla.universalchardet.UniversalDetector;
@@ -69,14 +70,14 @@ class HttpUrlLoader implements UrlLoader {
 	protected @Nonnull HttpResponse getHttpResponse() throws IOException {
 		RequestConfig.Builder requestBuilder = createRequestBuilder(DEFAULT_TIMEOUT);
 		HttpClient client = createHttpClient(requestBuilder);
-		HttpGet httpGet = createHttpGet(url);
+		HttpRequestBase httpGet = createHttpGet(url);
 
 		return client.execute(httpGet);
 	}
 
 	private HttpResponse validateStatusCode(HttpResponse response) throws IOException {
 		if (response.getStatusLine().getStatusCode() != 200) {
-			throw new IOException(response.getStatusLine().toString());
+			throw new IOException(String.format("%s. Failed loading '%s'.", response.getStatusLine().toString(), url));
 		}
 		return response;
 	}
@@ -122,16 +123,26 @@ class HttpUrlLoader implements UrlLoader {
 				.orElse(null);
 	}
 
-	private @Nonnull HttpGet createHttpGet(String url) {
-		return new HttpGet(url);
+	private @Nonnull HttpRequestBase createHttpGet(String url) {
+		HttpGet httpGet = new HttpGet(url);
+		httpGet.setHeader("Accept", "text/html,application/rss+xml,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+		return httpGet;
 	}
 
 	private @Nonnull HttpClient createHttpClient(@Nonnull RequestConfig.Builder requestBuilder) {
-		return HttpClientBuilder.create().setDefaultRequestConfig(requestBuilder.build()).build();
+		return HttpClientBuilder.create()
+				.setDefaultRequestConfig(requestBuilder.build())
+				.build();
 	}
 
 	private @Nonnull RequestConfig.Builder createRequestBuilder(int timeout) {
-		return RequestConfig.custom().setConnectTimeout(timeout).setConnectionRequestTimeout(timeout);
+		return RequestConfig.custom()
+				.setConnectTimeout(timeout)
+				.setConnectionRequestTimeout(timeout)
+				.setSocketTimeout(timeout)
+				.setContentCompressionEnabled(true)
+				.setRedirectsEnabled(true)
+				.setRelativeRedirectsAllowed(true);
 	}
 
 }
