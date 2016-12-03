@@ -4,7 +4,7 @@ Feed expander is a java service which provides a generic way to create rss or at
 ## Build
 You need to have **git**, **maven** and **java 1.8** installed before doing the following.
   * `cd /opt/`
-  * `sudo git clone https://github.com/meerkatzenwildschein/FeedExpander.git` 
+  * `sudo git clone https://github.com/rrauschenbach/FeedExpander.git` 
   * `cd FeedExpander/` 
   * `sudo mvn install` 
 
