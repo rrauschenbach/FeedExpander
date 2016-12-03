@@ -34,15 +34,6 @@ logging:
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: INFO
 
-  # Logger-specific levels.
-  loggers:
-
-    # Sets the level for 'com.example.app' to DEBUG.
-    com.example.app: DEBUG
-
-    # Redirects SQL logs to a separate file
-    org.hibernate.SQL:
-      level: DEBUG
 
 # Logback's Time Based Rolling Policy - archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}.log.gz
 # Logback's Size and Time Based Rolling Policy -  archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
