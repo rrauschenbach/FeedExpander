@@ -60,9 +60,13 @@ public class FeedCreatorTest {
 	@SuppressWarnings("unchecked")
 	public void testCreateNullHeadlineAndLink() throws Exception {
 		String createdFeed = new String(createFeedCreator("feeds/valid_page/index.html")
-				.createFeed(".headline,.article,.footer", null, null, null).build());
+				.createFeed(".headline,.article,.footer", null, null, null)
+				.setTitle("Title")
+				.build());
 		SyndFeedInput input = new SyndFeedInput();
 		SyndFeed feed = input.build(new XmlReader(new ByteArrayInputStream(createdFeed.getBytes())));
+		assertEquals("Title", feed.getTitle());
+		
 		List<SyndEntry> entries = feed.getEntries();
 
 		assertEquals(null, entries.get(0).getTitle());

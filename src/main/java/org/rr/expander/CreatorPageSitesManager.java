@@ -35,6 +35,8 @@ public class CreatorPageSitesManager {
 			private String alias;
 			@JsonProperty("description")
 			private String description;
+			@JsonProperty("title")
+			private String title;
 			@JsonProperty("pageUrl")
 			private String pageUrl;
 			@JsonProperty("item-selector")
@@ -48,6 +50,10 @@ public class CreatorPageSitesManager {
 			
 			public String getDescription() {
 				return description;
+			}
+			
+			public String getTitle() {
+				return title;
 			}
 
 			public String getPageUrl() {
@@ -110,6 +116,11 @@ public class CreatorPageSitesManager {
 	@Nullable
 	public String getDescription(@Nullable String alias) throws IOException {
 		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getDescription();
+	}
+	
+	@Nullable
+	public String getTitle(@Nullable String alias) throws IOException {
+		return Optional.ofNullable(getEntries().get(alias)).orElse(new Entry()).getTitle();
 	}
 	
 	@Nullable

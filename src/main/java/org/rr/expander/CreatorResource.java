@@ -69,7 +69,8 @@ public class CreatorResource {
 		FeedCreator feedHandler = feedCreatorFactory
 				.createFeedBuilder(creatorSitesManager.getPageUrl(alias))
 				.createFeed(creatorSitesManager.getItemSelector(alias), creatorSitesManager.getTitleSelector(alias),
-						creatorSitesManager.getLinkSelector(alias), creatorSitesManager.getAuthorSelector(alias));
+						creatorSitesManager.getLinkSelector(alias), creatorSitesManager.getAuthorSelector(alias))
+				.setTitle(creatorSitesManager.getTitle(alias));
 		return feedHandler;
 	}
 	

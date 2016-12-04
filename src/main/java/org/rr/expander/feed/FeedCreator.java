@@ -25,6 +25,14 @@ public interface FeedCreator {
 	public @Nonnull FeedCreator createFeed(@Nullable String itemSelector, @Nullable String titleSelector, @Nullable String linkSelector, @Nullable String authorSelector) throws MalformedURLException, FeedException, IOException;
 
 	/**
+	 * Applies a title to the feed.
+	 * 
+	 * @param title The title for the feed.
+	 * @return This {@link FeedCreator} instance.
+	 */
+	public @Nonnull FeedCreator setTitle(@Nullable String title); 
+	
+	/**
 	 * Get the mime type of the feed which is handled by this {@link FeedBuilderImpl} instance. The method
 	 * {@link #createFeed()} must be invoked before this method can be used.
 	 * 

@@ -145,5 +145,11 @@ public class FeedCreatorImpl implements FeedCreator {
 		}
 		return null;
 	}
+
+	@Override
+	public FeedCreator setTitle(String title) {
+		feed.setTitle(title);
+		return this;
+	}
 	
 }

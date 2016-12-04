@@ -5,6 +5,9 @@ pages:
 # description:  
 # The description is only for used for display reasons.
 #
+# title:
+# The title of the feed. It's optional but used by several feed readers to get a name for the feed.
+#
 # pageUrl:  
 # The url to the web page which should be extracted. Currently only http and https are supported.
 #
@@ -22,6 +25,7 @@ pages:
 
 - alias: twitter-fashion
   description: Fashion and Lifestyle on twitter.com
+  title: Twitter Fashion and Lifestyle
   pageUrl: https://twitter.com/i/streams/category/691572655820918785
   item-selector: '.content'
   title-selector: '.username'
