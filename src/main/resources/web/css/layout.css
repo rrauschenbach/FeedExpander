@@ -93,6 +93,11 @@ h1, h2, h3, h4, h5, h6, label {
 
 .numeric-cell {
 	text-align: right;
+	width: 20px;
+}
+
+.link-cell {
+	width: 450px;
 }
 
 .pure-menu-link {
@@ -102,6 +107,10 @@ h1, h2, h3, h4, h5, h6, label {
 .pure-menu-active > .pure-menu-link, .pure-menu-link:hover, .pure-menu-link:focus {
     color: #aecfe5;
     background-color: #1f8dd6;
+}
+
+.pure-table {
+	width:100%
 }
 
 /*

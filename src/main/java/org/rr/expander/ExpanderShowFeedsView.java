@@ -30,23 +30,40 @@ public class ExpanderShowFeedsView extends View {
 	
 	@Nonnull
 	private ExpanderFeedSitesManager feedSitesManager;
+	
+	@Nonnull
+	private CreatorPageSitesManager creatorPageSitesManager;
 
-	public ExpanderShowFeedsView(@Nonnull String serverUrl, @Nonnull ExpanderFeedSitesManager feedSitesManager) {
+	public ExpanderShowFeedsView(@Nonnull String serverUrl, @Nonnull ExpanderFeedSitesManager feedSitesManager,
+			@Nonnull CreatorPageSitesManager creatorPageSitesManager) {
 		super(URL_CREATOR_HTML_TEMPLATE);
 		this.serverUrl = serverUrl;
 		this.feedSitesManager = feedSitesManager;
+		this.creatorPageSitesManager = creatorPageSitesManager;
 	}
 	
 	public Set<String> getFeedAliases() throws IOException {
 		return feedSitesManager.getAliases();
 	}
 	
-	public String getDescription(String alias) throws IOException {
+	public Set<String> getPageAliases() throws IOException {
+		return creatorPageSitesManager.getAliases();
+	}
+	
+	public String getFeedDescription(String alias) throws IOException {
 		return StringEscapeUtils.escapeHtml4(feedSitesManager.getDescription(alias));
+	}
+	
+	public String getPageDescription(String alias) throws IOException {
+		return StringEscapeUtils.escapeHtml4(creatorPageSitesManager.getDescription(alias));
 	}
 	
 	public String getFeedUrl(String alias) {
 		return prependHttp(serverUrl + "/expand?alias=" + urlEncode(alias));
+	}
+	
+	public String getPageUrl(String alias) {
+		return prependHttp(serverUrl + "/create?alias=" + urlEncode(alias));
 	}
 
 	/**

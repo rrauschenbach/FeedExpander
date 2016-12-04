@@ -25,11 +25,15 @@ public class ExpanderShowFeedsResource {
 	@Nonnull
 	@Inject(optional = false)
 	private ExpanderFeedSitesManager feedSitesManager;
+
+	@Nonnull
+	@Inject(optional = false)
+	private CreatorPageSitesManager creatorPageSitesManager;
 	
 	@PermitAll
 	@GET
   public ExpanderShowFeedsView getIntro() {
-		return new ExpanderShowFeedsView(serviceUrl, feedSitesManager);
+		return new ExpanderShowFeedsView(serviceUrl, feedSitesManager, creatorPageSitesManager);
 	}
   		
 }

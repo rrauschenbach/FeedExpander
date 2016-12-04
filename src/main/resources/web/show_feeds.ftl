@@ -19,12 +19,12 @@
 		</div>
 
 		<div class="content">
-			<h2 class="content-head is-center">Available Feeds</h2>
+			<h2 class="content-head is-center">Expanded Feeds</h2>
 			<table class="pure-table">
 			    <thead>
 			        <tr>
 			            <th class="numeric-cell">#</th>
-			            <th>Link</th>
+			            <th class="link-cell">Link</th>
 			            <th>Description</th>
 			        </tr>
 			    </thead>
@@ -33,8 +33,31 @@
 					<#list feedAliases as alias>
 						<tr class="${(alias?index % 2 == 1)?then('pure-table-odd','')}">
 							<td class="numeric-cell"><label>${alias?index + 1}<label></td>
-							<td><a class="pure-menu-link" href="${getFeedUrl(alias)}">${getFeedUrl(alias)}</a></td>
-							<td><label>${getDescription(alias)}</label></td>
+							<td class="link-cell"><a class="pure-menu-link" href="${getFeedUrl(alias)}">${getFeedUrl(alias)}</a></td>
+							<td><label>${getFeedDescription(alias)}</label></td>
+						</tr>
+					</#list>
+			    </tbody>
+			</table>
+    	</div>
+    	
+		<div class="content">
+			<h2 class="content-head is-center">Created Feeds</h2>
+			<table class="pure-table">
+			    <thead>
+			        <tr>
+			            <th class="numeric-cell">#</th>
+			            <th class="link-cell">Link</th>
+			            <th>Description</th>
+			        </tr>
+			    </thead>
+			
+			    <tbody>
+					<#list pageAliases as alias>
+						<tr class="${(alias?index % 2 == 1)?then('pure-table-odd','')}">
+							<td class="numeric-cell"><label>${alias?index + 1}<label></td>
+							<td class="link-cell"><a class="pure-menu-link" href="${getPageUrl(alias)}">${getPageUrl(alias)}</a></td>
+							<td><label>${getPageDescription(alias)}</label></td>
 						</tr>
 					</#list>
 			    </tbody>
