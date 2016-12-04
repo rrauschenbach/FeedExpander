@@ -6,7 +6,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -210,13 +209,18 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 	}
 	
 	private String getExpandServiceUrl(ExpanderConfiguration config) {
-		String serverUrl = 
-				Optional.ofNullable(config.getServerName()).orElse(
-						Optional.ofNullable(
-								Optional.ofNullable(getBindHost(config)).orElse(evaluateHostName()))
-								.map(host -> getExpandServiceUrl(config, host))
-			.orElse(EMPTY));
-		return serverUrl;
+		String serverName = config.getServerName();
+		String bindHost = getBindHost(config);
+		String evaluatedHostName = evaluateHostName();
+		
+		if(isNotBlank(serverName)) {
+			return getExpandServiceUrl(config, serverName);
+		} else if(isNotBlank(serverName)) {
+			return getExpandServiceUrl(config, bindHost);
+		} else if(isNotBlank(evaluatedHostName)) {
+			return getExpandServiceUrl(config, bindHost);
+		}
+		return EMPTY;
 	}
 
 	private String getExpandServiceUrl(ExpanderConfiguration config, String host) {
