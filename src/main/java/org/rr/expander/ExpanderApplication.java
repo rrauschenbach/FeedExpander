@@ -210,9 +210,12 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 	}
 	
 	private String getExpandServiceUrl(ExpanderConfiguration config) {
-		String serverUrl = Optional.ofNullable(Optional.ofNullable(getBindHost(config)).orElse(evaluateHostName()))
-			.map(host -> getExpandServiceUrl(config, host))
-			.orElse(EMPTY);
+		String serverUrl = 
+				Optional.ofNullable(config.getServerName()).orElse(
+						Optional.ofNullable(
+								Optional.ofNullable(getBindHost(config)).orElse(evaluateHostName()))
+								.map(host -> getExpandServiceUrl(config, host))
+			.orElse(EMPTY));
 		return serverUrl;
 	}
 

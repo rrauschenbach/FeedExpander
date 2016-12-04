@@ -6,6 +6,8 @@ import io.dropwizard.Configuration;
 
 public class ExpanderConfiguration extends Configuration {
 	
+	private String serverName;
+	
 	private String htUsers;
 	
 	private String feedSites;
@@ -59,6 +61,16 @@ public class ExpanderConfiguration extends Configuration {
   @JsonProperty
 	public void setPageCacheConfigurationFileName(String pageCacheConfigurationFileName) {
 		this.pageCacheConfigurationFileName = pageCacheConfigurationFileName;
+	}
+
+  @JsonProperty
+	public String getServerName() {
+		return serverName;
+	}
+
+  @JsonProperty
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
 	}
 
 }

@@ -28,6 +28,9 @@ server:
 #      validateCerts: false
 #      validatePeers: false
 
+# It's possible to specifiy the server name here if it's unwanted to use the name of the host
+serverName:
+
 # Logging settings.
 logging:
 
