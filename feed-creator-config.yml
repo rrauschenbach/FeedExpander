@@ -1,0 +1,29 @@
+pages:
+# alias:
+# The alias used as parameter of the expanded url.
+# 
+# description:  
+# The description is only for used for display reasons.
+#
+# pageUrl:  
+# The url to the web page which should be extracted. Currently only http and https are supported.
+#
+# item-selector:
+# A css selector which is used to identify the parts of the web page to be loaded as feed.
+#
+# title-selector:
+# A css selector which is used to identify the title within the item. This selector must select an element which is relative to the item-selector.
+#
+# link-selector:
+# A css selector which points to a html link element. This selector must select an element which is relative to the item-selector.
+#
+# author-selector:
+# A css selector which is used to identify the author within the item. This selector must select an element which is relative to the item-selector.
+
+- alias: twitter-fashion
+  description: Fashion and Lifestyle on twitter.com
+  pageUrl: https://twitter.com/i/streams/category/691572655820918785
+  item-selector: '.content'
+  title-selector: '.username'
+  link-selector: 'a.twitter-timeline-link'
+  author-selector: '.username'

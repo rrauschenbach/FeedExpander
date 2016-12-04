@@ -15,12 +15,12 @@ public interface FeedBuilder {
 	/**
 	 * Starts fetching the feed from the {@link #feedUrl} specified with the class constructor.
 	 * 
-	 * @return This {@link FeedBuilderImpl} instance.
+	 * @return This {@link FeedBuilder} instance.
 	 */
-	public @Nonnull FeedBuilderImpl loadFeed() throws MalformedURLException, FeedException, IOException;
+	public @Nonnull FeedBuilder loadFeed() throws MalformedURLException, FeedException, IOException;
 
 	/**
-	 * Get the mime type of the feed which is handled by this {@link FeedBuilderImpl} instance. The method
+	 * Get the mime type of the feed which is handled by this {@link FeedBuilder} instance. The method
 	 * {@link #loadFeed()} must be invoked before this method can be used.
 	 * 
 	 * @return The mime of the feed.
@@ -35,18 +35,18 @@ public interface FeedBuilder {
 	 * 
 	 * @param includeCssSelector The include expression which is used to filter the page content of the
 	 *        linked web page.
-	 * @return This {@link FeedBuilderImpl} instance.
+	 * @return This {@link FeedBuilder} instance.
 	 */
-	public @Nonnull FeedBuilderImpl expand(@Nullable String includeCssSelector);
+	public @Nonnull FeedBuilder expand(@Nullable String includeCssSelector);
 
 	/**
 	 * Filter feed entries using regular expressions.
 	 * 
 	 * @param includeFilter Filter away all feed entries matching to any of the regular expressions.
 	 * @param excludeFilter Filter away all feed entries not matching to any of the regular expressions.
-	 * @return This {@link FeedBuilderImpl} instance.
+	 * @return This {@link FeedBuilder} instance.
 	 */
-	FeedBuilderImpl filter(@Nonnull List<String> includeFilter, @Nonnull List<String> excludeFilter);
+	FeedBuilder filter(@Nonnull List<String> includeFilter, @Nonnull List<String> excludeFilter);
 
 	/**
 	 * Create a new, utf-8 encoded feed from the current, modified loaded feed. The
@@ -65,6 +65,6 @@ public interface FeedBuilder {
 	 * @param limit Number of feed entries kept for the result feed.
 	 */
 	@Nonnull
-	public FeedBuilderImpl applyLimit(@Nullable Integer limit);
+	public FeedBuilder applyLimit(@Nullable Integer limit);
 
 }

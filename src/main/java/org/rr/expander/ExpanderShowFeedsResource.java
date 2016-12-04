@@ -24,7 +24,7 @@ public class ExpanderShowFeedsResource {
 
 	@Nonnull
 	@Inject(optional = false)
-	private FeedSitesManager feedSitesManager;
+	private ExpanderFeedSitesManager feedSitesManager;
 	
 	@PermitAll
 	@GET

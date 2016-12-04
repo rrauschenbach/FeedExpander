@@ -35,8 +35,8 @@ public class FeedSitesManagerTest {
 			+ "  selector: 'article'\n"
 			+ "  limit: 10\n";
 	
-	public FeedSitesManager getFeedSitesManager(String feedsConfig) {
-		return new FeedSitesManager(EMPTY) {
+	public ExpanderFeedSitesManager getFeedSitesManager(String feedsConfig) {
+		return new ExpanderFeedSitesManager(EMPTY) {
 
 			@Override
 			protected String readFeedSitesConfig(@Nonnull Path feedSitesFile) throws IOException {
@@ -48,25 +48,25 @@ public class FeedSitesManagerTest {
 	
 	@Test
 	public void testDefaultConfigFileContainsExampleEntries() throws IOException {
-		FeedSitesManager feedSitesManager = getFeedSitesManager(FileUtils.readFileToString(new File("feed-config.yml")));
+		ExpanderFeedSitesManager feedSitesManager = getFeedSitesManager(FileUtils.readFileToString(new File("feed-expander-config.yml")));
 		assertTrue(feedSitesManager.size() > 0);
 	}
 	
 	@Test(expected = JsonMappingException.class)
 	public void testEmptyContent() throws IOException {
-		FeedSitesManager feedSitesManager = getFeedSitesManager(EMPTY);
+		ExpanderFeedSitesManager feedSitesManager = getFeedSitesManager(EMPTY);
 		feedSitesManager.size();
 	}
 	
 	@Test(expected = JsonMappingException.class)
 	public void testInvalidContent() throws IOException {
-		FeedSitesManager feedSitesManager = getFeedSitesManager(EMPTY);
+		ExpanderFeedSitesManager feedSitesManager = getFeedSitesManager(EMPTY);
 		feedSitesManager.size();
 	}
 	
 	@Test
 	public void testValidConfig() throws IOException {
-		FeedSitesManager feedSitesManager = getFeedSitesManager(TWO_ENTRIES_CONFIG);
+		ExpanderFeedSitesManager feedSitesManager = getFeedSitesManager(TWO_ENTRIES_CONFIG);
 		assertTrue(feedSitesManager.size() == 2);
 		
 		for (String alias : feedSitesManager.getAliases()) {
@@ -81,7 +81,7 @@ public class FeedSitesManagerTest {
 	
 	@Test
 	public void testFilterEntry() throws IOException {
-		FeedSitesManager feedSitesManager = getFeedSitesManager(TWO_ENTRIES_CONFIG);
+		ExpanderFeedSitesManager feedSitesManager = getFeedSitesManager(TWO_ENTRIES_CONFIG);
 		assertTrue(feedSitesManager.size() == 2);
 		
 		List<String> excludeFilter = feedSitesManager.getExcludeFilter("test");

@@ -24,6 +24,9 @@ import org.rr.expander.feed.FeedContentExchangerImpl;
 import org.rr.expander.feed.FeedContentFilter;
 import org.rr.expander.feed.FeedContentFilterFactory;
 import org.rr.expander.feed.FeedContentFilterImpl;
+import org.rr.expander.feed.FeedCreator;
+import org.rr.expander.feed.FeedCreatorFactory;
+import org.rr.expander.feed.FeedCreatorImpl;
 import org.rr.expander.health.HtUserHealthCheck;
 import org.rr.expander.health.PageCacheHealthCheck;
 import org.rr.expander.loader.UrlLoaderFactory;
@@ -69,6 +72,7 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 	public void run(ExpanderConfiguration config, Environment environment) throws ClassNotFoundException {
 		Injector injector = createInjector(config);
 		registerExpanderResource(environment, injector);
+		registerExtractorResource(environment, injector);
 		registerShowFeedsResource(environment, injector);
 		registerBasicAuth(environment, config.getHtusers());
 		registerConfigurationHealthCheck(config, environment, injector);
@@ -134,6 +138,10 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 		environment.jersey().register(injector.getInstance(ExpanderResource.class));
 	}
 	
+	private void registerExtractorResource(Environment environment, Injector injector) {
+		environment.jersey().register(injector.getInstance(CreatorResource.class));
+	}
+	
 	private void registerShowFeedsResource(Environment environment, Injector injector) {
 		environment.jersey().register(injector.getInstance(ExpanderShowFeedsResource.class));
 	}
@@ -143,10 +151,12 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
         @Override
         protected void configure() {
         	bindFeedSitesManager(config);
+        	bindPageSitesManager(config);
         	bindExpandServiceUrl(config);
         	bindUrlLoaderFactory();
         	bindPageCache(config);
         	bindFeedBuilder();
+        	bindFeedCreator();
         	bindFeedContentExchanger();
         	bindFeedContentFilter();
         }
@@ -168,6 +178,13 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
         	     .implement(FeedBuilder.class, FeedBuilderImpl.class)
         	     .build(FeedBuilderFactory.class));
 				}
+				
+				private void bindFeedCreator() {
+					install(new FactoryModuleBuilder()
+        	     .implement(FeedCreator.class, FeedCreatorImpl.class)
+        	     .build(FeedCreatorFactory.class));
+				}
+
 
 				private void bindPageCache(ExpanderConfiguration config) {
 					bind(PageCache.class).toInstance(PageCacheFactory.createPageCacheFactory(
@@ -183,7 +200,11 @@ public class ExpanderApplication extends Application<ExpanderConfiguration> {
 				}
 
 				private void bindFeedSitesManager(ExpanderConfiguration config) {
-					bind(FeedSitesManager.class).toInstance(new FeedSitesManager(config.getFeedSites()));
+					bind(ExpanderFeedSitesManager.class).toInstance(new ExpanderFeedSitesManager(config.getFeedSites()));
+				}
+				
+				private void bindPageSitesManager(ExpanderConfiguration config) {
+					bind(CreatorPageSitesManager.class).toInstance(new CreatorPageSitesManager(config.getPageSites()));
 				}
     });
 	}

@@ -57,8 +57,11 @@ metrics:
 # Uncomment and edit htusers file if http auth is required.
 # htusers: htusers
 
-# Allow to define url's with selector and alias which are available with the alias url parameter.
-feedSites: feed-config.yml
+# Config file which allows to specify the feeds to be expanded.
+feedSites: feed-expander-config.yml
+
+# Config file which allows to specify the pages to be extracted.
+pageSites: feed-creator-config.yml
 
 # Cache configuration for loaded web pages linked by feeds.
 # Supported cache types are EH_CACHE which needs to have a pageCacheConfigurationFileName which points to a ehcache

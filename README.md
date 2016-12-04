@@ -41,7 +41,7 @@ WantedBy=multi-user.target
 ## Update
   * Stop feedexpander if running.
   * `cd /opt/FeedExpander`
-  * Copy away your `config.yml` and `feed-config.yml`.
+  * Copy away your `config.yml` and `feed-expander-config.yml`.
   * `git fetch --all`
   * `git reset --hard origin/master`
   * `mvn install`
@@ -53,13 +53,13 @@ WantedBy=multi-user.target
   In the case that FeedExpander is running on the same machine as the feed reader you are using (for example TTRSS) it would be a good idea configure FeedExpander with `bindHost: 127.0.0.1` which is already the default configuration. Comment out this line if you want FeedExpander to be reachable over network / internet. 
   
 ## Usage
-  Before the FeedExpander can be used, the feeds that should be expanded have to be configured in the `feed-config.yml` file. The unique alias which is configured for each feed ends as a parameter of the expanded feed url. For example an alias `abc` in the feed configuration will cause a expanded feed url like `http://localhost:9998/expand?alias=abc`. All configured, expanded url's can be listed with the url `http://localhost:9998/feeds`.
+  Before the FeedExpander can be used, the feeds that should be expanded have to be configured in the `feed-expander-config.yml` file. The unique alias which is configured for each feed ends as a parameter of the expanded feed url. For example an alias `abc` in the feed configuration will cause a expanded feed url like `http://localhost:9998/expand?alias=abc`. All configured, expanded url's can be listed with the url `http://localhost:9998/feeds`.
   
 ### Expand feeds 
-  The `selector` in the `feed-config.yml` file selects a part of a html page. It describes a navigation path through the html elements using a CSS (or jquery) like selector syntax. The selected part will be shown as article content in the result feed.
+  The `selector` in the `feed-expander-config.yml` file selects a part of a html page. It describes a navigation path through the html elements using a CSS (or jquery) like selector syntax. The selected part will be shown as article content in the result feed.
   
 ### Filter feeds
-  The `includeFilter` and `excludeFilter` in the `feed-config.yml` allows to configure regular expressions (or just simple keywords) to filter feed articles. If the `includeFilter` matches to a feed article, it will get removed / filtered. On the other hand, the `excludeFilter` allow to specify an expression which removes all other, not matching articles from the feed.
+  The `includeFilter` and `excludeFilter` in the `feed-expander-config.yml` allows to configure regular expressions (or just simple keywords) to filter feed articles. If the `includeFilter` matches to a feed article, it will get removed / filtered. On the other hand, the `excludeFilter` allow to specify an expression which removes all other, not matching articles from the feed.
   
 ### Selector overview
   - `tagname`: find elements by tag, e.g. `a`

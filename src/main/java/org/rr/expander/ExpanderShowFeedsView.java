@@ -29,9 +29,9 @@ public class ExpanderShowFeedsView extends View {
 	private final String serverUrl;
 	
 	@Nonnull
-	private FeedSitesManager feedSitesManager;
+	private ExpanderFeedSitesManager feedSitesManager;
 
-	public ExpanderShowFeedsView(@Nonnull String serverUrl, @Nonnull FeedSitesManager feedSitesManager) {
+	public ExpanderShowFeedsView(@Nonnull String serverUrl, @Nonnull ExpanderFeedSitesManager feedSitesManager) {
 		super(URL_CREATOR_HTML_TEMPLATE);
 		this.serverUrl = serverUrl;
 		this.feedSitesManager = feedSitesManager;
@@ -46,7 +46,7 @@ public class ExpanderShowFeedsView extends View {
 	}
 	
 	public String getFeedUrl(String alias) {
-		return serverUrl + "/expand?alias=" + urlEncode(alias);
+		return prependHttp(serverUrl + "/expand?alias=" + urlEncode(alias));
 	}
 
 	/**

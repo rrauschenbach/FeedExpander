@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.io.FileUtils;
-import org.rr.expander.FeedSitesManager.Entries.Entry;
+import org.rr.expander.ExpanderFeedSitesManager.Entries.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +30,7 @@ import com.google.common.annotations.VisibleForTesting;
 /**
  * Manager which is able to parse and provide values from the configuration file specified with the constructor. 
  */
-public class FeedSitesManager {
+public class ExpanderFeedSitesManager {
 	
 	static class Entries {
 		
@@ -96,12 +96,6 @@ public class FeedSitesManager {
     }
 	}
 	
-	@Nonnull
-	private final static Logger logger = LoggerFactory.getLogger(FeedSitesManager.class);
-	
-	@Nonnull
-	private static final String SEPARATOR_CHAR = "|";
-
 	/** the feed sites config file name. */
 	private Path feedSitesFile;
 	
@@ -111,7 +105,7 @@ public class FeedSitesManager {
 	/** the feed site configuration will be stored here. */
 	private Map<String, Entry> feedSiteEntries;
 
-	public FeedSitesManager(@Nullable String feedSitesFile) {
+	public ExpanderFeedSitesManager(@Nullable String feedSitesFile) {
 		this.feedSitesFile = Paths.get(feedSitesFile);
 	}
 	

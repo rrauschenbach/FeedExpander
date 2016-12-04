@@ -128,7 +128,9 @@ public class FeedBuilderTest {
 	}
 
 	private String extractPageContent(String content1, String includeCssSelector) {
-		List<String> extractPageElements = new PageContentExtractor(includeCssSelector).extractPageElements(content1, "http://test.de");
+		List<String> extractPageElements = new PageContentExtractor(includeCssSelector)
+				.extractPageElements(content1, "http://test.de")
+				.getPageElements();
 		if(!extractPageElements.isEmpty()) {
 			return extractPageElements.get(0);
 		}

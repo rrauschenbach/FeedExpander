@@ -2,9 +2,6 @@ package org.rr.expander.cache;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Specifies common methods for page caching.

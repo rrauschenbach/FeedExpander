@@ -9,6 +9,8 @@ public class ExpanderConfiguration extends Configuration {
 	private String htUsers;
 	
 	private String feedSites;
+	
+	private String pageSites;
 
 	private String pageCacheType;
 	
@@ -27,6 +29,11 @@ public class ExpanderConfiguration extends Configuration {
   @JsonProperty
   public String getFeedSites() {
 		return feedSites;
+	}
+  
+  @JsonProperty
+  public String getPageSites() {
+		return pageSites;
 	}
 
   @JsonProperty

@@ -2,10 +2,8 @@ package org.rr.expander.feed;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.join;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -68,8 +66,10 @@ public class FeedContentExchangerImpl implements FeedContentExchanger {
 			String link = feedEntry.getLink();
 			if (isNotBlank(link)) {
 				String pageContent = loadPageContent(link);
-				String extractedPageContent = mergeHtmlElements(new PageContentExtractor(includeCssSelector)
-						.extractPageElements(pageContent, link));
+				String extractedPageContent = new PageContentExtractor(includeCssSelector)
+						.extractPageElements(pageContent, link)
+						.cleanHtml()
+						.getMergedPageElements();
 				applyNewContentToEntry(feedEntry, extractedPageContent);
 			}
 		} catch (IOException | IllegalStateException e) {
@@ -104,10 +104,6 @@ public class FeedContentExchangerImpl implements FeedContentExchanger {
 	private void applyNewContentToEntry(@Nonnull SyndContent description, @Nonnull String pageContent) {
 		description.setValue(pageContent);
 		description.setType("html");
-	}
-
-	private @Nonnull String mergeHtmlElements(@Nonnull Collection<String> htmlElements) {
-		return join(htmlElements, "\n");
 	}
 
 	private @Nonnull String loadPageContent(@Nonnull String link) throws IOException {

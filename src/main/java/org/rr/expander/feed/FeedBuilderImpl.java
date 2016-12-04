@@ -32,7 +32,7 @@ import com.sun.syndication.io.XmlReader;
  * The {@link FeedBuilderImpl} can be used to handle the whole load, expand and new feed generation
  * process by simply invoking <code>loadFeed().expand(expression).build()</code>.
  */
-public class FeedBuilderImpl implements FeedBuilder{
+public class FeedBuilderImpl implements FeedBuilder {
 	
 	@Nonnull
 	private final static Logger logger = LoggerFactory.getLogger(FeedBuilderImpl.class);
@@ -63,7 +63,10 @@ public class FeedBuilderImpl implements FeedBuilder{
 
 	@Inject
 	public FeedBuilderImpl(
-			@Assisted @Nonnull String feedUrl) {
+			@Assisted @Nullable String feedUrl) {
+		if(feedUrl == null) {
+			throw new IllegalArgumentException("The feed url must not be null.");
+		}
 		this.feedUrl = feedUrl;
 	}
 
@@ -154,7 +157,7 @@ public class FeedBuilderImpl implements FeedBuilder{
 	 * @return The reduces feed entry list.
 	 * @throws IllegalArgumentException if the feed is not loaded before.
 	 */
-	private @Nonnull void reduceEntries(int limit) {
+	private void reduceEntries(int limit) {
 		Optional.ofNullable(loadedFeed)
 			.map(feed -> getEntries().stream()
 			.limit(limit)

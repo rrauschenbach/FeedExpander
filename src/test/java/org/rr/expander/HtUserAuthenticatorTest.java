@@ -1,7 +1,8 @@
 package org.rr.expander;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;

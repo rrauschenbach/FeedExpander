@@ -27,7 +27,7 @@ public class FeedContentFilterImpl implements FeedContentFilter {
 	}
 	
 	@Override
-	public @Nonnull List<SyndEntry> filterInclude(@Nullable List<SyndEntry> feedEntries) {
+	public @Nonnull List<SyndEntry> filterInclude(@Nonnull List<SyndEntry> feedEntries) {
 		if(isNotBlank(regex.pattern())) {
 			return feedEntries.stream().filter(entry -> negate(match(entry))).collect(toList());
 		}
@@ -35,7 +35,7 @@ public class FeedContentFilterImpl implements FeedContentFilter {
 	}
 
 	@Override
-	public @Nonnull List<SyndEntry> filterExclude(@Nullable List<SyndEntry> feedEntries) {
+	public @Nonnull List<SyndEntry> filterExclude(@Nonnull List<SyndEntry> feedEntries) {
 		if(isNotBlank(regex.pattern())) {
 			return feedEntries.stream().filter(entry -> match(entry)).collect(toList());
 		}

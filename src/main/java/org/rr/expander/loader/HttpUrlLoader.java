@@ -45,9 +45,6 @@ class HttpUrlLoader implements UrlLoader {
 	@Nonnull
 	private String url;
 
-	@Nullable
-	private ByteArrayInputStream in;
-
 	public HttpUrlLoader(@Nonnull String url) {
 		this.url = url;
 	}

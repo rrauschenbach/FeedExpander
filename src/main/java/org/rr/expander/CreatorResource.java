@@ -11,8 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import org.rr.expander.feed.FeedBuilder;
-import org.rr.expander.feed.FeedBuilderFactory;
+import org.rr.expander.feed.FeedCreator;
+import org.rr.expander.feed.FeedCreatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,40 +21,39 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.sun.syndication.io.FeedException;
 
-@Path("/expand")
-public class ExpanderResource {
-	
+@Path("/create")
+public class CreatorResource {
+
 	@Nonnull
 	private final static Logger logger = LoggerFactory.getLogger(ExpanderResource.class);
 
 	@Nonnull
 	@Inject(optional = false)
-	private ExpanderFeedSitesManager feedSitesManager;
+	private CreatorPageSitesManager creatorSitesManager;
 	
 	@Nonnull
 	@Inject(optional = false)
-	private FeedBuilderFactory feedBuilderFactory;
+	private FeedCreatorFactory feedCreatorFactory;
 	
 	@PermitAll
 	@GET
 	public Response expand(@QueryParam("alias") Optional<String> alias) {
 		if(alias.isPresent()) {
-			return expandByAlias(alias);
+			return extractByAlias(alias);
 		}
 		return getBadRequestResponse();
 	}
 	
 	@Nonnull
-	private Response expandByAlias(@Nonnull Optional<String> alias) {
+	private Response extractByAlias(@Nonnull Optional<String> alias) {
 		return alias.transform(new Function<String, Response>() {
 			@Override
 			public Response apply(@Nullable String alias) {
 				try {
-					if(alias != null && feedSitesManager.containsAlias(alias)) {
-						FeedBuilder feedHandler = createFeedHandlerForAlias(alias);
-						return getSuccessResponse(feedHandler);
-					} 
-					logger.warn(String.format("Fetching feed for alias '%s' is not allowed.", alias));
+					if(alias != null && creatorSitesManager.containsAlias(alias)) {
+						FeedCreator pageHandlerForAlias = createFeedHandlerForAlias(alias);
+						return getSuccessResponse(pageHandlerForAlias);
+					}
 					return getForbiddenResponse();
 				} catch (Exception e) {
 					logger.warn(String.format("Fetching feed for alias '%s' has failed.", alias), e);
@@ -63,43 +62,36 @@ public class ExpanderResource {
 			}
 		}).or(getBadRequestResponse()); // (no alias)
 	}
-
+	
 	@Nonnull
-	private FeedBuilder createFeedHandlerForAlias(@Nonnull String alias)
+	private FeedCreator createFeedHandlerForAlias(@Nonnull String alias)
 			throws MalformedURLException, FeedException, IOException {
-		FeedBuilder feedHandler = feedBuilderFactory.createFeedBuilder(feedSitesManager.getFeedUrl(alias))
-				.loadFeed()
-				.applyLimit(feedSitesManager.getLimit(alias))
-				.filter(feedSitesManager.getIncludeFilter(alias), feedSitesManager.getExcludeFilter(alias))
-				.expand(feedSitesManager.getSelector(alias))
-				.filter(feedSitesManager.getIncludeFilter(alias), feedSitesManager.getExcludeFilter(alias));
+		FeedCreator feedHandler = feedCreatorFactory
+				.createFeedBuilder(creatorSitesManager.getPageUrl(alias))
+				.createFeed(creatorSitesManager.getItemSelector(alias), creatorSitesManager.getTitleSelector(alias),
+						creatorSitesManager.getLinkSelector(alias), creatorSitesManager.getAuthorSelector(alias));
 		return feedHandler;
 	}
 	
 	@Nonnull
-	private Response getSuccessResponse(FeedBuilder feedBuilder) throws FeedException {
-		return Response.ok(feedBuilder.build(), feedBuilder.getMediaType())
+	private Response getSuccessResponse(FeedCreator feedCreator) throws FeedException {
+		return Response.ok(feedCreator.build(), feedCreator.getMediaType())
 				.header("X-Robots-Tag", "noindex, nofollow")
 				.build();
 	}
 
 	@Nonnull
 	private Response getInternalServerErrorResponse() {
-		return getResponse(500);
+		return Response.status(500).build();
 	}
 
 	@Nonnull
 	private Response getForbiddenResponse() {
-		return getResponse(403);
+		return Response.status(403).build();
 	}
 	
 	@Nonnull
 	private Response getBadRequestResponse() {
-		return getResponse(400);
-	}
-	
-	@Nonnull
-	private Response getResponse(int state) {
-		return Response.status(state).build();
+		return Response.status(400).build();
 	}	
 }

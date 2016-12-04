@@ -27,17 +27,17 @@ feeds:
   description: News und Foren zu Computer, IT, Wissenschaft, Medien und Politik.
     Preisvergleich von Hardware und Software sowie Downloads bei Heise Medien
   feedUrl: http://www.heise.de/newsticker/heise-atom.xml
-  selector: 'article'
+  selector: 'article' # css selector to the article which is located under an article tag.
   limit: 10
   
 - alias: golem
   description: Golem.de - Ständig aktuelle IT-News für Profis und Videos aus Politik,
     Wirtschaft und Wissenschaft über Hardware, Software, Telekommunikation, Games.
   feedUrl: http://rss.golem.de/rss.php?feed=RSS2.0
-  selector: 'article'
+  selector: 'article' # css selector to the article which is located under an article tag.
   limit: 10
   filter:
-  - include: '(apple|ipad|iphone)'
+  - include: '(apple|ipad|iphone)' # filter away those articles which includes some keywords.
     exclude: ''
   
 - alias: javarevisited
@@ -45,26 +45,26 @@ feeds:
     structures, algorithms, programming, coding, FIX Protocol, Tibco RV, UNIX, SQL,
     books, certifications.
   feedUrl: http://feeds.feedburner.com/Javarevisited
-  selector: '.post'
+  selector: '.post' # css selector to the article which is located under a tag having a class="post" attribute.
   limit: 10
   
 - alias: prolinux
   description: Magazin mit Schwerpunkten auf Open Source, Android und Linux. 
     Angebote wie News, Artikel, Berichte, Workshops, Tipps, Kalender.
   feedUrl: http://pro-linux.de/rss/2/3/rss20_aktuell.xml
-  selector: '#news'
+  selector: '#news' # css selector to the article which is located under a tag having a id="news" attribute.
   limit: 10
   
 - alias: androidpolice
   description: Android Police - Android News, Apps, Games, Phones, Tablets.
   feedUrl: http://feeds.feedburner.com/AndroidPolice
-  selector: '.post-hero,.post-content'
+  selector: '.post-hero,.post-content' # css selector to the article which is located under tags having the attributes class="post-hero" or class="post-content"
   limit: 10
   
 - alias: asienspiegel
   description: Asienspiegel - News aus Japan.
   feedUrl: http://asienspiegel.ch/feed/
-  selector: '#content'
+  selector: '#content' # css selector to the article which is located under a tag having a id="content" attribute.
   limit: 3
   
 - alias: javacodegeeks
@@ -72,21 +72,14 @@ feeds:
     Java tutorials for beginners, Java books, Scala, Groovy and JRuby news, tutorials, 
     code examples and ...
   feedUrl: http://feeds.feedburner.com/JavaCodeGeeks
-  selector: 'article'
+  selector: 'article' # css selector to the article which is located under an article tag.
   limit: 10
   
 - alias: hardwareluxx
   description: Tägliche IT-News, Testberichte über Notebooks, Smartphones, 
     Prozessoren, Grafikkarten und anderen Komponenten rund um PC-Hardware.
   feedUrl: http://www.hardwareluxx.de/index.php/component/obrss/hardwareluxx-rss-feed.feed
-  selector: 'div[itemprop=articleBody]'
-  limit: 10
-  
-- alias: trycatchfinally_opensource
-  description: Filtered, open source only feed for the "Try catch finally" blog
-  feedUrl: http://blubberbart.blogspot.com/feeds/posts/default
-  filter:
-  - exclude: opensource
+  selector: 'div[itemprop=articleBody]' # css selector to the article which is located under a dic tag with the attribute itemprop="articleBody".
   limit: 10
   
 - alias: nhk
