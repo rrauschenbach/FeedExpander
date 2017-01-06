@@ -31,11 +31,18 @@ public class HtmlUtils {
 	 */
 	public static @Nonnull String makeAbsolute(@Nonnull String link, @Nonnull String pageUrl) {
 		try {
-			URL baseUrl = new URL(pageUrl);
-			URL url = new URL(baseUrl, link);
-			return url.toString();
+			if(!hasSchema(link)) {
+				URL baseUrl = new URL(pageUrl);
+				URL url = new URL(baseUrl, link);
+				return url.toString();
+			}
+			return link;
 		} catch(MalformedURLException e) {
 			throw new IllegalArgumentException(String.format("Invalid link '%s' or page url '%s'.", link, pageUrl), e);
 		}
+	}
+	
+	private static boolean hasSchema(@Nonnull String link) {
+		return link.matches("http[s]?://.*");
 	}
 }
