@@ -4,6 +4,8 @@ package org.rr.expander.feed;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.junit.Assert.*;
 
+import java.net.MalformedURLException;
+
 import org.junit.Test;
 
 public class HtmlUtilsTest {
@@ -44,5 +46,54 @@ public class HtmlUtilsTest {
 	public void testCleanHtmlEmpty() {
 		String cleaned = HtmlUtils.cleanHtml(EMPTY);
 		assertEquals(EMPTY, cleaned);
+	}
+	
+	@Test
+	public void testMakeAbsoluteLinkWithAnAbsoluteLink() throws MalformedURLException {
+		String pageUrl = "http://example.com/path/to/test.html";
+		String absoluteLink = HtmlUtils.makeAbsolute(pageUrl, pageUrl);
+		assertEquals(pageUrl, absoluteLink);
+	}
+	
+	@Test
+	public void testMakeAbsoluteLinkWithRelativeLinkAndTrailingSlash() throws MalformedURLException {
+		String pageUrl = "http://example.com/path/to/";
+		String absoluteLink = HtmlUtils.makeAbsolute("test.html", pageUrl);
+		assertEquals(pageUrl + "test.html", absoluteLink);
+	}
+	
+	@Test
+	public void testMakeAbsoluteLinkWithRelativeLinkAndNoTrailingSlash() throws MalformedURLException {
+		String pageUrl = "http://example.com/path/to";
+		String absoluteLink = HtmlUtils.makeAbsolute("test.html", pageUrl);
+		assertEquals("http://example.com/path/test.html", absoluteLink);
+	}
+	
+	@Test
+	public void testMakeAbsoluteLinkWithAbsoluteLinkAndTrailingSlash() throws MalformedURLException {
+		String pageUrl = "http://example.com/path/to/";
+		String absoluteLink = HtmlUtils.makeAbsolute("/test.html", pageUrl);
+		assertEquals("http://example.com/test.html", absoluteLink);
+	}
+	
+	@Test
+	public void testMakeAbsoluteLinkWithAbsoluteLinkAndNoTrailingSlash() throws MalformedURLException {
+		String pageUrl = "http://example.com/path/to";
+		String absoluteLink = HtmlUtils.makeAbsolute("/test.html", pageUrl);
+		assertEquals("http://example.com/test.html", absoluteLink);
+	}
+	
+	@Test
+	public void testMakeAbsoluteLinkWithRelativeLinkAndNoPath() throws MalformedURLException {
+		String pageUrl = "http://example.com";
+		String absoluteLink = HtmlUtils.makeAbsolute("test.html", pageUrl);
+		assertEquals(pageUrl + "/test.html", absoluteLink);
+	}
+	
+	@Test
+	public void testMakeAbsoluteLinkWithAbsoluteLinkAndNoPath() throws MalformedURLException {
+		String pageUrl = "http://example.com/";
+		String absoluteLink = HtmlUtils.makeAbsolute("/test.html", pageUrl);
+		assertEquals(pageUrl + "test.html", absoluteLink);
 	}
 }

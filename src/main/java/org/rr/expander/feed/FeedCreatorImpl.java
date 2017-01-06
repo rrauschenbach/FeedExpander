@@ -3,6 +3,7 @@ package org.rr.expander.feed;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.rr.expander.feed.HtmlUtils.cleanHtml;
+import static org.rr.expander.feed.HtmlUtils.makeAbsolute;
 import static org.rr.expander.feed.HtmlUtils.stripHtml;
 
 import java.io.IOException;
@@ -95,17 +96,21 @@ public class FeedCreatorImpl implements FeedCreator {
 			entry.setTitle(stripHtml(getText(extractPageElement, titleSelector)));
 		}
 		if(linkSelector != null) {
-			entry.setLink(getHref(getText(extractPageElement, linkSelector)));
+				entry.setLink(makeAbsolute(getHref(getText(extractPageElement, linkSelector)), pageUrl));
 		}
 		if(authorSelector != null) {
 			entry.setAuthor(stripHtml(getText(extractPageElement, authorSelector)));
 		}
 		
+		entry.setDescription(createFeedContent(extractPageElement));
+		return entry;
+	}
+
+	private @Nonnull SyndContent createFeedContent(@Nonnull String extractPageElement) {
 		SyndContent description = new SyndContentImpl();
 		description.setType("text/html");
 		description.setValue(cleanHtml(extractPageElement));
-		entry.setDescription(description);
-		return entry;
+		return description;
 	}
 
 	private @Nonnull String getText(@Nonnull String extractPageElement, @Nonnull String selector) {
